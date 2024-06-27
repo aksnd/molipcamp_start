@@ -1,4 +1,4 @@
-# molipcamp_start
+# kaist_week1
 
 A new Flutter project.
 
