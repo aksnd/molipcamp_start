@@ -34,11 +34,6 @@ class _NavigationBarState extends State<NavigationBarWidget> {
     gallery(),
     free_page(),
   ];
-  static const List<Widget> _widgetOptions = <Widget>[
-    phone_number(),
-    gallery(),
-    free_page(),
-  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -53,7 +48,7 @@ class _NavigationBarState extends State<NavigationBarWidget> {
         title: const Text('BottomNavigationBar Sample'),
       ),
       body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+        child: _pages[_selectedIndex],
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
