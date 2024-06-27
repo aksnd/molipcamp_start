@@ -54,7 +54,7 @@ class _NavigationBarState extends State<NavigationBarWidget> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: '전화번호',
+            label: '전화번호 ',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.business),
