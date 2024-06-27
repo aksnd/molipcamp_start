@@ -8,7 +8,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:molipcamp_start/main.dart';
+import 'package:kaist_week1/contactlist.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
