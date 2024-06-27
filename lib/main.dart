@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           bottom: TabBar(
             tabs: [
-              Tab(text: "연락처"),
+              Tab(text: "연락처 목록"),
               Tab(text: "갤러리"),
               Tab(text: "기타"),
             ],
