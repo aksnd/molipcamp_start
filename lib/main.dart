@@ -12,6 +12,7 @@ class projectapp1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: "몰입캠프 첫 project",
       home: NavigationBarWidget(),
     );
@@ -45,7 +46,7 @@ class _NavigationBarState extends State<NavigationBarWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('BottomNavigationBar Sample'),
+        title: const Text('몰입캠프 1st project'),
       ),
       body: Center(
         child: _pages[_selectedIndex],

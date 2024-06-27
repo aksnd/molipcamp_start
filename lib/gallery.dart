@@ -28,8 +28,8 @@ class _MyAppState extends State<gallery> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: AppBar(title: Text("Camera Test")),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -74,7 +74,7 @@ class _MyAppState extends State<gallery> {
           },
           child: Text("갤러리"),
         ),
-      ],`
+      ],
     );
   }
 }
