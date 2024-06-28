@@ -7,6 +7,7 @@ import 'dart:convert';
 
 /// Flutter code sample for [BottomNavigationBar].
 
+
 void main() => runApp(const projectapp1());
 
 class projectapp1 extends StatelessWidget {
@@ -80,25 +81,22 @@ class _NavigationBarState extends State<NavigationBarWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('몰입캠프 1st project'),
-      ),
       body: Center(
         child: _pages[_selectedIndex],
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.contact_page),
             label: '전화번호 ',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.business),
+            icon: Icon(Icons.insert_photo),
             label: '갤러리',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            label: '자유주제',
+            icon: Icon(Icons.quiz),
+            label: '퀴즈',
           ),
         ],
         currentIndex: _selectedIndex,
