@@ -2,26 +2,26 @@
   {
     "name": "이테디",
     "phone": "010-1000-2000",
-    "image": "https://picsum.photos/100/100"
+    "image": "assets/images/1.png"
   },
   {
     "name": "김스틴",
     "phone": "010-9000-8000",
-    "image": "https://picsum.photos/100/100"
+    "image": "assets/images/2.png"
   },
   {
     "name": "이주노",
     "phone": "010-3000-3000",
-    "image": "https://picsum.photos/100/100"
+    "image": "assets/images/3.png"
   },
   {
     "name": "임헬렌",
     "phone": "010-2000-8000",
-    "image": "https://picsum.photos/100/100"
+    "image": "assets/images/4.png"
   },
   {
     "name": "염해리",
     "phone": "010-1000-1000",
-    "image": "https://picsum.photos/100/100"
+    "image": "assets/images/1.png"
   }
 ]

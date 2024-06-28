@@ -1,80 +1,87 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'dart:io';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import './contact.dart';
 
-
-class gallery extends StatefulWidget {
-  const gallery({Key? key}) : super(key: key);
-
+class gallery extends StatelessWidget {
   @override
-  State<gallery> createState() => _MyAppState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: PhotoGridScreen(),
+    );
+  }
 }
 
-class _MyAppState extends State<gallery> {
-  XFile? _image; //이미지를 담을 변수 선언
-  final ImagePicker picker = ImagePicker(); //ImagePicker 초기화
+class PhotoGridScreen extends StatefulWidget {
+  @override
+  _PhotoGridScreenState createState() => _PhotoGridScreenState();
+}
 
-  //이미지를 가져오는 함수
-  Future getImage(ImageSource imageSource) async {
-    //pickedFile에 ImagePicker로 가져온 이미지가 담긴다.
-    final XFile? pickedFile = await picker.pickImage(source: imageSource);
-    if (pickedFile != null) {
-      setState(() {
-        _image = XFile(pickedFile.path); //가져온 이미지를 _image에 저장
-      });
-    }
+class _PhotoGridScreenState extends State<PhotoGridScreen> {
+  List<Contact> contacts = [];
+
+  @override
+  void initState() {
+    super.initState();
+    loadContacts();
+  }
+
+  Future<void> loadContacts() async {
+    final jsonString = await rootBundle.loadString('assets/contacts.json');
+    final List<dynamic> jsonData = jsonDecode(jsonString);
+    setState(() {
+      contacts = jsonData.map((item) => Contact.fromJson(item)).toList();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(height: 30, width: double.infinity),
-            _buildPhotoArea(),
-            SizedBox(height: 20),
-            _buildButton(),
-          ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Photo Grid'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3, // 3x3 그리드
+            mainAxisSpacing: 8.0,
+            crossAxisSpacing: 8.0,
+          ),
+          itemCount: contacts.length,
+          itemBuilder: (context, index) {
+            return GestureDetector(
+              onTap: () {
+                // 사진 클릭 시 데이터 불러오기
+                _showContactDetails(context, contacts[index]);
+              },
+              child: Image.network(
+                contacts[index].image,
+                fit: BoxFit.cover,
+              ),
+            );
+          },
         ),
       ),
     );
   }
 
-  Widget _buildPhotoArea() {
-    return _image != null
-        ? Container(
-      width: 300,
-      height: 300,
-      child: Image.file(File(_image!.path)), //가져온 이미지를 화면에 띄워주는 코드
-    )
-        : Container(
-      width: 300,
-      height: 300,
-      color: Colors.grey,
-    );
-  }
-
-  Widget _buildButton() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        ElevatedButton(
-          onPressed: () {
-            getImage(ImageSource.camera); //getImage 함수를 호출해서 카메라로 찍은 사진 가져오기
-          },
-          child: Text("카메라"),
-        ),
-        SizedBox(width: 30),
-        ElevatedButton(
-          onPressed: () {
-            getImage(ImageSource.gallery); //getImage 함수를 호출해서 갤러리에서 사진 가져오기
-          },
-          child: Text("갤러리"),
-        ),
-      ],
+  void _showContactDetails(BuildContext context, Contact contact) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(contact.name),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.network(contact.image),
+              SizedBox(height: 10),
+              Text('Phone: ${contact.phone}'),
+            ],
+          ),
+        );
+      },
     );
   }
 }
