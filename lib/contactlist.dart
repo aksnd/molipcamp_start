@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:kaist_week1/contacts_provider.dart';
 import 'dart:convert';
+import 'package:url_launcher/url_launcher.dart';
 import 'contact.dart'; // Contact 클래스를 import
 import './dialog.dart';
 import 'package:provider/provider.dart';
@@ -67,7 +68,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     onTap: (){
                       showProfile(context, contact, index, updateContact);
                     },
-                    trailing: const Icon(Icons.call),
+                    trailing:IconButton(
+                      icon: const Icon(Icons.call),
+                      onPressed: () => _makePhoneCall(contact.phone),
+                    ),
                   ),
                   const SizedBox(height: 16),
                 ],
@@ -96,5 +100,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void addContact(Contact addContact){
     Provider.of<ContactsProvider>(context, listen: false).addContact(addContact);
+  }
+
+  void _makePhoneCall(String phoneNumber) async {
+    final String cleanedPhoneNumber = phoneNumber.replaceAll(RegExp(r'[^0-9]'),'');
+    final Uri phoneUri = Uri(scheme: 'tel', host: cleanedPhoneNumber);
+    await launchUrl(phoneUri);
   }
 }
