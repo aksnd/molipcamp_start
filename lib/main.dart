@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import './gallery.dart';
 import './free_page.dart';
 import './contactlist.dart';
+import 'contacts_provider.dart';
+import 'package:provider/provider.dart';
 /// Flutter code sample for [BottomNavigationBar].
 
 
@@ -12,10 +14,12 @@ class projectapp1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "몰입캠프 첫 project",
-      home: NavigationBarWidget(),
+    return ChangeNotifierProvider(
+      create: (context) => ContactsProvider(),
+      child: MaterialApp(
+        title: '몰입캠프 첫 project',
+        home: NavigationBarWidget(), // Adjust this based on your starting point
+      ),
     );
   }
 }
