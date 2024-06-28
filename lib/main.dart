@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import './gallery.dart';
 import './free_page.dart';
 import './contactlist.dart';
+import './contact.dart';
+import 'dart:convert';
+
 /// Flutter code sample for [BottomNavigationBar].
 
 void main() => runApp(const projectapp1());
@@ -25,22 +28,54 @@ class NavigationBarWidget extends StatefulWidget {
   @override
   State<NavigationBarWidget> createState() =>
       _NavigationBarState();
+
 }
+
 
 class _NavigationBarState extends State<NavigationBarWidget> {
   int _selectedIndex = 0;
+  List<Contact> _contacts = [];
+  List _pages = [];
 
-  List _pages = [
-    phone_number(),
-    gallery(),
-    free_page(),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _loadContacts();
+    _loadPages();
+  }
 
+  Future<void> _loadContacts() async {
+    // Replace with your actual loading mechanism
+    final String response = ''; // Load contacts from asset or network
+    if (response.isNotEmpty) {
+      final List<dynamic> data = json.decode(response);
+      setState(() {
+        _contacts = data.map((contact) => Contact.fromJson(contact)).toList();
+        _loadPages();
+      });
+    } else {
+      // Handle case where response is empty or failed to load
+      // For now, initialize with empty data or default values
+      setState(() {
+        _contacts = [];
+        _loadPages();
+      });
+    }
+  }
+  void _loadPages() {
+    // Initialize _pages list with the appropriate pages based on _contacts data
+    _pages = [
+      phone_number(),
+      gallery(),
+      QuizPage(contacts: _contacts), // Updated to pass the contacts list
+    ];
+  }
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
