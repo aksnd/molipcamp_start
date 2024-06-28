@@ -1,9 +1,14 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:kaist_week1/contacts_provider.dart';
 import 'dart:convert';
+import 'package:url_launcher/url_launcher.dart';
 import 'contact.dart'; // Contact 클래스를 import
 import './dialog.dart';
+import 'package:provider/provider.dart';
+import 'contacts_provider.dart';
 import 'package:image_picker/image_picker.dart';
 
 class phone_number extends StatelessWidget {
@@ -13,7 +18,7 @@ class phone_number extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-        debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
@@ -33,25 +38,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<Contact> _contacts = [];
-
   @override
   void initState() {
     super.initState();
-    _loadContacts();
-  }
-
-  Future<void> _loadContacts() async {
-    final String response = await rootBundle.loadString('assets/contacts.json');
-    final List<dynamic> data = json.decode(response);
-    setState(() {
-      _contacts = data.map((contact) => Contact.fromJson(contact)).toList();
-    });
-  }
-  void updateContact(int index, Contact editedContact) {
-    setState(() {
-      _contacts[index] = editedContact;
-    });
   }
 
   @override
@@ -60,30 +49,36 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: const Text('전화번호부'),
       ),
-      body: SafeArea(
-        child: ListView.builder(
-          itemCount: _contacts.length,
-          itemBuilder: (context, index) {
-            final contact = _contacts[index];
-            return Column(
-              children: [
-                ListTile(
-                  title: Text(contact.name),
-                  subtitle: Text(contact.phone),
-                  leading: CircleAvatar(
-                    radius: 30,
-                    backgroundImage: _getImageProvider(contact.image),
+      body: Consumer<ContactsProvider>(
+        builder: (context,contactsProvider, child){
+          final contacts = contactsProvider.contacts;
+          return ListView.builder(
+            itemCount: contacts.length,
+            itemBuilder: (context, index) {
+              final contact = contacts[index];
+              return Column(
+                children: [
+                  ListTile(
+                    title: Text(contact.name),
+                    subtitle: Text(contact.phone),
+                    leading: CircleAvatar(
+                      radius: 30,
+                      backgroundImage: _getImageProvider(contact.image),
+                    ),
+                    onTap: (){
+                      showProfile(context, contact, index, updateContact);
+                    },
+                    trailing:IconButton(
+                      icon: const Icon(Icons.call),
+                      onPressed: () => _makePhoneCall(contact.phone),
+                    ),
                   ),
-                  onTap: (){
-                    showProfile(context, contact, index, updateContact);
-                  },
-                  trailing: const Icon(Icons.call),
-                ),
-                const SizedBox(height: 16),
-              ],
-            );
-          },
-        ),
+                  const SizedBox(height: 16),
+                ],
+              );
+            },
+          );
+        }
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: ()=>print("button clicked"),
@@ -98,5 +93,18 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       return FileImage(File(imageUrl));
     }
+  }
+  void updateContact(int index, Contact editedContact) {
+    Provider.of<ContactsProvider>(context, listen: false).updateContact(index, editedContact);
+  }
+
+  void addContact(Contact addContact){
+    Provider.of<ContactsProvider>(context, listen: false).addContact(addContact);
+  }
+
+  void _makePhoneCall(String phoneNumber) async {
+    final String cleanedPhoneNumber = phoneNumber.replaceAll(RegExp(r'[^0-9]'),'');
+    final Uri phoneUri = Uri(scheme: 'tel', host: cleanedPhoneNumber);
+    await launchUrl(phoneUri);
   }
 }
