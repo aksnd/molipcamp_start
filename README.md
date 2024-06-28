@@ -1,6 +1,7 @@
 # kaist_week1
 
 A new Flutter project.
+readme modified by yunseo
 
 ## Getting Started
 
