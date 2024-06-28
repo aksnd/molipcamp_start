@@ -2,9 +2,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
+import 'package:url_launcher/url_launcher.dart';
 import 'contact.dart'; // Contact 클래스를 import
 import './dialog.dart';
-import 'package:image_picker/image_picker.dart';
 
 class phone_number extends StatelessWidget {
   const phone_number({super.key});
@@ -77,7 +77,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   onTap: (){
                     showProfile(context, contact, index, updateContact);
                   },
-                  trailing: const Icon(Icons.call),
+                  trailing:IconButton(
+                    icon: const Icon(Icons.call),
+                    onPressed: () => _makePhoneCall(contact.phone),
+                  ),
                 ),
                 const SizedBox(height: 16),
               ],
@@ -98,5 +101,11 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       return FileImage(File(imageUrl));
     }
+  }
+
+  void _makePhoneCall(String phoneNumber) async {
+    final String cleanedPhoneNumber = phoneNumber.replaceAll(RegExp(r'[^0-9]'),'');
+    final Uri phoneUri = Uri(scheme: 'tel', host: cleanedPhoneNumber);
+    await launchUrl(phoneUri);
   }
 }
