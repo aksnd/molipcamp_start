@@ -81,9 +81,18 @@ class _PhotoGridScreenState extends State<PhotoGridScreen> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Image.asset(contact.image, fit: BoxFit.cover),
+              // _getImageProvider(contact.image),
+              SizedBox(height: 20,),
+              Container(
+                width: 200, // 원하는 크기로 설정하세요
+                height: 200, // 원하는 크기로 설정하세요
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: _getImageProvider(contact.image),
+                ),
+              ),
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(15.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

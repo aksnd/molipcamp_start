@@ -4,8 +4,8 @@ import './free_page.dart';
 import './contactlist.dart';
 import 'contacts_provider.dart';
 import 'package:provider/provider.dart';
-/// Flutter code sample for [BottomNavigationBar].
 
+/// Flutter code sample for [BottomNavigationBar].
 
 void main() => runApp(const projectapp1());
 
@@ -28,8 +28,7 @@ class NavigationBarWidget extends StatefulWidget {
   const NavigationBarWidget({super.key});
 
   @override
-  State<NavigationBarWidget> createState() =>
-      _NavigationBarState();
+  State<NavigationBarWidget> createState() => _NavigationBarState();
 }
 
 class _NavigationBarState extends State<NavigationBarWidget> {
