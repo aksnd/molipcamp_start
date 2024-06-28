@@ -30,6 +30,9 @@ class _MyAppState extends State<gallery> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+        appBar: AppBar(
+          title: const Text('갤러리'),
+        ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

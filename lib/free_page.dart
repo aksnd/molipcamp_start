@@ -4,8 +4,11 @@ class free_page extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(child: Text('free_page'),),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('퀴즈'),
+        backgroundColor: Colors.pinkAccent,
+      ),
     );
   }
 }

@@ -1,7 +1,7 @@
 class Contact {
-  final String name;
-  final String phone;
-  final String image;
+  String name;
+  String phone;
+  String image;
 
   Contact({required this.name, required this.phone, required this.image});
 

@@ -1,8 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
 import 'contact.dart'; // Contact 클래스를 import
-
+import './dialog.dart';
+import 'package:image_picker/image_picker.dart';
 
 class phone_number extends StatelessWidget {
   const phone_number({super.key});
@@ -31,7 +33,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   List<Contact> _contacts = [];
 
   @override
@@ -47,18 +48,18 @@ class _MyHomePageState extends State<MyHomePage> {
       _contacts = data.map((contact) => Contact.fromJson(contact)).toList();
     });
   }
-
-  void _incrementCounter() {
+  void updateContact(int index, Contact editedContact) {
     setState(() {
-      _counter++;
-      _counter++;
+      _contacts[index] = editedContact;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
+      appBar: AppBar(
+        title: const Text('전화번호부'),
+      ),
       body: SafeArea(
         child: ListView.builder(
           itemCount: _contacts.length,
@@ -71,8 +72,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   subtitle: Text(contact.phone),
                   leading: CircleAvatar(
                     radius: 30,
-                    backgroundImage: NetworkImage(contact.image),
+                    backgroundImage: _getImageProvider(contact.image),
                   ),
+                  onTap: (){
+                    showProfile(context, contact, index, updateContact);
+                  },
                   trailing: const Icon(Icons.call),
                 ),
                 const SizedBox(height: 16),
@@ -82,10 +86,17 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: ()=>print("button clicked"),
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
     );
+  }
+  ImageProvider _getImageProvider(String imageUrl) {
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      return NetworkImage(imageUrl);
+    } else {
+      return FileImage(File(imageUrl));
+    }
   }
 }

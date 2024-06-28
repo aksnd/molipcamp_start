@@ -4,6 +4,7 @@ import './free_page.dart';
 import './contactlist.dart';
 /// Flutter code sample for [BottomNavigationBar].
 
+
 void main() => runApp(const projectapp1());
 
 class projectapp1 extends StatelessWidget {
@@ -45,9 +46,6 @@ class _NavigationBarState extends State<NavigationBarWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('몰입캠프 1st project'),
-      ),
       body: Center(
         child: _pages[_selectedIndex],
       ),
