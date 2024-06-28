@@ -55,7 +55,7 @@ class _PhotoGridScreenState extends State<PhotoGridScreen> {
                 // 사진 클릭 시 데이터 불러오기
                 _showContactDetails(context, contacts[index]);
               },
-              child: Image.network(
+              child: Image.asset(
                 contacts[index].image,
                 fit: BoxFit.cover,
               ),
@@ -71,15 +71,52 @@ class _PhotoGridScreenState extends State<PhotoGridScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(contact.name),
+          contentPadding: EdgeInsets.all(10),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Image.network(contact.image),
-              SizedBox(height: 10),
-              Text('Phone: ${contact.phone}'),
+              Image.asset(contact.image, fit: BoxFit.cover),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "이름 ${contact.name}",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      "전화번호 ${contact.phone}",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      "생일 ${contact.birthday}",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
+            ),
+          ],
         );
       },
     );
