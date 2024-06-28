@@ -93,8 +93,8 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
   ImageProvider _getImageProvider(String imageUrl) {
-    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-      return NetworkImage(imageUrl);
+    if (imageUrl.startsWith('asset') || imageUrl.startsWith('assets')) {
+      return AssetImage(imageUrl);
     } else {
       return FileImage(File(imageUrl));
     }

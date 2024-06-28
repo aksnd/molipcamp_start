@@ -43,7 +43,7 @@ Future<void> showProfile(BuildContext context, Contact contact, int index, onUpd
 
 
 Future<void> editProfile(BuildContext context, Contact contact,int index, onUpdate) async {
-  Contact editedContact = Contact(name: contact.name, phone: contact.phone, image: contact.image);
+  Contact editedContact = Contact(name: contact.name, phone: contact.phone, image: contact.image, birthday: contact.birthday);
   final TextEditingController _controller1 = TextEditingController(text: editedContact.name);
   final TextEditingController _controller2 = TextEditingController(text: editedContact.phone);
 
