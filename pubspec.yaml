@@ -16,6 +16,9 @@ dependencies:
   cupertino_icons: ^1.0.6
   url_launcher: ^6.0.30
   image_picker: ^0.8.5+3
+  flutter_native_contact_picker: ^0.0.6
+  permission_handler: ^10.0.0
+  contacts_service: ^0.6.3
 
 dev_dependencies:
   flutter_test:

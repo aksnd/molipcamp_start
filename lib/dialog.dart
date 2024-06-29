@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'contacts_provider.dart';
 import 'package:provider/provider.dart';
 
-Future<void> showProfile(BuildContext context, Contact contact, int index,bool condition , onUpdate) async {
+Future<void> showProfile(BuildContext context, SimpleContact contact, int index,bool condition , onUpdate) async {
   return showDialog<void>(
     context: context,
     barrierDismissible: false, // user must tap button to dismiss
@@ -92,8 +92,8 @@ Future<void> showProfile(BuildContext context, Contact contact, int index,bool c
 
 
 
-Future<void> editProfile(BuildContext context, Contact contact,int index, onUpdate) async {
-  Contact editedContact = Contact(name: contact.name, phone: contact.phone, image: contact.image, birthday: contact.birthday);
+Future<void> editProfile(BuildContext context, SimpleContact contact,int index, onUpdate) async {
+  SimpleContact editedContact = SimpleContact(name: contact.name, phone: contact.phone, image: contact.image, birthday: contact.birthday);
   final TextEditingController _controller1 = TextEditingController(text: editedContact.name);
   final TextEditingController _controller2 = TextEditingController(text: editedContact.phone);
   final TextEditingController _controller3 = TextEditingController(text: editedContact.birthday);

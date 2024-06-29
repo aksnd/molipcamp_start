@@ -4,6 +4,8 @@ import './free_page.dart';
 import './contactlist.dart';
 import 'contacts_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 /// Flutter code sample for [BottomNavigationBar].
 
@@ -45,6 +47,12 @@ class _NavigationBarState extends State<NavigationBarWidget> {
       _selectedIndex = index;
     });
   }
+  @override
+  void initState() {
+    super.initState();
+  }
+
+
 
   @override
   Widget build(BuildContext context) {

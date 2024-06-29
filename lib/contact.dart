@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Contact {
+class SimpleContact {
   String name;
   String phone;
   String image;
   String birthday;
 
-  Contact({required this.name, required this.phone, required this.image, required this.birthday});
+  SimpleContact({required this.name, required this.phone, required this.image, required this.birthday});
 
   Map<String, dynamic> toJson() => {
     'name': name,
@@ -16,8 +16,8 @@ class Contact {
     'birthday': birthday,
   };
 
-  factory Contact.fromJson(Map<String, dynamic> json) {
-    return Contact(
+  factory SimpleContact.fromJson(Map<String, dynamic> json) {
+    return SimpleContact(
       name: json['name'],
       phone: json['phone'],
       image: json['image'],
