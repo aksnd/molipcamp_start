@@ -27,15 +27,15 @@ class Contact {
 
 }
 
-
-Future<void> saveContacts(List<Contact> contacts) async {
+/*
+Future<void> saveContacts(List<Contact> contacts) async { //Contacts를 local에 저장
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
   List<String> jsonContacts = contacts.map((contact) => jsonEncode(contact.toJson())).toList();
   await prefs.setStringList('contacts', jsonContacts);
 }
 
-Future<List<Contact>> loadContacts() async {
+Future<List<Contact>> loadContacts() async { //Contacts를 local에서 load.
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
   List<String>? jsonContacts = prefs.getStringList('contacts');
@@ -44,4 +44,4 @@ Future<List<Contact>> loadContacts() async {
   } else {
     return [];
   }
-}
+}*/

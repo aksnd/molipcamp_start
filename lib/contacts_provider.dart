@@ -16,7 +16,7 @@ class ContactsProvider extends ChangeNotifier {
 
   }
 
-  Future<void> _loadContacts() async {
+  Future<void> _loadContacts() async { //기본적으로 load하고, 만약 비어있으면 json에서 가져오는 함수
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       List<String>? jsonContacts = prefs.getStringList('contacts');
@@ -36,27 +36,27 @@ class ContactsProvider extends ChangeNotifier {
       // Handle error as needed (e.g., show error message)
     }
   }
-  Future<void> _saveContacts() async {
+  Future<void> _saveContacts() async { //sharedpreferences로 저장 (수정할때 마다 선언 필요)
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> jsonContacts = _contacts.map((contact) => jsonEncode(contact.toJson())).toList();
     await prefs.setStringList('contacts', jsonContacts);
   }
 
 
-  void addContact(Contact contact) {
+  void addContact(Contact contact) { //추가하기
     _contacts.add(contact);
     _saveContacts();
     notifyListeners(); // Notify listeners after adding a new contact
   }
 
-  void updateContact(int index, Contact updatedContact) {
+  void updateContact(int index, Contact updatedContact) { //수정하기
     if (index >= 0 && index < _contacts.length) {
       _contacts[index] = updatedContact;
       _saveContacts();
       notifyListeners(); // Notify listeners after updating a contact
     }
   }
-  void deleteContact(int index) {
+  void deleteContact(int index) { //삭제하기
     if (index >= 0 && index < _contacts.length) {
       _contacts.removeAt(index);
       _saveContacts(); // Save contacts to SharedPreferences after deleting
