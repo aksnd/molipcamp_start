@@ -1,146 +1,69 @@
 [
   {
-    "name": "장세일",
-    "phone": "010-0000-0000",
-    "image": "assets/images/1.png",
-    "birthday": "2001.02.20"
+    "name": "박영민",
+    "phone": "010-3752-4088",
+    "image": "assets/images/yeongmin.png",
+    "birthday": "2003.02.28"
   },
   {
-    "name": "김민경",
-    "phone": "010-0000-0000",
-    "image": "assets/images/2.png",
-    "birthday": "2002.05.03"
+    "name": "박윤서",
+    "phone": "010-6722-2655",
+    "image": "assets/images/yunseo.png",
+    "birthday": "2004.06.22"
+  },
+  {
+    "name": "조승완",
+    "phone": "010-8809-0553",
+    "image": "assets/images/seungwan.png",
+    "birthday": "2002.02.24"
+  },
+  {
+    "name": "박지훈",
+    "phone": "010-3103-0490",
+    "image": "assets/images/jihun.png",
+    "birthday": "2002.06.06"
+  },
+  {
+    "name": "안규찬",
+    "phone": "010-9082-4532",
+    "image": "assets/images/gyuchan.png",
+    "birthday": "2002.03.01"
+  },
+  {
+    "name": "하은수",
+    "phone": "010-3219-7172",
+    "image": "assets/images/eunsu.png",
+    "birthday": "2002.02.08"
   },
   {
     "name": "양세희",
-    "phone": "010-0000-0000",
-    "image": "assets/images/3.png",
+    "phone": "010-5914-8862",
+    "image": "assets/images/sehui.png",
     "birthday": "2001.06.27"
   },
   {
-    "name": "박상우",
-    "phone": "010-0000-0000",
-    "image": "assets/images/4.png",
-    "birthday": "2003.01.25"
+    "name": "윤우성",
+    "phone": "010-7567-5464",
+    "image": "assets/images/useong.png",
+    "birthday": "2004.08.21"
+  },
+
+  {
+    "name": "김예락",
+    "phone": "010-7334-1296",
+    "image": "assets/images/yerak.png",
+    "birthday": "2002.02.13"
   },
   {
-    "name": "염해리",
-    "phone": "010-1000-1000",
-    "image": "assets/images/1.png",
-    "birthday": "2000.05.05"
+    "name": "강승완",
+    "phone": "010-5207-6070",
+    "image": "assets/images/kseungwan.png",
+    "birthday": "2001.05.09"
   },
   {
-    "name": "김정일",
-    "phone": "010-9000-8000",
-    "image": "assets/images/2.png",
-    "birthday": "2000.06.06"
-  },
-  {
-    "name": "김정이",
-    "phone": "010-9000-8000",
-    "image": "assets/images/2.png",
-    "birthday": "2000.07.07"
-  },
-  {
-    "name": "김정삼",
-    "phone": "010-9000-8000",
-    "image": "assets/images/2.png",
-    "birthday": "2000.08.08"
-  },
-  {
-    "name": "김정사",
-    "phone": "010-9000-8000",
-    "image": "assets/images/2.png",
-    "birthday": "2000.09.09"
-  },
-  {
-    "name": "김정오",
-    "phone": "010-9000-8000",
-    "image": "assets/images/2.png",
-    "birthday": "2000.10.10"
-  },
-  {
-    "name": "김정육",
-    "phone": "010-9000-8000",
-    "image": "assets/images/2.png",
-    "birthday": "2000.11.11"
-  },
-  {
-    "name": "김정칠",
-    "phone": "010-9000-8000",
-    "image": "assets/images/2.png",
-    "birthday": "2000.12.12"
-  },
-  {
-    "name": "김정팔",
-    "phone": "010-9000-8000",
-    "image": "assets/images/2.png",
-    "birthday": "2000.01.13"
-  },
-  {
-    "name": "김정구",
-    "phone": "010-9000-8000",
-    "image": "assets/images/2.png",
-    "birthday": "2000.02.14"
-  },
-  {
-    "name": "김정십",
-    "phone": "010-9000-8000",
-    "image": "assets/images/2.png",
-    "birthday": "2000.02.15"
-  },
-  {
-    "name": "김십일",
-    "phone": "010-9000-8000",
-    "image": "assets/images/2.png",
-    "birthday": "2000.02.16"
-  },
-  {
-    "name": "김십이",
-    "phone": "010-9000-8000",
-    "image": "assets/images/2.png",
-    "birthday": "2000.02.17"
-  },
-  {
-    "name": "김십삼",
-    "phone": "010-9000-8000",
-    "image": "assets/images/2.png",
-    "birthday": "2000.02.18"
-  },
-  {
-    "name": "김십사",
-    "phone": "010-9000-8000",
-    "image": "assets/images/2.png",
-    "birthday": "2000.02.19"
-  },
-  {
-    "name": "김십오",
-    "phone": "010-9000-8000",
-    "image": "assets/images/2.png",
-    "birthday": "2000.02.20"
-  },
-  {
-    "name": "김십육",
-    "phone": "010-9000-8000",
-    "image": "assets/images/2.png",
-    "birthday": "2000.02.21"
-  },
-  {
-    "name": "김십칠",
-    "phone": "010-9000-8000",
-    "image": "assets/images/2.png",
-    "birthday": "2000.02.22"
-  },
-  {
-    "name": "김십팔",
-    "phone": "010-9000-8000",
-    "image": "assets/images/2.png",
-    "birthday": "2000.02.23"
-  },
-  {
-    "name": "김십구",
-    "phone": "010-9000-8000",
-    "image": "assets/images/2.png",
-    "birthday": "2000.02.24"
+    "name": "신진영",
+    "phone": "010-2936-7208",
+    "image": "assets/images/jinyeong.png",
+    "birthday": "2002.03.12"
   }
 ]
