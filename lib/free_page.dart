@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import './contact.dart';
 import 'contacts_provider.dart';
 
+
+//이게 전체 총괄
 class free_page extends StatelessWidget {
   const free_page({super.key});
 
@@ -36,6 +38,8 @@ class free_page extends StatelessWidget {
   }
 }
 
+
+//전화번호 퀴즈 - 탭2
 class PhoneNumberQuizPage extends StatefulWidget {
   @override
   _QuizPageState createState() => _QuizPageState();
@@ -46,6 +50,7 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
   String correctAnswer='';
   Contact? contact;
   int currentIndex = 0;
+  int answercount_phonenumber = 0;
 
   @override
   void initState() {
@@ -86,6 +91,9 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
 
   void _checkAnswer(String selectedOption) {
     bool isCorrect = selectedOption == correctAnswer;
+    if (isCorrect) {
+      answercount_phonenumber++;
+    }
 
     showDialog(
       context: context,
@@ -100,6 +108,13 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
                 Navigator.of(context).pop();
               },
               child: Text('닫기'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _nextQuestion();
+              },
+              child: Text('다음문제'),
             ),
           ],
         );
@@ -137,7 +152,7 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
       builder: (context) {
         return AlertDialog(
           title: Text('모든 문제가 끝났습니다!'),
-          content: Text('모든 문제를 완료하셨습니다.'),
+          content: Text('맞춘 문제 개수: $answercount_phonenumber'),
           actions: [
             TextButton(
               onPressed: () {
@@ -231,6 +246,9 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
   }
 }
 
+
+//이름 퀴즈 - 탭1
+
 class NameQuizPage extends StatefulWidget {
   @override
   _NameQuizPageState createState() => _NameQuizPageState();
@@ -241,15 +259,31 @@ class _NameQuizPageState extends State<NameQuizPage> {
   String correctAnswer = '';
   Contact? contact;
   int currentIndex = 0;
+  int answercount_name = 0;
+  List<Contact> filteredContacts = [];
 
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     final contactsProvider = Provider.of<ContactsProvider>(context, listen: false);
+  //     if (contactsProvider.contacts.isNotEmpty) {
+  //       setState(() {
+  //         contact = contactsProvider.contacts[currentIndex];
+  //         _generateNameQuizOptions();
+  //       });
+  //     }
+  //   });
+  // }
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final contactsProvider = Provider.of<ContactsProvider>(context, listen: false);
-      if (contactsProvider.contacts.isNotEmpty) {
+      filteredContacts = contactsProvider.contacts.where((contact) => contact.image != 'assets/images/default.png').toList();
+      if (filteredContacts.isNotEmpty) {
         setState(() {
-          contact = contactsProvider.contacts[currentIndex];
+          contact = filteredContacts[currentIndex];
           _generateNameQuizOptions();
         });
       }
@@ -268,7 +302,8 @@ class _NameQuizPageState extends State<NameQuizPage> {
     final contactsProvider = Provider.of<ContactsProvider>(context, listen: false);
     Random random = Random();
     while (options.length < 3) {
-      String randomName = contactsProvider.contacts[random.nextInt(contactsProvider.contacts.length)].name;
+      // String randomName = contactsProvider.contacts[random.nextInt(contactsProvider.contacts.length)].name;
+      String randomName = filteredContacts[random.nextInt(filteredContacts.length)].name;
       if (!options.contains(randomName)) {
         options.add(randomName);
       }
@@ -279,6 +314,9 @@ class _NameQuizPageState extends State<NameQuizPage> {
 
   void _checkAnswer(String selectedOption) {
     bool isCorrect = selectedOption == correctAnswer;
+    if (isCorrect) {
+      answercount_name++;
+    }
 
     showDialog(
       context: context,
@@ -294,6 +332,13 @@ class _NameQuizPageState extends State<NameQuizPage> {
               },
               child: Text('닫기'),
             ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _nextQuestion();
+              },
+              child: Text('다음문제'),
+            ),
           ],
         );
       },
@@ -301,24 +346,38 @@ class _NameQuizPageState extends State<NameQuizPage> {
   }
 
   void _nextQuestion() {
-    final contactsProvider = Provider.of<ContactsProvider>(context, listen: false);
+    // final contactsProvider = Provider.of<ContactsProvider>(context, listen: false);
+    // setState(() {
+    //   if (currentIndex < contactsProvider.contacts.length - 1) {
+    //     currentIndex++;
+    //     contact = contactsProvider.contacts[currentIndex];
+    //     _generateNameQuizOptions();
+    //   }
     setState(() {
-      if (currentIndex < contactsProvider.contacts.length - 1) {
+      if (currentIndex < filteredContacts.length - 1) {
         currentIndex++;
-        contact = contactsProvider.contacts[currentIndex];
+        contact = filteredContacts[currentIndex];
         _generateNameQuizOptions();
-      } else {
+      }
+    else {
         _showCompletionDialog();
       }
     });
   }
 
   void _previousQuestion() {
-    final contactsProvider = Provider.of<ContactsProvider>(context, listen: false);
+    // final contactsProvider = Provider.of<ContactsProvider>(context, listen: false);
+    // setState(() {
+    //   if (currentIndex > 0) {
+    //     currentIndex--;
+    //     contact = contactsProvider.contacts[currentIndex];
+    //     _generateNameQuizOptions();
+    //   }
+    // });
     setState(() {
       if (currentIndex > 0) {
         currentIndex--;
-        contact = contactsProvider.contacts[currentIndex];
+        contact = filteredContacts[currentIndex];
         _generateNameQuizOptions();
       }
     });
@@ -330,7 +389,7 @@ class _NameQuizPageState extends State<NameQuizPage> {
       builder: (context) {
         return AlertDialog(
           title: Text('모든 문제가 끝났습니다!'),
-          content: Text('모든 문제를 완료하셨습니다.'),
+          content: Text('맞춘 문제 개수: $answercount_name'),
           actions: [
             TextButton(
               onPressed: () {
@@ -351,16 +410,23 @@ class _NameQuizPageState extends State<NameQuizPage> {
       return Image.file(File(imageUrl), fit: BoxFit.cover);
     }
   }
-
   @override
   Widget build(BuildContext context) {
-    final contactsProvider = Provider.of<ContactsProvider>(context);
-    if (contactsProvider.contacts.isEmpty) {
+    if (filteredContacts.isEmpty) {
       return Center(child: CircularProgressIndicator());
     }
     if (options.isEmpty) {
       return Center(child: CircularProgressIndicator());
     }
+  // @override
+  // Widget build(BuildContext context) {
+  //   final contactsProvider = Provider.of<ContactsProvider>(context);
+  //   if (contactsProvider.contacts.isEmpty) {
+  //     return Center(child: CircularProgressIndicator());
+  //   }
+  //   if (options.isEmpty) {
+  //     return Center(child: CircularProgressIndicator());
+  //   }
 
     return Padding(
       padding: const EdgeInsets.all(0.0),
@@ -374,7 +440,7 @@ class _NameQuizPageState extends State<NameQuizPage> {
                 onPressed: _previousQuestion,
                 child: Text('이전 문제'),
               ),
-              Text('${currentIndex + 1}/${contactsProvider.contacts.length}'),
+              Text('${currentIndex + 1}/${filteredContacts.length}'),
               TextButton(
                 onPressed: _nextQuestion,
                 child: Text('다음 문제'),
@@ -418,6 +484,10 @@ class _NameQuizPageState extends State<NameQuizPage> {
   }
 
 }
+
+
+
+//생일 퀴즈 - 탭3
 class BirthdayQuizPage extends StatefulWidget {
   @override
   _BirthdayQuizPageState createState() => _BirthdayQuizPageState();
@@ -428,6 +498,7 @@ class _BirthdayQuizPageState extends State<BirthdayQuizPage> {
   String correctAnswer = '';
   Contact? contact;
   int currentIndex = 0;
+  int answercount_birth = 0;
 
   @override
   void initState() {
@@ -469,6 +540,9 @@ class _BirthdayQuizPageState extends State<BirthdayQuizPage> {
 
   void _checkAnswer(String selectedOption) {
     bool isCorrect = selectedOption == correctAnswer;
+    if (isCorrect) {
+      answercount_birth++;
+    }
 
     showDialog(
       context: context,
@@ -483,6 +557,13 @@ class _BirthdayQuizPageState extends State<BirthdayQuizPage> {
                 Navigator.of(context).pop();
               },
               child: Text('닫기'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _nextQuestion();
+              },
+              child: Text('다음문제'),
             ),
           ],
         );
@@ -520,7 +601,7 @@ class _BirthdayQuizPageState extends State<BirthdayQuizPage> {
       builder: (context) {
         return AlertDialog(
           title: Text('모든 문제가 끝났습니다!'),
-          content: Text('모든 문제를 완료하셨습니다.'),
+          content: Text('맞춘 문제 개수: $answercount_birth'),
           actions: [
             TextButton(
               onPressed: () {
@@ -579,7 +660,7 @@ class _BirthdayQuizPageState extends State<BirthdayQuizPage> {
               child: contact != null ? _getImageProvider(contact!.image) : SizedBox.shrink(),
             ),
           ),
-          SizedBox(height: 20),
+
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
