@@ -454,11 +454,11 @@ class _BirthdayQuizPageState extends State<BirthdayQuizPage> {
 
     Random random = Random();
     while (options.length < 3) {
-      String randomBirthday = "${random.nextInt(12) + 1}".padLeft(2, '0') +
+      String randomBirthday = "${random.nextInt(8) + 1998}".padLeft(2, '0') +
           "." +
-          "${random.nextInt(30) + 1}".padLeft(2, '0') +
+          "${random.nextInt(12) + 1}".padLeft(2, '0') +
           "." +
-          "${random.nextInt(50) + 1970}";
+          "${random.nextInt(30) + 1}";
       if (!options.contains(randomBirthday)) {
         options.add(randomBirthday);
       }
