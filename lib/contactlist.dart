@@ -66,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       backgroundImage: _getImageProvider(contact.image),
                     ),
                     onTap: (){
-                      showProfile(context, contact, index, updateContact);
+                      showProfile(context, contact, index, true, updateContact);
                     },
                     trailing:IconButton(
                       icon: const Icon(Icons.call),
