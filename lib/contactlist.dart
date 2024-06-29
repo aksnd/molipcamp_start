@@ -45,14 +45,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('전화번호부'),
-      ),
-      body: Consumer<ContactsProvider>(
-        builder: (context,contactsProvider, child){
-          final contacts = contactsProvider.contacts;
-          return ListView.builder(
+    return Consumer<ContactsProvider>(
+      builder: (context,contactsProvider, child){
+        final contacts = contactsProvider.contacts;
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('전화번호부'),
+          ),
+          body: ListView.builder(
             itemCount: contacts.length,
             itemBuilder: (context, index) {
               final contact = contacts[index];
@@ -77,14 +77,18 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               );
             },
-          );
-        }
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: ()=>print("button clicked"),
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Contact defaultContact = Contact(name: 'no name', phone: '010-0000-0000', image: 'assets/images/2.png', birthday: '01/01/2000');
+              addContact(defaultContact);
+              editProfile(context, contacts[contacts.length-1],contacts.length-1,updateContact);
+            },
+            tooltip: 'Increment',
+            child: const Icon(Icons.add),
+          ),
+        );
+      }
     );
   }
   ImageProvider _getImageProvider(String imageUrl) {
@@ -101,6 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void addContact(Contact addContact){
     Provider.of<ContactsProvider>(context, listen: false).addContact(addContact);
   }
+
 
   void _makePhoneCall(String phoneNumber) async {
     final String cleanedPhoneNumber = phoneNumber.replaceAll(RegExp(r'[^0-9]'),'');

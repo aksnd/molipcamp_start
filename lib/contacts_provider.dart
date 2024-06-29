@@ -56,4 +56,11 @@ class ContactsProvider extends ChangeNotifier {
       notifyListeners(); // Notify listeners after updating a contact
     }
   }
+  void deleteContact(int index) {
+    if (index >= 0 && index < _contacts.length) {
+      _contacts.removeAt(index);
+      _saveContacts(); // Save contacts to SharedPreferences after deleting
+      notifyListeners(); // Notify listeners after deleting a contact
+    }
+  }
 }
