@@ -80,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              Contact defaultContact = Contact(name: 'no name', phone: '010-0000-0000', image: 'assets/images/2.png', birthday: '2000.01.01');
+              Contact defaultContact = Contact(name: 'no name', phone: '010-0000-0000', image: 'assets/images/default.png', birthday: '2000.01.01');
               addContact(defaultContact);
               editProfile(context, contacts[contacts.length-1],contacts.length-1,updateContact);
             },
