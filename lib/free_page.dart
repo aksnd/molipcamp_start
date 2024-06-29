@@ -44,7 +44,7 @@ class PhoneNumberQuizPage extends StatefulWidget {
 class _QuizPageState extends State<PhoneNumberQuizPage> {
   List<String> options=[];
   String correctAnswer='';
-  Contact? contact;
+  SimpleContact? contact;
   int currentIndex = 0;
 
   @override
@@ -239,7 +239,7 @@ class NameQuizPage extends StatefulWidget {
 class _NameQuizPageState extends State<NameQuizPage> {
   List<String> options = [];
   String correctAnswer = '';
-  Contact? contact;
+  SimpleContact? contact;
   int currentIndex = 0;
 
   @override
@@ -426,7 +426,7 @@ class BirthdayQuizPage extends StatefulWidget {
 class _BirthdayQuizPageState extends State<BirthdayQuizPage> {
   List<String> options = [];
   String correctAnswer = '';
-  Contact? contact;
+  SimpleContact? contact;
   int currentIndex = 0;
 
   @override

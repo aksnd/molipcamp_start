@@ -6,9 +6,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import './contact.dart'; // Adjust as per your project structure
 
 class ContactsProvider extends ChangeNotifier {
-  List<Contact> _contacts = [];
+  List<SimpleContact> _contacts = [];
 
-  List<Contact> get contacts => _contacts;
+  List<SimpleContact> get contacts => _contacts;
 
   ContactsProvider() {
     // Load contacts initially when the provider is instantiated
@@ -22,12 +22,12 @@ class ContactsProvider extends ChangeNotifier {
       List<String>? jsonContacts = prefs.getStringList('contacts');
 
       if (jsonContacts != null) {
-        _contacts = jsonContacts.map((jsonContact) => Contact.fromJson(jsonDecode(jsonContact))).toList();
+        _contacts = jsonContacts.map((jsonContact) => SimpleContact.fromJson(jsonDecode(jsonContact))).toList();
       } else {
         // If no contacts in SharedPreferences, load from asset file
         final jsonString = await rootBundle.loadString('assets/contacts.json');
         final List<dynamic> jsonData = jsonDecode(jsonString);
-        _contacts = jsonData.map((item) => Contact.fromJson(item)).toList();
+        _contacts = jsonData.map((item) => SimpleContact.fromJson(item)).toList();
       }
       _saveContacts();
       notifyListeners(); // Notify listeners when contacts are loaded
@@ -43,13 +43,13 @@ class ContactsProvider extends ChangeNotifier {
   }
 
 
-  void addContact(Contact contact) { //추가하기
+  void addContact(SimpleContact contact) { //추가하기
     _contacts.add(contact);
     _saveContacts();
     notifyListeners(); // Notify listeners after adding a new contact
   }
 
-  void updateContact(int index, Contact updatedContact) { //수정하기
+  void updateContact(int index, SimpleContact updatedContact) { //수정하기
     if (index >= 0 && index < _contacts.length) {
       _contacts[index] = updatedContact;
       _saveContacts();
