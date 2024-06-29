@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import './contact.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'contacts_provider.dart';
+import 'package:provider/provider.dart';
 
 Future<void> showProfile(BuildContext context, Contact contact, int index, onUpdate) async {
   return showDialog<void>(
@@ -21,6 +23,13 @@ Future<void> showProfile(BuildContext context, Contact contact, int index, onUpd
           ),
         ),
         actions: <Widget>[
+          TextButton(
+            child: Text('delete'),
+            onPressed: () {
+              Navigator.of(context).pop();
+              Provider.of<ContactsProvider>(context, listen: false).deleteContact(index);
+            },
+          ),
           TextButton(
             child: Text('edit'),
             onPressed: () {
@@ -55,9 +64,6 @@ Future<void> editProfile(BuildContext context, Contact contact,int index, onUpda
       editedContact.image = pickedFile.path;
     }
   }
-
-
-
   return showDialog<void>(
     context: context,
     barrierDismissible: false, // user must tap button to dismiss
