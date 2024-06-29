@@ -26,9 +26,9 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
-  late List<String> options;
-  late String correctAnswer;
-  late Contact contact;
+  List<String> options=[];
+  String correctAnswer='';
+  Contact? contact;
   int currentIndex = 0;
 
   @override
@@ -46,7 +46,12 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   void _generateQuizOptions() {
-    correctAnswer = contact.phone;
+
+    if (contact == null)
+      {print("contact = null");
+      return;}
+
+    correctAnswer = contact!.phone;
     options = [correctAnswer];
 
     Random random = Random();
@@ -144,6 +149,9 @@ class _QuizPageState extends State<QuizPage> {
     if (contactsProvider.contacts.isEmpty) {
       return Center(child: CircularProgressIndicator());
     }
+    if (options.isEmpty) {
+      return Center(child: CircularProgressIndicator());
+    }
 
     return Padding(
       padding: const EdgeInsets.all(15.0),
@@ -169,7 +177,7 @@ class _QuizPageState extends State<QuizPage> {
             height: 150,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
-              child: _getImageProvider(contact.image),
+              child: contact != null ? _getImageProvider(contact!.image) : SizedBox.shrink(),
             ),
           ),
           SizedBox(height: 20),
@@ -179,7 +187,7 @@ class _QuizPageState extends State<QuizPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "이름 ${contact.name}",
+                  contact != null ? "이름: ${contact!.name}" : "이름 없음",
                   style: TextStyle(
                     fontSize: 18,
                     color: Colors.grey[700],
