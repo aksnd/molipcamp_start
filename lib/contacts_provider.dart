@@ -13,6 +13,7 @@ class ContactsProvider extends ChangeNotifier {
   ContactsProvider() {
     // Load contacts initially when the provider is instantiated
     _loadContacts();
+
   }
 
   Future<void> _loadContacts() async {
