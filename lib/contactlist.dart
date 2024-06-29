@@ -98,8 +98,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             icon: const Icon(Icons.save),
                             onPressed: () async {
                               ContactService.Contact newContact = ContactService.Contact(
-                                displayName: contact.name,
-                                phones: [ContactService.Item(label: "mobile", value: contact.phone)],
+                                givenName: contact.name,
+                                phones: [ContactService.Item(label: "mobile", value: contact.phone.replaceAll(RegExp(r'[^0-9]'),''))],
                               );
                               try{
                                 await ContactService.ContactsService.addContact(newContact);
@@ -137,7 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () async {
                   NativeContact.Contact? contact = await _contactPicker.selectContact();
                   if(contact!=null && contact.fullName!=null && contact.phoneNumbers!=null){
-                    SimpleContact defaultContact = SimpleContact(name: contact.fullName!, phone: contact.phoneNumbers![0], image: 'assets/images/2.png', birthday: '2000.01.01');
+                    SimpleContact defaultContact = SimpleContact(name: contact.fullName!, phone: contact.phoneNumbers![0], image: 'assets/images/default.png', birthday: '2000.01.01');
                     addContact(defaultContact);
                   }
 

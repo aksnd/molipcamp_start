@@ -260,7 +260,7 @@ class _NameQuizPageState extends State<NameQuizPage> {
   SimpleContact? contact;
   int currentIndex = 0;
   int answercount_name = 0;
-  List<Contact> filteredContacts = [];
+  List<SimpleContact> filteredContacts = [];
 
   // @override
   // void initState() {
