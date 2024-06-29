@@ -3,36 +3,74 @@ import './contact.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
-Future<void> showProfile(BuildContext context, Contact contact, int index, onUpdate) async {
+Future<void> showProfile(BuildContext context, Contact contact, int index, bool condition, onUpdate) async {
   return showDialog<void>(
     context: context,
     barrierDismissible: false, // user must tap button to dismiss
     builder: (BuildContext context) {
       return AlertDialog(
+        contentPadding: EdgeInsets.all(10),
         title: Text('프로필 확인'),
-        content: SingleChildScrollView(
-          child: ListBody(
-            children: <Widget>[
-              Text('This is a popup dialog.'),
-              Text(contact.name),
-              Text(contact.phone),
-              Text(contact.image),
-            ],
-          ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // _getImageProvider(contact.image),
+            SizedBox(height: 20,),
+            Container(
+              width: 200, // 원하는 크기로 설정하세요
+              height: 200, // 원하는 크기로 설정하세요
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: _getImageProvider(contact.image),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "이름 ${contact.name}",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    "전화번호 ${contact.phone}",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    "생일 ${contact.birthday}",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
         actions: <Widget>[
-          TextButton(
-            child: Text('edit'),
-            onPressed: () {
-              Navigator.of(context).pop();
-              editProfile(context, contact,index,onUpdate);
-            },
-          ),
+          if (condition)
+            TextButton(
+              child: Text('edit'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                editProfile(context, contact,index,onUpdate);
+              },
+            ),
           TextButton(
             child: Text('close'),
             onPressed: () {
               Navigator.of(context).pop();
-            },
+              },
           ),
         ],
       );
@@ -46,6 +84,7 @@ Future<void> editProfile(BuildContext context, Contact contact,int index, onUpda
   Contact editedContact = Contact(name: contact.name, phone: contact.phone, image: contact.image, birthday: contact.birthday);
   final TextEditingController _controller1 = TextEditingController(text: editedContact.name);
   final TextEditingController _controller2 = TextEditingController(text: editedContact.phone);
+  final TextEditingController _controller3 = TextEditingController(text: editedContact.birthday);
 
   Future getImage(ImageSource imageSource) async {
     //pickedFile에 ImagePicker로 가져온 이미지가 담긴다.
@@ -63,15 +102,81 @@ Future<void> editProfile(BuildContext context, Contact contact,int index, onUpda
     barrierDismissible: false, // user must tap button to dismiss
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Input Dialog'),
+        //title: Text('Input Dialog'),
+        contentPadding: EdgeInsets.all(10),
         content: SingleChildScrollView(
           child: Column(
-            children: <Widget>[
-              TextField(
-                controller: _controller1,
+            children: [
+              // _getImageProvider(contact.image),
+              SizedBox(height: 20,),
+              Container(
+                width: 200, // 원하는 크기로 설정하세요
+                height: 200, // 원하는 크기로 설정하세요
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: _getImageProvider(contact.image),
+                ),
               ),
-              TextField(
-                controller: _controller2,
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          "이름 ",
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.grey[700],
+                            ),
+                        ),
+                        const SizedBox(width: 8), // 간격 조정을 위한 SizedBox
+                        Expanded(
+                          child: TextField(
+                            controller: _controller1,
+                            ),
+                          ),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          "전화번호 ",
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                        const SizedBox(width: 8), // 간격 조정을 위한 SizedBox
+                        Expanded(
+                          child: TextField(
+                            controller: _controller2,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          "생일 ",
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                        const SizedBox(width: 8), // 간격 조정을 위한 SizedBox
+                        Expanded(
+                          child: TextField(
+                            controller: _controller3,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -94,9 +199,11 @@ Future<void> editProfile(BuildContext context, Contact contact,int index, onUpda
             onPressed: () {
               editedContact.name = _controller1.text;
               editedContact.phone = _controller2.text;
+              editedContact.birthday = _controller3.text;
               onUpdate(index, editedContact);
               print(_controller1.text);
               print(_controller2.text);
+              print(_controller3.text);
               Navigator.of(context).pop();
             },
           ),
@@ -109,3 +216,10 @@ Future<void> editProfile(BuildContext context, Contact contact,int index, onUpda
 }
 
 
+Image _getImageProvider(String imageUrl) {
+  if (imageUrl.startsWith('asset') || imageUrl.startsWith('assets')) {
+    return Image.asset(imageUrl, fit:BoxFit.cover);
+  } else {
+    return Image.file(File(imageUrl),fit:BoxFit.cover);
+  }
+}
