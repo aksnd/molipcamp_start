@@ -65,5 +65,29 @@
     "phone": "010-2936-7208",
     "image": "assets/images/jinyeong.png",
     "birthday": "2002.03.12"
+  },
+  {
+    "name": "강지우",
+    "phone": "010-7240-2030",
+    "image": "assets/images/jiu.png",
+    "birthday": "2003.03.16"
+  },
+  {
+    "name": "정민규",
+    "phone": "010-9183-8247",
+    "image": "assets/images/mingyu.png",
+    "birthday": "2000.04.21"
+  },
+  {
+    "name": "김민경",
+    "phone": "010-2247-6890",
+    "image": "assets/images/mingyeong.png",
+    "birthday": "2002.05.03"
+  },
+  {
+    "name": "진유하",
+    "phone": "010-3290-2565",
+    "image": "assets/images/default.png",
+    "birthday": "2004.02.27"
   }
 ]
