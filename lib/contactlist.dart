@@ -103,7 +103,12 @@ class _MyHomePageState extends State<MyHomePage> {
                               );
                               try{
                                 await ContactService.ContactsService.addContact(newContact);
-                                print('Contact saved to device successfully');
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('연락처에 저장되었습니다'),
+                                    duration: Duration(seconds: 2),
+                                  ),
+                                );
                               }catch(e){
                                 print('Failed to save contact to device: $e');
                               }
