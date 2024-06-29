@@ -1,27 +1,27 @@
 [
   {
-    "name": "이테디",
-    "phone": "010-1000-2000",
+    "name": "장세일",
+    "phone": "010-0000-0000",
     "image": "assets/images/1.png",
-    "birthday": "2000.01.01"
+    "birthday": "2001.02.20"
   },
   {
-    "name": "김스틴",
-    "phone": "010-9000-8000",
+    "name": "김민경",
+    "phone": "010-0000-0000",
     "image": "assets/images/2.png",
-    "birthday": "2000.02.02"
+    "birthday": "2002.05.03"
   },
   {
-    "name": "이주노",
-    "phone": "010-3000-3000",
+    "name": "양세희",
+    "phone": "010-0000-0000",
     "image": "assets/images/3.png",
-    "birthday": "2000.03.03"
+    "birthday": "2001.06.27"
   },
   {
-    "name": "임헬렌",
-    "phone": "010-2000-8000",
+    "name": "박상우",
+    "phone": "010-0000-0000",
     "image": "assets/images/4.png",
-    "birthday": "2000.04.04"
+    "birthday": "2003.01.25"
   },
   {
     "name": "염해리",
