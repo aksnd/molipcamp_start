@@ -13,7 +13,7 @@ class free_page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('퀴즈'),
@@ -21,7 +21,8 @@ class free_page extends StatelessWidget {
           bottom: TabBar(
             tabs: [
               Tab(text: '이름 퀴즈'),
-              Tab(text: '전화번호 퀴즈'),
+              Tab(text: 'MBTI'),
+              Tab(text: '전화번호'),
               Tab(text: '생일 퀴즈'),
             ],
           ),
@@ -29,6 +30,7 @@ class free_page extends StatelessWidget {
         body: TabBarView(
           children: [
             NameQuizPage(),
+            MBTIQuizPage(),
             PhoneNumberQuizPage(),
             BirthdayQuizPage(),
           ],
@@ -262,19 +264,6 @@ class _NameQuizPageState extends State<NameQuizPage> {
   int answercount_name = 0;
   List<SimpleContact> filteredContacts = [];
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   WidgetsBinding.instance.addPostFrameCallback((_) {
-  //     final contactsProvider = Provider.of<ContactsProvider>(context, listen: false);
-  //     if (contactsProvider.contacts.isNotEmpty) {
-  //       setState(() {
-  //         contact = contactsProvider.contacts[currentIndex];
-  //         _generateNameQuizOptions();
-  //       });
-  //     }
-  //   });
-  // }
   @override
   void initState() {
     super.initState();
@@ -346,13 +335,7 @@ class _NameQuizPageState extends State<NameQuizPage> {
   }
 
   void _nextQuestion() {
-    // final contactsProvider = Provider.of<ContactsProvider>(context, listen: false);
-    // setState(() {
-    //   if (currentIndex < contactsProvider.contacts.length - 1) {
-    //     currentIndex++;
-    //     contact = contactsProvider.contacts[currentIndex];
-    //     _generateNameQuizOptions();
-    //   }
+
     setState(() {
       if (currentIndex < filteredContacts.length - 1) {
         currentIndex++;
@@ -366,14 +349,7 @@ class _NameQuizPageState extends State<NameQuizPage> {
   }
 
   void _previousQuestion() {
-    // final contactsProvider = Provider.of<ContactsProvider>(context, listen: false);
-    // setState(() {
-    //   if (currentIndex > 0) {
-    //     currentIndex--;
-    //     contact = contactsProvider.contacts[currentIndex];
-    //     _generateNameQuizOptions();
-    //   }
-    // });
+
     setState(() {
       if (currentIndex > 0) {
         currentIndex--;
@@ -418,15 +394,7 @@ class _NameQuizPageState extends State<NameQuizPage> {
     if (options.isEmpty) {
       return Center(child: CircularProgressIndicator());
     }
-  // @override
-  // Widget build(BuildContext context) {
-  //   final contactsProvider = Provider.of<ContactsProvider>(context);
-  //   if (contactsProvider.contacts.isEmpty) {
-  //     return Center(child: CircularProgressIndicator());
-  //   }
-  //   if (options.isEmpty) {
-  //     return Center(child: CircularProgressIndicator());
-  //   }
+
 
     return Padding(
       padding: const EdgeInsets.all(0.0),
@@ -571,6 +539,8 @@ class _BirthdayQuizPageState extends State<BirthdayQuizPage> {
     );
   }
 
+
+
   void _nextQuestion() {
     final contactsProvider = Provider.of<ContactsProvider>(context, listen: false);
     setState(() {
@@ -676,6 +646,212 @@ class _BirthdayQuizPageState extends State<BirthdayQuizPage> {
                 SizedBox(height: 8),
                 Text(
                   "이 사람의 생일은?",
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.grey[700],
+                  ),
+                ),
+                SizedBox(height: 16),
+                ...options.map((option) => ElevatedButton(
+                  onPressed: () => _checkAnswer(option),
+                  child: Text(option),
+                )),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+//MBTI 퀴즈 - 탭2
+
+class MBTIQuizPage extends StatefulWidget {
+  @override
+  _MBTIQuizPageState createState() => _MBTIQuizPageState();
+}
+
+class _MBTIQuizPageState extends State<MBTIQuizPage> {
+  List<String> options = [];
+  String correctAnswer = '';
+  SimpleContact? contact;
+  int currentIndex = 0;
+  int answerCountMbti = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final contactsProvider = Provider.of<ContactsProvider>(context, listen: false);
+      if (contactsProvider.contacts.isNotEmpty) {
+        setState(() {
+          contact = contactsProvider.contacts[currentIndex];
+          _generateMBTIQuizOptions();
+        });
+      }
+    });
+  }
+
+  void _generateMBTIQuizOptions() {
+    if (contact == null) {
+      print("contact = null");
+      return;
+    }
+
+    correctAnswer = contact!.mbti;
+    options = [correctAnswer];
+
+    Random random = Random();
+    final contactsProvider = Provider.of<ContactsProvider>(context, listen: false);
+
+    while (options.length < 3) {
+      String randomMBTI = contactsProvider.contacts[random.nextInt(contactsProvider.contacts.length)].mbti;
+      if (!options.contains(randomMBTI)) {
+        options.add(randomMBTI);
+      }
+    }
+
+    options.shuffle();
+  }
+
+  void _checkAnswer(String selectedOption) {
+    bool isCorrect = selectedOption == correctAnswer;
+    if (isCorrect) {
+      answerCountMbti++;
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(isCorrect ? '정답!' : '오답'),
+          content: Text(isCorrect ? '축하합니다! 정답입니다.' : '아쉽네요. 정답은 $correctAnswer입니다.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('닫기'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _nextQuestion();
+              },
+              child: Text('다음문제'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _nextQuestion() {
+    final contactsProvider = Provider.of<ContactsProvider>(context, listen: false);
+    setState(() {
+      if (currentIndex < contactsProvider.contacts.length - 1) {
+        currentIndex++;
+        contact = contactsProvider.contacts[currentIndex];
+        _generateMBTIQuizOptions();
+      } else {
+        _showCompletionDialog();
+      }
+    });
+  }
+
+  void _previousQuestion() {
+    final contactsProvider = Provider.of<ContactsProvider>(context, listen: false);
+    setState(() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        contact = contactsProvider.contacts[currentIndex];
+        _generateMBTIQuizOptions();
+      }
+    });
+  }
+
+  void _showCompletionDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('모든 문제가 끝났습니다!'),
+          content: Text('맞춘 문제 개수: $answerCountMbti'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('닫기'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Image _getImageProvider(String imageUrl) {
+    if (imageUrl.startsWith('asset') || imageUrl.startsWith('assets')) {
+      return Image.asset(imageUrl, fit: BoxFit.cover);
+    } else {
+      return Image.file(File(imageUrl), fit: BoxFit.cover);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final contactsProvider = Provider.of<ContactsProvider>(context);
+    if (contactsProvider.contacts.isEmpty) {
+      return Center(child: CircularProgressIndicator());
+    }
+    if (options.isEmpty) {
+      return Center(child: CircularProgressIndicator());
+    }
+
+    return Padding(
+      padding: const EdgeInsets.all(0.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              TextButton(
+                onPressed: _previousQuestion,
+                child: Text('이전 문제'),
+              ),
+              Text('${currentIndex + 1}/${contactsProvider.contacts.length}'),
+              TextButton(
+                onPressed: _nextQuestion,
+                child: Text('다음 문제'),
+              ),
+            ],
+          ),
+          Container(
+            width: 120,
+            height: 120,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: contact != null ? _getImageProvider(contact!.image) : SizedBox.shrink(),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  contact != null ? "이름: ${contact!.name}" : "이름 없음",
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.grey[700],
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "이 사람의 MBTI는?",
                   style: TextStyle(
                     fontSize: 18,
                     color: Colors.grey[700],
