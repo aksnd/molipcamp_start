@@ -56,6 +56,14 @@ Future<void> showProfile(BuildContext context, SimpleContact contact, int index,
                       color: Colors.grey[700],
                     ),
                   ),
+                  SizedBox(height: 8),
+                  Text(
+                    "그룹 ${contact.group}",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey[700],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -93,7 +101,7 @@ Future<void> showProfile(BuildContext context, SimpleContact contact, int index,
 
 
 Future<void> editProfile(BuildContext context, SimpleContact contact,int index, onUpdate) async {
-  SimpleContact editedContact = SimpleContact(name: contact.name, phone: contact.phone, image: contact.image, birthday: contact.birthday);
+  SimpleContact editedContact = SimpleContact(name: contact.name, phone: contact.phone, image: contact.image, birthday: contact.birthday,group: contact.group);
   final TextEditingController _controller1 = TextEditingController(text: editedContact.name);
   final TextEditingController _controller2 = TextEditingController(text: editedContact.phone);
   final TextEditingController _controller3 = TextEditingController(text: editedContact.birthday);
@@ -184,6 +192,26 @@ Future<void> editProfile(BuildContext context, SimpleContact contact,int index, 
                         ),
                       ],
                     ),
+                    SizedBox(height: 8),
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          "그룹 ",
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                        const SizedBox(width: 8), // 간격 조정을 위한 SizedBox
+                        Expanded(child: GroupDropdown(
+                          groups: ['default','Group 1', 'Group 2', 'Group 3'],
+                          selectedGroup: editedContact.group,
+                          onGroupChanged:(String newGroup){
+                            editedContact.group= newGroup;
+                            }
+                        )),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -232,3 +260,59 @@ Image _getImageProvider(String imageUrl) {
     return Image.file(File(imageUrl),fit:BoxFit.cover);
   }
 }
+class GroupDropdown extends StatefulWidget {
+  final List<String> groups;
+  final String selectedGroup;
+  final Function(String) onGroupChanged;
+
+  const GroupDropdown({
+    Key? key,
+    required this.groups,
+    required this.selectedGroup,
+    required this.onGroupChanged,
+  }) : super(key: key);
+
+  @override
+  _GroupDropdownState createState() => _GroupDropdownState();
+}
+
+class _GroupDropdownState extends State<GroupDropdown>{
+  String? _selectedGroup;
+
+  @override
+  void initState(){
+    super.initState();
+    _selectedGroup = widget.selectedGroup;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButton<String>(
+      value: _selectedGroup,
+      hint: Text(_selectedGroup ?? 'Select Group'),
+      items: widget.groups.map((String group) {
+        return DropdownMenuItem<String>(
+          value: group,
+          child: Text(group),
+        );
+      }).toList()
+        ..add(
+          const DropdownMenuItem<String>(
+            value: 'new_group',
+            child: Text('새 그룹 추가'),
+          ),
+        ),
+      onChanged: (String? newValue) {
+        if (newValue == 'new_group') {
+          //수정하기
+        } else if (newValue != null) {
+          setState((){
+            _selectedGroup=newValue;
+          });
+          widget.onGroupChanged(newValue);
+        }
+      },
+    );
+  }
+}
+

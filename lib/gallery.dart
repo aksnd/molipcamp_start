@@ -35,7 +35,10 @@ class _PhotoGridScreenState extends State<PhotoGridScreen> {
       ),
       body: Consumer<ContactsProvider>(
         builder: (context,contactsProvider, child){
-          final contacts = contactsProvider.contacts;
+          final contacts = (contactsProvider.contacts.where((c)=>
+              (c.image!='assets/images/default.png')).toList()
+          );
+
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: GridView.builder(

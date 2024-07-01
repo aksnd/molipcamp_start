@@ -6,14 +6,16 @@ class SimpleContact {
   String phone;
   String image;
   String birthday;
+  String group;
 
-  SimpleContact({required this.name, required this.phone, required this.image, required this.birthday});
+  SimpleContact({required this.name, required this.phone, required this.image, required this.birthday, required this.group});
 
   Map<String, dynamic> toJson() => {
     'name': name,
     'phone': phone,
     'image': image,
     'birthday': birthday,
+    'group': group,
   };
 
   factory SimpleContact.fromJson(Map<String, dynamic> json) {
@@ -22,6 +24,7 @@ class SimpleContact {
       phone: json['phone'],
       image: json['image'],
       birthday: json['birthday'],
+      group: json['group'],
     );
   }
 

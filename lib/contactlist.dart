@@ -130,7 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               FloatingActionButton(
                 onPressed: () {
-                  SimpleContact defaultContact = SimpleContact(name: 'no name', phone: '010-0000-0000', image: 'assets/images/default.png', birthday: '2000.01.01');
+                  SimpleContact defaultContact = SimpleContact(name: 'no name', phone: '010-0000-0000', image: 'assets/images/default.png', birthday: '2000.01.01',group:'default');
                   addContact(defaultContact);
                   editProfile(context, contacts[contacts.length-1],contacts.length-1,updateContact);
                 },
@@ -142,7 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () async {
                   NativeContact.Contact? contact = await _contactPicker.selectContact();
                   if(contact!=null && contact.fullName!=null && contact.phoneNumbers!=null){
-                    SimpleContact defaultContact = SimpleContact(name: contact.fullName!, phone: contact.phoneNumbers![0], image: 'assets/images/default.png', birthday: '2000.01.01');
+                    SimpleContact defaultContact = SimpleContact(name: contact.fullName!, phone: contact.phoneNumbers![0], image: 'assets/images/default.png', birthday: '2000.01.01',group:'default');
                     addContact(defaultContact);
                   }
 
