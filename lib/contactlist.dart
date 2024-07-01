@@ -77,7 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
               IconButton( //전화번호부 기반 추가
-                icon: Icon(Icons.contacts),
+                icon: Icon(Icons.contact_phone),
                 onPressed: () async {
                   NativeContact.Contact? contact = await _contactPicker.selectContact();
                   if(contact!=null && contact.fullName!=null && contact.phoneNumbers!=null){
@@ -128,11 +128,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     IconButton(
-                                      icon: const Icon(Icons.call),
+                                      icon: const Icon(Icons.call_rounded),
                                       onPressed: () => _makePhoneCall(contact.phone),
                                     ),
                                     IconButton(
-                                      icon: const Icon(Icons.save),
+                                      // icon: const Icon(Icons.save),
+                                      icon: const Icon(Icons.download),
                                       onPressed: () async {
                                         ContactService.Contact newContact = ContactService.Contact(
                                           givenName: contact.name,
