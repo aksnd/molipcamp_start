@@ -151,6 +151,7 @@ Future<void> addNewGroup(BuildContext context, SimpleContact contact,Set<String>
             child: Text('Close'),
             onPressed: () {
               Navigator.of(context).pop();
+              editProfile(context, contact, groups, onUpdate);
             },
           ),
           TextButton(
