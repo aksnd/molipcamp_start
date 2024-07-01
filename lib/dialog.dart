@@ -156,11 +156,10 @@ Future<void> addNewGroup(BuildContext context, SimpleContact contact,Set<String>
           TextButton(
             child: Text('Save'),
             onPressed: () {
-              SimpleContact newContact=contact;
               contact.group=_controllerGroup.text;
               Provider.of<GroupsProvider>(context, listen: false).addGroups(_controllerGroup.text);
               Navigator.of(context).pop();
-              editProfile(context, newContact,groups,onUpdate);
+              editProfile(context, contact,groups,onUpdate);
             },
           ),
         ],
@@ -205,8 +204,8 @@ Future<void> editProfile(BuildContext context, SimpleContact contact,Set<String>
                   // _getImageProvider(contact.image),
                   SizedBox(height: 20,),
                   Container(
-                    width: 200, // 원하는 크기로 설정하세요
-                    height: 200, // 원하는 크기로 설정하세요
+                    width: 150, // 원하는 크기로 설정하세요
+                    height: 150, // 원하는 크기로 설정하세요
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8.0),
                       child: _getImageProvider(editedContact.image),
@@ -309,7 +308,6 @@ Future<void> editProfile(BuildContext context, SimpleContact contact,Set<String>
                                   editedContact.phone = _controller2.text;
                                   editedContact.birthday = _controller3.text;
                                   editedContact.mbti = _controller4.text;
-                                  onUpdate(contact.index, editedContact);
                                   Navigator.of(context).pop();
                                   addNewGroup(context, editedContact, groups,onUpdate);
 
