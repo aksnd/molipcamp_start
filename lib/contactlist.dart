@@ -72,9 +72,8 @@ class _MyHomePageState extends State<MyHomePage> {
               IconButton(
                 icon: Icon(Icons.add),
                 onPressed: () {
-                  SimpleContact defaultContact = SimpleContact(index: 1,name: '!이름을 입력하세요!', phone: '010-0000-0000', image: 'assets/images/default.png', birthday: '2000.01.01');
-                  addContact(defaultContact);
-                  editProfile(context, contacts[0],updateContact);
+                  SimpleContact defaultContact = SimpleContact(index: 1,name: '', phone: '010-0000-0000', image: 'assets/images/default.png', birthday: '2000.01.01');
+                  editProfile(context, defaultContact,addContact);
                 },
               ),
               IconButton(
@@ -82,8 +81,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () async {
                   NativeContact.Contact? contact = await _contactPicker.selectContact();
                   if(contact!=null && contact.fullName!=null && contact.phoneNumbers!=null){
-                    SimpleContact defaultContact = SimpleContact(index: 1,name: contact.fullName!, phone: contact.phoneNumbers![0], image: 'assets/images/default.png', birthday: '2000.01.01');
-                    addContact(defaultContact);
+                    SimpleContact defaultContact = SimpleContact(index: 1,name: contact.fullName!, phone: formatPhoneNumber(contact.phoneNumbers![0]), image: 'assets/images/default.png', birthday: '2000.01.01');
+                    addContact(1, defaultContact);
 
                   }
                 },
@@ -181,10 +180,18 @@ class _MyHomePageState extends State<MyHomePage> {
     Provider.of<ContactsProvider>(context, listen: false).updateContact(index, editedContact);
   }
 
-  void addContact(SimpleContact addContact){
+  void addContact(int _, SimpleContact addContact){
     Provider.of<ContactsProvider>(context, listen: false).addContact(addContact);
   }
-
+  String formatPhoneNumber(String phoneNumber) {
+    if (phoneNumber.length == 10) {
+      return '${phoneNumber.substring(0, 3)}-${phoneNumber.substring(3, 6)}-${phoneNumber.substring(6)}';
+    } else if (phoneNumber.length == 11) {
+      return '${phoneNumber.substring(0, 3)}-${phoneNumber.substring(3, 7)}-${phoneNumber.substring(7)}';
+    }
+    // Handle other cases if necessary
+    return phoneNumber; // Return original if not a recognized format
+  }
 
   void _makePhoneCall(String phoneNumber) async {
     final String cleanedPhoneNumber = phoneNumber.replaceAll(RegExp(r'[^0-9]'),'');

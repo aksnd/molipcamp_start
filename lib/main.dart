@@ -6,10 +6,15 @@ import 'contacts_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter/services.dart';
 
-/// Flutter code sample for [BottomNavigationBar].
-
-void main() => runApp(const projectapp1());
+void main(){
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+  runApp(const projectapp1());
+}
 
 class projectapp1 extends StatelessWidget {
   const projectapp1({super.key});

@@ -9,10 +9,10 @@ class ContactsProvider extends ChangeNotifier {
   List<SimpleContact> _contacts = [];
   List<SimpleContact> _filteredcontacts = [];
   String _SearchQuery = '';
-  List<SimpleContact> get contacts => _contacts;
-  List<SimpleContact> get filteredcontacts => _filteredcontacts;
+  List<SimpleContact> get contacts => _contacts; //외부에서 contacts로 접근할때 _contacts와 같게 취급
+  List<SimpleContact> get filteredcontacts => _filteredcontacts; //외부에서 filteredcontacts로 접근할때 _filteredcontacts와 같게 취급
   ContactsProvider() {
-    // Load contacts initially when the provider is instantiated
+    //첫 Contacts가 생성될때 실행되는 함수, load만으로 가져옴
     _loadContacts();
   }
 
@@ -20,18 +20,19 @@ class ContactsProvider extends ChangeNotifier {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       List<String>? jsonContacts = prefs.getStringList('contacts');
-
-      if (jsonContacts != null) {
+      //sharedPreferences에서 app 내 data 가져오기
+      if (jsonContacts != null) { //app 내 data로 _contacts 만들기
         _contacts = jsonContacts.map((jsonContact) => SimpleContact.fromJson(jsonDecode(jsonContact))).toList();
-      } else {
+      } else { //app내 data가 없을때 json으로 _contacts 만들기
         // If no contacts in SharedPreferences, load from asset file
         final jsonString = await rootBundle.loadString('assets/contacts.json');
         final List<dynamic> jsonData = jsonDecode(jsonString);
         _contacts = jsonData.map((item) => SimpleContact.fromJson(item)).toList();
       }
-      _sortContacts();
-      _filterContacts();
-      _saveContacts();
+      //contacts의 전반적인 상태관리 함수 4개라 생각하면 편함
+      _sortContacts(); //_contacts ㄱㄴㄷ순 정렬, index 재할당
+      _saveContacts(); //_contacts 그대로 sharedPreference에 저장
+      _filterContacts(); //검색중이었을떄, 검색중인놈만 뜨게하기위해 filteredcontacts 재검색
       notifyListeners(); // Notify listeners when contacts are loaded
     } catch (e) {
       print('Error loading contacts: $e');
@@ -39,7 +40,7 @@ class ContactsProvider extends ChangeNotifier {
     }
   }
 
-  void _filterContacts() {
+  void _filterContacts() { // 상태관리 함수 3호 검색어랑 매칭해서 확인하기
     if (_SearchQuery.isEmpty) {
       _filteredcontacts = _contacts;
     } else {
@@ -57,7 +58,7 @@ class ContactsProvider extends ChangeNotifier {
     await prefs.setStringList('contacts', jsonContacts);
   }
 
-  void _sortContacts(){
+  void _sortContacts(){ // ㄱㄴㄷ순 정렬, _updateIndexes는 인덱스 실제 배열하고 같게 해서 _contacts에 저장
     _contacts.sort((a,b)=> a.name.compareTo(b.name));
     _updateIndexes();
   }
@@ -96,7 +97,7 @@ class ContactsProvider extends ChangeNotifier {
     }
   }
 
-  void updateSearchQuery(String query) {
+  void updateSearchQuery(String query) { // 검색할때 Query가 변경되었을때 사용되는 함수
     _SearchQuery = query;
     _filterContacts();
     notifyListeners();
