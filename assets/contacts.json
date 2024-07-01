@@ -1,47 +1,55 @@
 [
   {
+    "index": 0,
     "name": "박영민",
     "phone": "010-3752-4088",
     "image": "assets/images/yeongmin.png",
     "birthday": "2003.02.28"
   },
   {
+    "index": 1,
     "name": "박윤서",
     "phone": "010-6722-2655",
     "image": "assets/images/yunseo.png",
     "birthday": "2004.06.22"
   },
   {
+    "index": 2,
     "name": "조승완",
     "phone": "010-8809-0553",
     "image": "assets/images/seungwan.png",
     "birthday": "2002.02.24"
   },
   {
+    "index": 3,
     "name": "박지훈",
     "phone": "010-3103-0490",
     "image": "assets/images/jihun.png",
     "birthday": "2002.06.06"
   },
   {
+    "index": 4,
     "name": "안규찬",
     "phone": "010-9082-4532",
     "image": "assets/images/gyuchan.png",
     "birthday": "2002.03.01"
   },
   {
+    "index": 5,
     "name": "하은수",
     "phone": "010-3219-7172",
     "image": "assets/images/eunsu.png",
     "birthday": "2002.02.08"
   },
   {
+    "index": 6,
     "name": "양세희",
     "phone": "010-5914-8862",
     "image": "assets/images/sehui.png",
     "birthday": "2001.06.27"
   },
   {
+    "index": 7,
     "name": "윤우성",
     "phone": "010-7567-5464",
     "image": "assets/images/useong.png",
@@ -49,18 +57,21 @@
   },
 
   {
+    "index": 8,
     "name": "김예락",
     "phone": "010-7334-1296",
     "image": "assets/images/yerak.png",
     "birthday": "2002.02.13"
   },
   {
+    "index": 9,
     "name": "강승완",
     "phone": "010-5207-6070",
     "image": "assets/images/kseungwan.png",
     "birthday": "2001.05.09"
   },
   {
+    "index": 10,
     "name": "신진영",
     "phone": "010-2936-7208",
     "image": "assets/images/jinyeong.png",

@@ -7,13 +7,13 @@ import './contact.dart'; // Adjust as per your project structure
 
 class ContactsProvider extends ChangeNotifier {
   List<SimpleContact> _contacts = [];
-
+  List<SimpleContact> _filteredcontacts = [];
+  String _SearchQuery = '';
   List<SimpleContact> get contacts => _contacts;
-
+  List<SimpleContact> get filteredcontacts => _filteredcontacts;
   ContactsProvider() {
     // Load contacts initially when the provider is instantiated
     _loadContacts();
-
   }
 
   Future<void> _loadContacts() async { //기본적으로 load하고, 만약 비어있으면 json에서 가져오는 함수
@@ -29,6 +29,8 @@ class ContactsProvider extends ChangeNotifier {
         final List<dynamic> jsonData = jsonDecode(jsonString);
         _contacts = jsonData.map((item) => SimpleContact.fromJson(item)).toList();
       }
+      _sortContacts();
+      _filterContacts();
       _saveContacts();
       notifyListeners(); // Notify listeners when contacts are loaded
     } catch (e) {
@@ -36,10 +38,27 @@ class ContactsProvider extends ChangeNotifier {
       // Handle error as needed (e.g., show error message)
     }
   }
+
+  void _filterContacts() {
+    if (_SearchQuery.isEmpty) {
+      _filteredcontacts = _contacts;
+    } else {
+      _filteredcontacts = _contacts
+          .where((contact) => contact.name.toLowerCase().contains(_SearchQuery.toLowerCase()))
+          .toList();
+    }
+  }
+
+
+
   Future<void> _saveContacts() async { //sharedpreferences로 저장 (수정할때 마다 선언 필요)
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> jsonContacts = _contacts.map((contact) => jsonEncode(contact.toJson())).toList();
     await prefs.setStringList('contacts', jsonContacts);
+  }
+
+  void _sortContacts(){
+    _contacts.sort((a,b)=> a.name.compareTo(b.name));
   }
 
 
@@ -52,6 +71,8 @@ class ContactsProvider extends ChangeNotifier {
   void updateContact(int index, SimpleContact updatedContact) { //수정하기
     if (index >= 0 && index < _contacts.length) {
       _contacts[index] = updatedContact;
+      _sortContacts();
+      _filterContacts();
       _saveContacts();
       notifyListeners(); // Notify listeners after updating a contact
     }
@@ -60,7 +81,15 @@ class ContactsProvider extends ChangeNotifier {
     if (index >= 0 && index < _contacts.length) {
       _contacts.removeAt(index);
       _saveContacts(); // Save contacts to SharedPreferences after deleting
+      _filterContacts();
       notifyListeners(); // Notify listeners after deleting a contact
     }
   }
+
+  void updateSearchQuery(String query) {
+    _SearchQuery = query;
+    _filterContacts();
+    notifyListeners();
+  }
+
 }
