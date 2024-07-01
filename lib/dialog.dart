@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'contacts_provider.dart';
 import 'package:provider/provider.dart';
 
+
 Future<void> showProfile(BuildContext context, SimpleContact contact,bool condition , onUpdate) async {
   return showDialog<void>(
     context: context,
