@@ -30,18 +30,34 @@ class _PhotoGridScreenState extends State<PhotoGridScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Photo Grid'),
-      ),
-      body: Consumer2<ContactsProvider,GroupsProvider>(
-        builder: (context,contactsProvider, groupsProvider, child){
-          final contacts = (contactsProvider.contacts.where((c)=>
-              (c.image!='assets/images/default.png')).toList()
-          );
-          final groups= groupsProvider.groups;
-
-          return Padding(
+    return Consumer2<ContactsProvider,GroupsProvider>(
+      builder: (context,contactsProvider, groupsProvider, child){
+        final groups = groupsProvider.groups;
+        final contacts = (contactsProvider.widget2GroupFilteredContacts.where((c)=>
+        (c.image!='assets/images/default.png')).toList()
+        );
+        List<String> dropDownGroup = contactsProvider.nowGroup;
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Photo Grid'),
+            actions: <Widget>[
+              Container(
+                  width: 130,
+                  alignment: Alignment.centerRight,
+                  child:Flexible(
+                      child: GroupDropdown(
+                          groups: groups,
+                          selectedGroup: dropDownGroup[1],
+                          onGroupChanged:(String newGroup){
+                            dropDownGroup[1]= newGroup;
+                            Provider.of<ContactsProvider>(context, listen: false).updateNowGroup(dropDownGroup, 1);
+                          }
+                      )
+                  )),
+              const SizedBox(width: 10,),
+            ],
+          ),
+          body:Padding(
             padding: const EdgeInsets.all(8.0),
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -57,16 +73,16 @@ class _PhotoGridScreenState extends State<PhotoGridScreen> {
                     _showContactDetails(context, contacts[index], groups);
                   },
                   /*child: Image.asset(
-                    contacts[index].image,
-                    fit: BoxFit.cover,
-                  ),*/
+              contacts[index].image,
+              fit: BoxFit.cover,
+            ),*/
                   child: _getImageProvider(contacts[index].image),
                 );
               },
             ),
-          );
-        }
-      ),
+          ),
+        );
+      }
     );
   }
   

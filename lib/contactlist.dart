@@ -65,11 +65,27 @@ class _MyHomePageState extends State<MyHomePage> {
       builder: (context,contactsProvider, groupsProvider, child){
         final contacts = contactsProvider.contacts;
         final groups = groupsProvider.groups;
+        List<String> dropDownGroup = contactsProvider.nowGroup;
         final filteredcontacts = contactsProvider.filteredcontacts;
+        final groupfilteredcontacts = contactsProvider.widget1GroupFilteredContacts;
         return Scaffold(
           appBar: AppBar(
             title: const Text('전화번호부'),
             actions: <Widget>[
+              Container(
+                width: 130,
+                alignment: Alignment.centerRight,
+                child:Flexible(
+                  child: GroupDropdown(
+                    groups: groups,
+                    selectedGroup: dropDownGroup[0],
+                    onGroupChanged:(String newGroup){
+                      dropDownGroup[0]= newGroup;
+                      Provider.of<ContactsProvider>(context, listen: false).updateNowGroup(dropDownGroup, 0);
+                    }
+                  )
+                )),
+              const SizedBox(width: 10,),
               IconButton( // 단순추가
                 icon: Icon(Icons.add),
                 onPressed: () {
@@ -107,9 +123,9 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               Expanded(
                 child:ListView.builder(
-                  itemCount: filteredcontacts.length,
+                  itemCount: groupfilteredcontacts.length,
                   itemBuilder: (context, index) { // 이 index는 filteredcontacts의 index 이므로 Read말고는 부적합
-                    final contact = filteredcontacts[index];
+                    final contact = groupfilteredcontacts[index];
                     return Column(
                       children: [
                         ListTile(
