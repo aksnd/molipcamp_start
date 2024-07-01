@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'contacts_provider.dart';
 import 'package:provider/provider.dart';
 
-Future<void> showProfile(BuildContext context, SimpleContact contact, int index,bool condition , onUpdate) async {
+Future<void> showProfile(BuildContext context, SimpleContact contact,bool condition , onUpdate) async {
   return showDialog<void>(
     context: context,
     barrierDismissible: false, // user must tap button to dismiss
@@ -65,7 +65,7 @@ Future<void> showProfile(BuildContext context, SimpleContact contact, int index,
               child: Text('delete'),
               onPressed: () {
                 Navigator.of(context).pop();
-                Provider.of<ContactsProvider>(context, listen: false).deleteContact(index);
+                Provider.of<ContactsProvider>(context, listen: false).deleteContact(contact.index);
               },
             ),
           if (condition)
@@ -73,7 +73,7 @@ Future<void> showProfile(BuildContext context, SimpleContact contact, int index,
               child: Text('edit'),
               onPressed: () {
                 Navigator.of(context).pop();
-                editProfile(context, contact,index,onUpdate);
+                editProfile(context, contact,onUpdate);
               },
             ),
           TextButton(
@@ -90,8 +90,8 @@ Future<void> showProfile(BuildContext context, SimpleContact contact, int index,
 
 
 
-Future<void> editProfile(BuildContext context, SimpleContact contact,int index, onUpdate) async {
-  SimpleContact editedContact = SimpleContact(name: contact.name, phone: contact.phone, image: contact.image, birthday: contact.birthday);
+Future<void> editProfile(BuildContext context, SimpleContact contact, onUpdate) async {
+  SimpleContact editedContact = SimpleContact(index:contact.index, name: contact.name, phone: contact.phone, image: contact.image, birthday: contact.birthday);
   final TextEditingController _controller1 = TextEditingController(text: editedContact.name);
   final TextEditingController _controller2 = TextEditingController(text: editedContact.phone);
   final TextEditingController _controller3 = TextEditingController(text: editedContact.birthday);
@@ -207,7 +207,7 @@ Future<void> editProfile(BuildContext context, SimpleContact contact,int index, 
               editedContact.name = _controller1.text;
               editedContact.phone = _controller2.text;
               editedContact.birthday = _controller3.text;
-              onUpdate(index, editedContact);
+              onUpdate(contact.index, editedContact);
               print(_controller1.text);
               print(_controller2.text);
               print(_controller3.text);

@@ -72,9 +72,9 @@ class _MyHomePageState extends State<MyHomePage> {
               IconButton(
                 icon: Icon(Icons.add),
                 onPressed: () {
-                  SimpleContact defaultContact = SimpleContact(name: 'no name', phone: '010-0000-0000', image: 'assets/images/default.png', birthday: '2000.01.01');
+                  SimpleContact defaultContact = SimpleContact(index: 1,name: '!이름을 입력하세요!', phone: '010-0000-0000', image: 'assets/images/default.png', birthday: '2000.01.01');
                   addContact(defaultContact);
-                  editProfile(context, contacts[contacts.length-1],contacts.length-1,updateContact);
+                  editProfile(context, contacts[0],updateContact);
                 },
               ),
               IconButton(
@@ -82,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () async {
                   NativeContact.Contact? contact = await _contactPicker.selectContact();
                   if(contact!=null && contact.fullName!=null && contact.phoneNumbers!=null){
-                    SimpleContact defaultContact = SimpleContact(name: contact.fullName!, phone: contact.phoneNumbers![0], image: 'assets/images/default.png', birthday: '2000.01.01');
+                    SimpleContact defaultContact = SimpleContact(index: 1,name: contact.fullName!, phone: contact.phoneNumbers![0], image: 'assets/images/default.png', birthday: '2000.01.01');
                     addContact(defaultContact);
 
                   }
@@ -120,7 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               backgroundImage: _getImageProvider(contact.image),
                             ),
                             onTap: (){
-                              showProfile(context, contact, index, true, updateContact);
+                              showProfile(context, contact, true, updateContact);
                             },
                             trailing: SizedBox(
                                 width: 100,

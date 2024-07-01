@@ -59,12 +59,21 @@ class ContactsProvider extends ChangeNotifier {
 
   void _sortContacts(){
     _contacts.sort((a,b)=> a.name.compareTo(b.name));
+    _updateIndexes();
+  }
+
+  void _updateIndexes() {
+    for (int i = 0; i < _contacts.length; i++) {
+      _contacts[i].index = i;
+    }
   }
 
 
   void addContact(SimpleContact contact) { //추가하기
     _contacts.add(contact);
+    _sortContacts();
     _saveContacts();
+    _filterContacts();
     notifyListeners(); // Notify listeners after adding a new contact
   }
 
@@ -72,14 +81,15 @@ class ContactsProvider extends ChangeNotifier {
     if (index >= 0 && index < _contacts.length) {
       _contacts[index] = updatedContact;
       _sortContacts();
-      _filterContacts();
       _saveContacts();
+      _filterContacts();
       notifyListeners(); // Notify listeners after updating a contact
     }
   }
   void deleteContact(int index) { //삭제하기
     if (index >= 0 && index < _contacts.length) {
       _contacts.removeAt(index);
+      _sortContacts();
       _saveContacts(); // Save contacts to SharedPreferences after deleting
       _filterContacts();
       notifyListeners(); // Notify listeners after deleting a contact
