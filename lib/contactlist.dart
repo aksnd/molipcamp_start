@@ -8,7 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'contact.dart'; // Contact 클래스를 import
 import './dialog.dart';
 import 'package:provider/provider.dart';
-import 'contacts_provider.dart';
+import 'groups_provider.dart';
 import 'package:image_picker/image_picker.dart';
 
 // 이 아래는 전화번호부 관련 import
@@ -61,15 +61,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ContactsProvider>(
-      builder: (context,contactsProvider, child){
+    return Consumer2<ContactsProvider,GroupsProvider>(
+      builder: (context,contactsProvider, groupsProvider, child){
         final contacts = contactsProvider.contacts;
+        final groups = groupsProvider.groups;
         return Scaffold(
           appBar: AppBar(
             title: const Text('전화번호부'),
           ),
           body: ListView.builder(
-            itemCount: contacts.length,
+          itemCount: contacts.length,
             itemBuilder: (context, index) {
               final contact = contacts[index];
               return Column(
@@ -82,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       backgroundImage: _getImageProvider(contact.image),
                     ),
                     onTap: (){
-                      showProfile(context, contact, index, true, updateContact);
+                      showProfile(context, contact,groups, index, true, updateContact);
                     },
                     trailing: SizedBox(
                       width: 100,
@@ -132,7 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () {
                   SimpleContact defaultContact = SimpleContact(name: 'no name', phone: '010-0000-0000', image: 'assets/images/default.png', birthday: '2000.01.01',group:'default');
                   addContact(defaultContact);
-                  editProfile(context, contacts[contacts.length-1],contacts.length-1,updateContact);
+                  editProfile(context, contacts[contacts.length-1],groups, contacts.length-1, updateContact);
                 },
                 tooltip: 'Increment',
                 child: const Icon(Icons.add),

@@ -5,6 +5,7 @@ import './contact.dart';
 import './dialog.dart';
 import 'package:provider/provider.dart';
 import 'contacts_provider.dart';
+import 'groups_provider.dart';
 import 'dart:io';
 class gallery extends StatelessWidget {
   @override
@@ -33,11 +34,12 @@ class _PhotoGridScreenState extends State<PhotoGridScreen> {
       appBar: AppBar(
         title: Text('Photo Grid'),
       ),
-      body: Consumer<ContactsProvider>(
-        builder: (context,contactsProvider, child){
+      body: Consumer2<ContactsProvider,GroupsProvider>(
+        builder: (context,contactsProvider, groupsProvider, child){
           final contacts = (contactsProvider.contacts.where((c)=>
               (c.image!='assets/images/default.png')).toList()
           );
+          final groups= groupsProvider.groups;
 
           return Padding(
             padding: const EdgeInsets.all(8.0),
@@ -52,7 +54,7 @@ class _PhotoGridScreenState extends State<PhotoGridScreen> {
                 return GestureDetector(
                   onTap: () {
                     // 사진 클릭 시 데이터 불러오기
-                    _showContactDetails(context, contacts[index]);
+                    _showContactDetails(context, contacts[index], groups);
                   },
                   /*child: Image.asset(
                     contacts[index].image,
@@ -76,7 +78,7 @@ class _PhotoGridScreenState extends State<PhotoGridScreen> {
     }
   }
   
-  void _showContactDetails(BuildContext context, SimpleContact contact) {
-    showProfile(context, contact, 0, false, Null);
+  void _showContactDetails(BuildContext context, SimpleContact contact, Set<String> groups) {
+    showProfile(context, contact, groups, 0, false, Null);
   }
 }

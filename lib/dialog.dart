@@ -5,9 +5,10 @@ import './contact.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'contacts_provider.dart';
+import 'groups_provider.dart';
 import 'package:provider/provider.dart';
 
-Future<void> showProfile(BuildContext context, SimpleContact contact, int index,bool condition , onUpdate) async {
+Future<void> showProfile(BuildContext context, SimpleContact contact, Set<String> groups, int index,bool condition , onUpdate) async {
   return showDialog<void>(
     context: context,
     barrierDismissible: false, // user must tap button to dismiss
@@ -83,7 +84,7 @@ Future<void> showProfile(BuildContext context, SimpleContact contact, int index,
               child: Text('edit'),
               onPressed: () {
                 Navigator.of(context).pop();
-                editProfile(context, contact,index,onUpdate);
+                editProfile(context, contact,groups,index,onUpdate);
               },
             ),
           TextButton(
@@ -100,7 +101,7 @@ Future<void> showProfile(BuildContext context, SimpleContact contact, int index,
 
 
 
-Future<void> editProfile(BuildContext context, SimpleContact contact,int index, onUpdate) async {
+Future<void> editProfile(BuildContext context, SimpleContact contact,Set<String> groups,int index, onUpdate) async {
   SimpleContact editedContact = SimpleContact(name: contact.name, phone: contact.phone, image: contact.image, birthday: contact.birthday,group: contact.group);
   final TextEditingController _controller1 = TextEditingController(text: editedContact.name);
   final TextEditingController _controller2 = TextEditingController(text: editedContact.phone);
@@ -204,7 +205,7 @@ Future<void> editProfile(BuildContext context, SimpleContact contact,int index, 
                         ),
                         const SizedBox(width: 8), // 간격 조정을 위한 SizedBox
                         Expanded(child: GroupDropdown(
-                          groups: ['default','Group 1', 'Group 2', 'Group 3'],
+                          groups: groups,
                           selectedGroup: editedContact.group,
                           onGroupChanged:(String newGroup){
                             editedContact.group= newGroup;
@@ -261,7 +262,7 @@ Image _getImageProvider(String imageUrl) {
   }
 }
 class GroupDropdown extends StatefulWidget {
-  final List<String> groups;
+  final Set<String> groups;
   final String selectedGroup;
   final Function(String) onGroupChanged;
 
@@ -305,7 +306,7 @@ class _GroupDropdownState extends State<GroupDropdown>{
       onChanged: (String? newValue) {
         if (newValue == 'new_group') {
           //수정하기
-        } else if (newValue != null) {
+        } else if (newValue != null&& newValue !=_selectedGroup) {
           setState((){
             _selectedGroup=newValue;
           });
