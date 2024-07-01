@@ -27,7 +27,7 @@ class GroupsProvider extends ChangeNotifier {
         final List<dynamic> jsonData = jsonDecode(jsonString);
         List<SimpleContact> contacts = jsonData.map((item) => SimpleContact.fromJson(item)).toList();
         List<String> groups = contacts.map((item)=> item.group).toList();
-        groups.add('result');
+        groups.add('default');
         _groups= groups.toSet();
       }
       _saveGroups();
