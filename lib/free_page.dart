@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './contact.dart';
 import 'contacts_provider.dart';
+import 'ranking_provider.dart';
 
 
 //이게 전체 총괄
@@ -41,7 +42,7 @@ class free_page extends StatelessWidget {
 }
 
 
-//전화번호 퀴즈 - 탭2
+//전화번호 퀴즈 - 탭3
 class PhoneNumberQuizPage extends StatefulWidget {
   @override
   _QuizPageState createState() => _QuizPageState();
@@ -152,9 +153,21 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
     showDialog(
       context: context,
       builder: (context) {
+        TextEditingController _phonenumber_nicknameController = TextEditingController();
         return AlertDialog(
           title: Text('모든 문제가 끝났습니다!'),
-          content: Text('맞춘 문제 개수: $answercount_phonenumber'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('맞춘 문제 개수: $answercount_phonenumber'),
+              TextField(
+                controller: _phonenumber_nicknameController,
+                decoration: InputDecoration(
+                  labelText: '랭킹용 닉네임을 설정해주세요',
+                ),
+              ),
+            ],
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -162,11 +175,149 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
               },
               child: Text('닫기'),
             ),
+            TextButton(
+              onPressed: () {
+                Provider.of<RankingProvider>(context, listen: false)
+                    .addRanking(_phonenumber_nicknameController.text, answercount_phonenumber, '전화번호');
+                Navigator.of(context).pop();
+              },
+              child: Text('랭킹 등록'),
+            ),
           ],
         );
       },
     );
   }
+  // void _showRankingModal() {
+  //   showModalBottomSheet(
+  //     context: context,
+  //     builder: (context) {
+  //       return Consumer<RankingProvider>(
+  //         builder: (context, rankingProvider, child) {
+  //           final rankings = rankingProvider.getRankings('전화번호');
+  //           if (rankings == null || rankings.isEmpty) {
+  //             return Center(
+  //               child: Padding(
+  //                 padding: const EdgeInsets.all(10.0),
+  //                 child: Text(
+  //                   '아직 랭킹이 없습니다. 문제를 풀고 랭킹에 이름을 올려보세요!',
+  //                   textAlign: TextAlign.center,
+  //                   style: TextStyle(fontSize: 18),
+  //                 ),
+  //               ),
+  //             );
+  //           }
+  //           return ListView.builder(
+  //             itemCount: rankings.length,
+  //             itemBuilder: (context, index) {
+  //               final entry = rankings[index];
+  //               return ListTile(
+  //                 title: Text(entry.nickname),
+  //                 trailing: Text(entry.score.toString()),
+  //               );
+  //             },
+  //           );
+  //         },
+  //       );
+  //     },
+  //   );
+  // }
+  void _showRankingModal() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Consumer<RankingProvider>(
+          builder: (context, rankingProvider, child) {
+            final rankings = rankingProvider.getRankings('전화번호');
+
+            return Container(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.amber,
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Text(
+                      '전화번호 퀴즈 랭킹',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  rankings.isEmpty
+                      ? Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        '아직 랭킹이 없습니다. 문제를 풀고 랭킹에 이름을 올려보세요!',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.purple,
+                        ),
+                      ),
+                    ),
+                  )
+                      : Expanded(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: rankings.length,
+                      itemBuilder: (context, index) {
+                        final entry = rankings[index];
+                        return Container(
+                          margin: EdgeInsets.symmetric(vertical: 8),
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.purple[100],
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    entry.nickname,
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  Text(
+                                    '점수: ${entry.score}',
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                ],
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.close),
+                                onPressed: () {
+                                  // Implement logic to remove ranking entry
+                                  rankingProvider.deleteRanking(entry.nickname,'전화번호');
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+
 
   Image _getImageProvider(String imageUrl) {
     if (imageUrl.startsWith('asset') || imageUrl.startsWith('assets')) {
@@ -186,7 +337,9 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
       return Center(child: CircularProgressIndicator());
     }
 
-    return Padding(
+    return Scaffold(
+
+    body:Padding(
       padding: const EdgeInsets.all(10.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -241,10 +394,16 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
                 )),
               ],
             ),
+
           ),
         ],
       ),
-    );
+    ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _showRankingModal,
+        child: Icon(Icons.leaderboard),
+        tooltip: '전화번호 퀴즈 랭킹보기',
+      ),);
   }
 }
 
