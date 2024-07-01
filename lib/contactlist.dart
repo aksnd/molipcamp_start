@@ -69,14 +69,14 @@ class _MyHomePageState extends State<MyHomePage> {
           appBar: AppBar(
             title: const Text('전화번호부'),
             actions: <Widget>[
-              IconButton(
+              IconButton( // 단순추가
                 icon: Icon(Icons.add),
                 onPressed: () {
                   SimpleContact defaultContact = SimpleContact(index: 1,name: '', phone: '010-0000-0000', image: 'assets/images/default.png', birthday: '2000.01.01');
                   editProfile(context, defaultContact,addContact);
                 },
               ),
-              IconButton(
+              IconButton( //전화번호부 기반 추가
                 icon: Icon(Icons.contacts),
                 onPressed: () async {
                   NativeContact.Contact? contact = await _contactPicker.selectContact();
@@ -93,13 +93,13 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: TextField(
+                child: TextField( // 검색 기능을 위한 입력칸
                   decoration: InputDecoration(
                     labelText: 'Search',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.search),
                   ),
-                  onChanged: (query) {
+                  onChanged: (query) { //변경될때마다 query기반 연락처 검색(이름 기준)
                     Provider.of<ContactsProvider>(context, listen: false).updateSearchQuery(query);
                   },
                 ),
@@ -107,7 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Expanded(
                 child:ListView.builder(
                   itemCount: filteredcontacts.length,
-                  itemBuilder: (context, index) {
+                  itemBuilder: (context, index) { // 이 index는 filteredcontacts의 index 이므로 Read말고는 부적합
                     final contact = filteredcontacts[index];
                     return Column(
                       children: [
@@ -169,21 +169,21 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     );
   }
-  ImageProvider _getImageProvider(String imageUrl) {
+  ImageProvider _getImageProvider(String imageUrl) { //사진 방식에 따라 다르게 load하는 함수
     if (imageUrl.startsWith('asset') || imageUrl.startsWith('assets')) {
       return AssetImage(imageUrl);
     } else {
       return FileImage(File(imageUrl));
     }
   }
-  void updateContact(int index, SimpleContact editedContact) {
+  void updateContact(int index, SimpleContact editedContact) { //수정
     Provider.of<ContactsProvider>(context, listen: false).updateContact(index, editedContact);
   }
 
-  void addContact(int _, SimpleContact addContact){
+  void addContact(int _, SimpleContact addContact){ //index는 필요없지만, updateContact와 똑같이 입력받을려고 저래해놓음.
     Provider.of<ContactsProvider>(context, listen: false).addContact(addContact);
   }
-  String formatPhoneNumber(String phoneNumber) {
+  String formatPhoneNumber(String phoneNumber) { //전화번호 양식
     if (phoneNumber.length == 10) {
       return '${phoneNumber.substring(0, 3)}-${phoneNumber.substring(3, 6)}-${phoneNumber.substring(6)}';
     } else if (phoneNumber.length == 11) {
