@@ -73,8 +73,8 @@ class _MyHomePageState extends State<MyHomePage> {
               IconButton( // 단순추가
                 icon: Icon(Icons.add),
                 onPressed: () {
-                  SimpleContact defaultContact = SimpleContact(index: 1,name: '', phone: '010-0000-0000', image: 'assets/images/default.png', birthday: '2000.01.01',mbti: 'ENTJ');
-                  editProfile(context, defaultContact,addContact);
+                  SimpleContact defaultContact = SimpleContact(index: 1,name: '', phone: '010-0000-0000', image: 'assets/images/default.png', birthday: '2000.01.01', group: 'default', mbti: 'ENTJ');
+                  editProfile(context, defaultContact, groups, addContact);
                 },
               ),
               IconButton( //전화번호부 기반 추가
@@ -82,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () async {
                   NativeContact.Contact? contact = await _contactPicker.selectContact();
                   if(contact!=null && contact.fullName!=null && contact.phoneNumbers!=null){
-                    SimpleContact defaultContact = SimpleContact(index: 1,name: contact.fullName!, phone: formatPhoneNumber(contact.phoneNumbers![0]), image: 'assets/images/default.png', birthday: '2000.01.01',mbti: 'ENTJ');
+                    SimpleContact defaultContact = SimpleContact(index: 1,name: contact.fullName!, phone: formatPhoneNumber(contact.phoneNumbers![0]),group:'default', image: 'assets/images/default.png', birthday: '2000.01.01',mbti: 'ENTJ');
                     addContact(1, defaultContact);
 
                   }
@@ -120,7 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               backgroundImage: _getImageProvider(contact.image),
                             ),
                             onTap: (){
-                              showProfile(context, contact, true, updateContact);
+                              showProfile(context, contact, groups, true, updateContact);
                             },
                             trailing: SizedBox(
                                 width: 100,

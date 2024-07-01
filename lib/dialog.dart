@@ -14,67 +14,69 @@ Future<void> showProfile(BuildContext context, SimpleContact contact, Set<String
       return AlertDialog(
         contentPadding: EdgeInsets.all(10),
         title: Text('프로필 확인'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // _getImageProvider(contact.image),
-            SizedBox(height: 20,),
-            Container(
-              width: 200, // 원하는 크기로 설정하세요
-              height: 200, // 원하는 크기로 설정하세요
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8.0),
-                child: _getImageProvider(contact.image),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // _getImageProvider(contact.image),
+              SizedBox(height: 20,),
+              Container(
+                width: 200, // 원하는 크기로 설정하세요
+                height: 200, // 원하는 크기로 설정하세요
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: _getImageProvider(contact.image),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "이름 ${contact.name}",
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey[700],
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "이름 ${contact.name}",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey[700],
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    "전화번호 ${contact.phone}",
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey[700],
+                    SizedBox(height: 8),
+                    Text(
+                      "전화번호 ${contact.phone}",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey[700],
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    "생일 ${contact.birthday}",
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey[700],
+                    SizedBox(height: 8),
+                    Text(
+                      "생일 ${contact.birthday}",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey[700],
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    "MBTI ${contact.mbti}",
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey[700],
+                    SizedBox(height: 8),
+                    Text(
+                      "MBTI ${contact.mbti}",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey[700],
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    "그룹 ${contact.group}",
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey[700],
+                    SizedBox(height: 8),
+                    Text(
+                      "그룹 ${contact.group}",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey[700],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         actions: <Widget>[
           if(condition)
@@ -221,29 +223,31 @@ Future<void> editProfile(BuildContext context, SimpleContact contact,Set<String>
                                 controller: _controller4,
                               ),
                             ),
-                            SizedBox(height: 8),
-                            Row(
-                              children: <Widget>[
-                                Text(
-                                  "그룹 ",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.grey[700],
-                                  ),
-                                ),
-                                const SizedBox(width: 8), // 간격 조정을 위한 SizedBox
-                                Expanded(child: GroupDropdown(
-                                    groups: groups,
-                                    selectedGroup: editedContact.group,
-                                    onGroupChanged:(String newGroup){
-                                      editedContact.group= newGroup;
-                                    }
-                                )),
+                          ],
+                         ),
+                        SizedBox(height: 8),
+                        Row(
+                          children: <Widget>[
+                            Text(
+                              "그룹 ",
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.grey[700],
+                              ),
+                            ),
+                            const SizedBox(width: 8), // 간격 조정을 위한 SizedBox
+                            Expanded(child: GroupDropdown(
+                                groups: groups,
+                                selectedGroup: editedContact.group,
+                                onGroupChanged:(String newGroup){
+                                  editedContact.group= newGroup;
+                                }
+                            )),
                           ],
                         ),
                       ],
-                    ),
                   ),
+                  )
                 ],
               ),
             ),
