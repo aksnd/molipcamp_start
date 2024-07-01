@@ -225,7 +225,7 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Colors.amber,
+                      color: Colors.pink,
                     ),
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: Text(
@@ -243,7 +243,7 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
-                        '아직 랭킹이 없습니다. 문제를 풀고 랭킹에 이름을 올려보세요!',
+                        '아직 랭킹이 없습니다.\n문제를 풀고 랭킹에 이름을 올려보세요!',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 16,
@@ -583,7 +583,7 @@ class _NameQuizPageState extends State<NameQuizPage> {
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Colors.amber,
+                      color: Colors.pink,
                     ),
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: Text(
@@ -601,7 +601,7 @@ class _NameQuizPageState extends State<NameQuizPage> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
-                        '아직 랭킹이 없습니다. 문제를 풀고 랭킹에 이름을 올려보세요!',
+                        '아직 랭킹이 없습니다.\n 문제를 풀고 랭킹에 이름을 올려보세요!',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 16,
@@ -934,7 +934,7 @@ class _BirthdayQuizPageState extends State<BirthdayQuizPage> {
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Colors.amber,
+                      color: Colors.pink,
                     ),
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: Text(
@@ -952,7 +952,7 @@ class _BirthdayQuizPageState extends State<BirthdayQuizPage> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
-                        '아직 랭킹이 없습니다. 문제를 풀고 랭킹에 이름을 올려보세요!',
+                        '아직 랭킹이 없습니다.\n문제를 풀고 랭킹에 이름을 올려보세요!',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 16,
@@ -1293,7 +1293,7 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Colors.amber,
+                      color: Colors.pink,
                     ),
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: Text(
@@ -1311,7 +1311,7 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
-                        '아직 랭킹이 없습니다. 문제를 풀고 랭킹에 이름을 올려보세요!',
+                        '아직 랭킹이 없습니다.\n문제를 풀고 랭킹에 이름을 올려보세요!',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 16,
