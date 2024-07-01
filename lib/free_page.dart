@@ -29,6 +29,7 @@ class free_page extends StatelessWidget {
           ),
         ),
         body: TabBarView(
+          physics: NeverScrollableScrollPhysics(),
           children: [
             NameQuizPage(),
             MBTIQuizPage(),
@@ -152,6 +153,7 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
   void _showCompletionDialog() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) {
         TextEditingController _phonenumber_nicknameController = TextEditingController();
         return AlertDialog(
@@ -180,7 +182,24 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
                 Provider.of<RankingProvider>(context, listen: false)
                     .addRanking(_phonenumber_nicknameController.text, answercount_phonenumber, '전화번호');
                 Navigator.of(context).pop();
-              },
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('랭킹에 등록되었습니다'),
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    // margin: EdgeInsets.symmetric(horizontal: 900.0, vertical: 0.0),
+                    width: 200,
+                  ),
+                );
+                setState(() {
+        currentIndex = 0;
+        contact = Provider.of<ContactsProvider>(context, listen: false).contacts[currentIndex];
+        _generate_phonenumber_QuizOptions();
+        });
+        },
+
               child: Text('랭킹 등록'),
             ),
           ],
@@ -188,40 +207,7 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
       },
     );
   }
-  // void _showRankingModal() {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     builder: (context) {
-  //       return Consumer<RankingProvider>(
-  //         builder: (context, rankingProvider, child) {
-  //           final rankings = rankingProvider.getRankings('전화번호');
-  //           if (rankings == null || rankings.isEmpty) {
-  //             return Center(
-  //               child: Padding(
-  //                 padding: const EdgeInsets.all(10.0),
-  //                 child: Text(
-  //                   '아직 랭킹이 없습니다. 문제를 풀고 랭킹에 이름을 올려보세요!',
-  //                   textAlign: TextAlign.center,
-  //                   style: TextStyle(fontSize: 18),
-  //                 ),
-  //               ),
-  //             );
-  //           }
-  //           return ListView.builder(
-  //             itemCount: rankings.length,
-  //             itemBuilder: (context, index) {
-  //               final entry = rankings[index];
-  //               return ListTile(
-  //                 title: Text(entry.nickname),
-  //                 trailing: Text(entry.score.toString()),
-  //               );
-  //             },
-  //           );
-  //         },
-  //       );
-  //     },
-  //   );
-  // }
+
   void _showRankingModal() {
     showModalBottomSheet(
       context: context,
@@ -521,10 +507,23 @@ class _NameQuizPageState extends State<NameQuizPage> {
   void _showCompletionDialog() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) {
+        TextEditingController _name_nicknameController = TextEditingController();
         return AlertDialog(
           title: Text('모든 문제가 끝났습니다!'),
-          content: Text('맞춘 문제 개수: $answercount_name'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('맞춘 문제 개수: $answercount_name'),
+              TextField(
+                controller: _name_nicknameController,
+                decoration: InputDecoration(
+                  labelText: '랭킹용 닉네임을 설정해주세요',
+                ),
+              ),
+            ],
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -532,12 +531,136 @@ class _NameQuizPageState extends State<NameQuizPage> {
               },
               child: Text('닫기'),
             ),
+            TextButton(
+              onPressed: () {
+                Provider.of<RankingProvider>(context, listen: false).addRanking(
+                    _name_nicknameController.text,
+                    answercount_name,
+                    'name');
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('랭킹에 등록되었습니다'),
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    // margin: EdgeInsets.symmetric(horizontal: 900.0, vertical: 0.0),
+                    width: 200,
+                  ),
+                );
+                setState(() {
+                  currentIndex = 0;
+                  contact =
+                  Provider.of<ContactsProvider>(context, listen: false)
+                      .contacts[currentIndex];
+                  _generateNameQuizOptions();
+                });
+              },
+              child: Text('랭킹 등록'),
+            ),
           ],
         );
       },
     );
   }
+  void _showRankingModal() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Consumer<RankingProvider>(
+          builder: (context, rankingProvider, child) {
+            final rankings = rankingProvider.getRankings('name');
 
+            return Container(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.amber,
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Text(
+                      '이름 퀴즈 랭킹',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  rankings.isEmpty
+                      ? Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        '아직 랭킹이 없습니다. 문제를 풀고 랭킹에 이름을 올려보세요!',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.purple,
+                        ),
+                      ),
+                    ),
+                  )
+                      : Expanded(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: rankings.length,
+                      itemBuilder: (context, index) {
+                        final entry = rankings[index];
+                        return Container(
+                          margin: EdgeInsets.symmetric(vertical: 8),
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.purple[100],
+                          ),
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    entry.nickname,
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  Text(
+                                    '점수: ${entry.score}',
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                ],
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.close),
+                                onPressed: () {
+                                  // Implement logic to remove ranking entry
+                                  rankingProvider.deleteRanking(
+                                      entry.nickname, 'name');
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
   Image _getImageProvider(String imageUrl) {
     if (imageUrl.startsWith('asset') || imageUrl.startsWith('assets')) {
       return Image.asset(imageUrl, fit: BoxFit.cover);
@@ -555,7 +678,8 @@ class _NameQuizPageState extends State<NameQuizPage> {
     }
 
 
-    return Padding(
+    return Scaffold(
+        body:Padding(
       padding: const EdgeInsets.all(0.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -606,7 +730,12 @@ class _NameQuizPageState extends State<NameQuizPage> {
             ),
           ),
         ],
-      ),
+      ),),
+      floatingActionButton: FloatingActionButton(
+      onPressed: _showRankingModal,
+      child: Icon(Icons.leaderboard),
+      tooltip: '이름 퀴즈 랭킹보기',
+    ),
     );
   }
 
@@ -727,10 +856,25 @@ class _BirthdayQuizPageState extends State<BirthdayQuizPage> {
   void _showCompletionDialog() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) {
+        TextEditingController _birth_nicknameController = TextEditingController();
         return AlertDialog(
           title: Text('모든 문제가 끝났습니다!'),
-          content: Text('맞춘 문제 개수: $answercount_birth'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('맞춘 문제 개수: $answercount_birth'),
+                TextField(
+                  controller: _birth_nicknameController,
+                  decoration: InputDecoration(
+                    labelText: '랭킹용 닉네임을 설정해주세요',
+                  ),
+                ),
+              ],
+            ),
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -738,12 +882,136 @@ class _BirthdayQuizPageState extends State<BirthdayQuizPage> {
               },
               child: Text('닫기'),
             ),
+            TextButton(
+              onPressed: () {
+                Provider.of<RankingProvider>(context, listen: false).addRanking(
+                    _birth_nicknameController.text,
+                    answercount_birth,
+                    'birthday');
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('랭킹에 등록되었습니다'),
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    // margin: EdgeInsets.symmetric(horizontal: 900.0, vertical: 0.0),
+                    width: 200,
+                  ),
+                );
+                setState(() {
+                  currentIndex = 0;
+                  contact =
+                  Provider.of<ContactsProvider>(context, listen: false)
+                      .contacts[currentIndex];
+                  _generateBirthdayQuizOptions();
+                });
+              },
+              child: Text('랭킹 등록'),
+            ),
           ],
         );
       },
     );
   }
+  void _showRankingModal() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Consumer<RankingProvider>(
+          builder: (context, rankingProvider, child) {
+            final rankings = rankingProvider.getRankings('birthday');
 
+            return Container(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.amber,
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Text(
+                      '생일 퀴즈 랭킹',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  rankings.isEmpty
+                      ? Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        '아직 랭킹이 없습니다. 문제를 풀고 랭킹에 이름을 올려보세요!',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.purple,
+                        ),
+                      ),
+                    ),
+                  )
+                      : Expanded(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: rankings.length,
+                      itemBuilder: (context, index) {
+                        final entry = rankings[index];
+                        return Container(
+                          margin: EdgeInsets.symmetric(vertical: 8),
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.purple[100],
+                          ),
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    entry.nickname,
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  Text(
+                                    '점수: ${entry.score}',
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                ],
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.close),
+                                onPressed: () {
+                                  // Implement logic to remove ranking entry
+                                  rankingProvider.deleteRanking(
+                                      entry.nickname, 'birthday');
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
   Image _getImageProvider(String imageUrl) {
     if (imageUrl.startsWith('asset') || imageUrl.startsWith('assets')) {
       return Image.asset(imageUrl, fit: BoxFit.cover);
@@ -762,7 +1030,8 @@ class _BirthdayQuizPageState extends State<BirthdayQuizPage> {
       return Center(child: CircularProgressIndicator());
     }
 
-    return Padding(
+    return Scaffold(
+        body:Padding(
       padding: const EdgeInsets.all(0.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -819,10 +1088,21 @@ class _BirthdayQuizPageState extends State<BirthdayQuizPage> {
             ),
           ),
         ],
+      ),),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _showRankingModal,
+        child: Icon(Icons.leaderboard),
+        tooltip: '생일 퀴즈 랭킹보기',
       ),
     );
   }
 }
+
+
+
+
+
+
 
 
 //MBTI 퀴즈 - 탭2
@@ -934,10 +1214,23 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
   void _showCompletionDialog() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) {
+        TextEditingController _mbti_nicknameController = TextEditingController();
         return AlertDialog(
           title: Text('모든 문제가 끝났습니다!'),
-          content: Text('맞춘 문제 개수: $answerCountMbti'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('맞춘 문제 개수: $answerCountMbti'),
+              TextField(
+                controller: _mbti_nicknameController,
+                decoration: InputDecoration(
+                  labelText: '랭킹용 닉네임을 설정해주세요',
+                ),
+              ),
+            ],
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -945,12 +1238,137 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
               },
               child: Text('닫기'),
             ),
+
+            TextButton(
+              onPressed: () {
+                Provider.of<RankingProvider>(context, listen: false).addRanking(
+                    _mbti_nicknameController.text,
+                    answerCountMbti,
+                    'mbti');
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('랭킹에 등록되었습니다'),
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    // margin: EdgeInsets.symmetric(horizontal: 900.0, vertical: 0.0),
+                    width: 200,
+                  ),
+                );
+                setState(() {
+                  currentIndex = 0;
+                  contact =
+                  Provider.of<ContactsProvider>(context, listen: false)
+                      .contacts[currentIndex];
+                  _generateMBTIQuizOptions();
+                });
+              },
+              child: Text('랭킹 등록'),
+            ),
           ],
         );
       },
     );
   }
+  void _showRankingModal() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Consumer<RankingProvider>(
+          builder: (context, rankingProvider, child) {
+            final rankings = rankingProvider.getRankings('mbti');
 
+            return Container(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.amber,
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Text(
+                      'mbti 퀴즈 랭킹',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  rankings.isEmpty
+                      ? Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        '아직 랭킹이 없습니다. 문제를 풀고 랭킹에 이름을 올려보세요!',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.purple,
+                        ),
+                      ),
+                    ),
+                  )
+                      : Expanded(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: rankings.length,
+                      itemBuilder: (context, index) {
+                        final entry = rankings[index];
+                        return Container(
+                          margin: EdgeInsets.symmetric(vertical: 8),
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.purple[100],
+                          ),
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    entry.nickname,
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  Text(
+                                    '점수: ${entry.score}',
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                ],
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.close),
+                                onPressed: () {
+                                  // Implement logic to remove ranking entry
+                                  rankingProvider.deleteRanking(
+                                      entry.nickname, 'mbti');
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
   Image _getImageProvider(String imageUrl) {
     if (imageUrl.startsWith('asset') || imageUrl.startsWith('assets')) {
       return Image.asset(imageUrl, fit: BoxFit.cover);
@@ -969,7 +1387,8 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
       return Center(child: CircularProgressIndicator());
     }
 
-    return Padding(
+    return Scaffold(
+        body:Padding(
       padding: const EdgeInsets.all(0.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -1026,7 +1445,12 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
           ),
         ],
       ),
-    );
+    ),
+      floatingActionButton: FloatingActionButton(
+      onPressed: _showRankingModal,
+      child: Icon(Icons.leaderboard),
+      tooltip: 'mbti 퀴즈 랭킹보기',
+    ),);
   }
 }
 
