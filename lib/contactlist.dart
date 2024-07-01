@@ -65,113 +65,135 @@ class _MyHomePageState extends State<MyHomePage> {
       builder: (context,contactsProvider, groupsProvider, child){
         final contacts = contactsProvider.contacts;
         final groups = groupsProvider.groups;
+        final filteredcontacts = contactsProvider.filteredcontacts;
         return Scaffold(
           appBar: AppBar(
             title: const Text('전화번호부'),
-          ),
-          body: ListView.builder(
-          itemCount: contacts.length,
-            itemBuilder: (context, index) {
-              final contact = contacts[index];
-              return Column(
-                children: [
-                  ListTile(
-                    title: Text(contact.name),
-                    subtitle: Text(contact.phone),
-                    leading: CircleAvatar(
-                      radius: 30,
-                      backgroundImage: _getImageProvider(contact.image),
-                    ),
-                    onTap: (){
-                      showProfile(context, contact,groups, index, true, updateContact);
-                    },
-                    trailing: SizedBox(
-                      width: 100,
-                      height: 30,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.call),
-                            onPressed: () => _makePhoneCall(contact.phone),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.save),
-                            onPressed: () async {
-                              ContactService.Contact newContact = ContactService.Contact(
-                                givenName: contact.name,
-                                phones: [ContactService.Item(label: "mobile", value: contact.phone.replaceAll(RegExp(r'[^0-9]'),''))],
-                              );
-                              try{
-                                await ContactService.ContactsService.addContact(newContact);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text('연락처에 저장되었습니다'),
-                                    duration: Duration(seconds: 2),
-                                  ),
-                                );
-                              }catch(e){
-                                print('Failed to save contact to device: $e');
-                              }
-                            },
-                          )
-                        ],
-                      )
-                    )
-
-                  ),
-                  const SizedBox(height: 16),
-                ],
-              );
-            },
-          ),
-
-          floatingActionButton: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              FloatingActionButton(
+            actions: <Widget>[
+              IconButton( // 단순추가
+                icon: Icon(Icons.add),
                 onPressed: () {
-                  SimpleContact defaultContact = SimpleContact(name: 'no name', phone: '010-0000-0000', image: 'assets/images/default.png', birthday: '2000.01.01',group:'default');
-                  addContact(defaultContact);
-                  editProfile(context, contacts[contacts.length-1],groups, contacts.length-1, updateContact);
+                  SimpleContact defaultContact = SimpleContact(index: 1,name: '', phone: '010-0000-0000', image: 'assets/images/default.png', birthday: '2000.01.01',mbti: 'ENTJ');
+                  editProfile(context, defaultContact,addContact);
                 },
-                tooltip: 'Increment',
-                child: const Icon(Icons.add),
               ),
-              const SizedBox(height: 16), // Adjust the spacing between FABs if necessary
-              FloatingActionButton(
+              IconButton( //전화번호부 기반 추가
+                icon: Icon(Icons.contact_phone),
                 onPressed: () async {
                   NativeContact.Contact? contact = await _contactPicker.selectContact();
                   if(contact!=null && contact.fullName!=null && contact.phoneNumbers!=null){
-                    SimpleContact defaultContact = SimpleContact(name: contact.fullName!, phone: contact.phoneNumbers![0], image: 'assets/images/default.png', birthday: '2000.01.01',group:'default');
-                    addContact(defaultContact);
-                  }
+                    SimpleContact defaultContact = SimpleContact(index: 1,name: contact.fullName!, phone: formatPhoneNumber(contact.phoneNumbers![0]), image: 'assets/images/default.png', birthday: '2000.01.01',mbti: 'ENTJ');
+                    addContact(1, defaultContact);
 
+                  }
                 },
-                tooltip: 'Second FAB',
-                child: Icon(Icons.contacts),
               ),
+            ],
+          ),
+          body: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField( // 검색 기능을 위한 입력칸
+                  decoration: InputDecoration(
+                    labelText: 'Search',
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.search),
+                  ),
+                  onChanged: (query) { //변경될때마다 query기반 연락처 검색(이름 기준)
+                    Provider.of<ContactsProvider>(context, listen: false).updateSearchQuery(query);
+                  },
+                ),
+              ),
+              Expanded(
+                child:ListView.builder(
+                  itemCount: filteredcontacts.length,
+                  itemBuilder: (context, index) { // 이 index는 filteredcontacts의 index 이므로 Read말고는 부적합
+                    final contact = filteredcontacts[index];
+                    return Column(
+                      children: [
+                        ListTile(
+                            title: Text(contact.name),
+                            subtitle: Text(contact.phone),
+                            leading: CircleAvatar(
+                              radius: 30,
+                              backgroundImage: _getImageProvider(contact.image),
+                            ),
+                            onTap: (){
+                              showProfile(context, contact, true, updateContact);
+                            },
+                            trailing: SizedBox(
+                                width: 100,
+                                height: 30,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.call_rounded),
+                                      onPressed: () => _makePhoneCall(contact.phone),
+                                    ),
+                                    IconButton(
+                                      // icon: const Icon(Icons.save),
+                                      icon: const Icon(Icons.download),
+                                      onPressed: () async {
+                                        ContactService.Contact newContact = ContactService.Contact(
+                                          givenName: contact.name,
+                                          phones: [ContactService.Item(label: "mobile", value: contact.phone.replaceAll(RegExp(r'[^0-9]'),''))],
+                                        );
+                                        try{
+                                          await ContactService.ContactsService.addContact(newContact);
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(
+                                              content: Text('연락처에 저장되었습니다'),
+                                              duration: Duration(seconds: 2),
+                                            ),
+                                          );
+                                        }catch(e){
+                                          print('Failed to save contact to device: $e');
+                                        }
+                                      },
+                                    )
+                                  ],
+                                )
+                            )
+
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                    );
+                  },
+                ),
+              ),
+
             ],
           ),
         );
       }
     );
   }
-  ImageProvider _getImageProvider(String imageUrl) {
+  ImageProvider _getImageProvider(String imageUrl) { //사진 방식에 따라 다르게 load하는 함수
     if (imageUrl.startsWith('asset') || imageUrl.startsWith('assets')) {
       return AssetImage(imageUrl);
     } else {
       return FileImage(File(imageUrl));
     }
   }
-  void updateContact(int index, SimpleContact editedContact) {
+  void updateContact(int index, SimpleContact editedContact) { //수정
     Provider.of<ContactsProvider>(context, listen: false).updateContact(index, editedContact);
   }
 
-  void addContact(SimpleContact addContact){
+  void addContact(int _, SimpleContact addContact){ //index는 필요없지만, updateContact와 똑같이 입력받을려고 저래해놓음.
     Provider.of<ContactsProvider>(context, listen: false).addContact(addContact);
   }
-
+  String formatPhoneNumber(String phoneNumber) { //전화번호 양식
+    if (phoneNumber.length == 10) {
+      return '${phoneNumber.substring(0, 3)}-${phoneNumber.substring(3, 6)}-${phoneNumber.substring(6)}';
+    } else if (phoneNumber.length == 11) {
+      return '${phoneNumber.substring(0, 3)}-${phoneNumber.substring(3, 7)}-${phoneNumber.substring(7)}';
+    }
+    // Handle other cases if necessary
+    return phoneNumber; // Return original if not a recognized format
+  }
 
   void _makePhoneCall(String phoneNumber) async {
     final String cleanedPhoneNumber = phoneNumber.replaceAll(RegExp(r'[^0-9]'),'');

@@ -79,6 +79,6 @@ class _PhotoGridScreenState extends State<PhotoGridScreen> {
   }
   
   void _showContactDetails(BuildContext context, SimpleContact contact, Set<String> groups) {
-    showProfile(context, contact, groups, 0, false, Null);
+    showProfile(context, contact, groups, false, Null);
   }
 }

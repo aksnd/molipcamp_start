@@ -2,49 +2,37 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SimpleContact {
+  int index;
   String name;
   String phone;
   String image;
   String birthday;
+  String mbti;
   String group;
 
-  SimpleContact({required this.name, required this.phone, required this.image, required this.birthday, required this.group});
+  SimpleContact({required this.index, required this.name, required this.phone, required this.image, required this.birthday,required this.mbti,required this.group});
 
   Map<String, dynamic> toJson() => {
+    'index': index,
     'name': name,
     'phone': phone,
     'image': image,
     'birthday': birthday,
+    'mbti': mbti,
     'group': group,
   };
 
   factory SimpleContact.fromJson(Map<String, dynamic> json) {
     return SimpleContact(
+      index: json['index'],
       name: json['name'],
       phone: json['phone'],
       image: json['image'],
       birthday: json['birthday'],
+      mbti: json['mbti'],
       group: json['group'],
     );
   }
 
 }
 
-/*
-Future<void> saveContacts(List<Contact> contacts) async { //Contacts를 local에 저장
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  List<String> jsonContacts = contacts.map((contact) => jsonEncode(contact.toJson())).toList();
-  await prefs.setStringList('contacts', jsonContacts);
-}
-
-Future<List<Contact>> loadContacts() async { //Contacts를 local에서 load.
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  List<String>? jsonContacts = prefs.getStringList('contacts');
-  if (jsonContacts != null) {
-    return jsonContacts.map((jsonContact) => Contact.fromJson(jsonDecode(jsonContact))).toList();
-  } else {
-    return [];
-  }
-}*/
