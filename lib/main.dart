@@ -3,6 +3,7 @@ import './gallery.dart';
 import './free_page.dart';
 import './contactlist.dart';
 import 'contacts_provider.dart';
+import 'ranking_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -20,12 +21,25 @@ class projectapp1 extends StatelessWidget {
   const projectapp1({super.key});
 
   @override
+//   Widget build(BuildContext context) {
+//     return ChangeNotifierProvider(
+//       create: (context) => ContactsProvider(),
+//       child: MaterialApp(
+//         title: '몰입캠프 첫 project',
+//         home: NavigationBarWidget(), // Adjust this based on your starting point
+//       ),
+//     );
+//   }
+// }
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => ContactsProvider(),
+    return MultiProvider( // ChangeNotifierProvider 대신 MultiProvider 사용
+      providers: [
+        ChangeNotifierProvider(create: (context) => ContactsProvider()),
+        ChangeNotifierProvider(create: (context) => RankingProvider()), // 추가: RankingProvider 등록
+      ],
       child: MaterialApp(
         title: '몰입캠프 첫 project',
-        home: NavigationBarWidget(), // Adjust this based on your starting point
+        home: NavigationBarWidget(),
       ),
     );
   }

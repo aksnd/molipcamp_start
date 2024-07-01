@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import './contact.dart';
 import 'dart:io';
@@ -54,6 +56,14 @@ Future<void> showProfile(BuildContext context, SimpleContact contact,bool condit
                       color: Colors.grey[700],
                     ),
                   ),
+                  SizedBox(height: 8),
+                  Text(
+                    "MBTI ${contact.mbti}",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey[700],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -91,10 +101,11 @@ Future<void> showProfile(BuildContext context, SimpleContact contact,bool condit
 
 
 Future<void> editProfile(BuildContext context, SimpleContact contact, onUpdate) async {
-  SimpleContact editedContact = SimpleContact(index:contact.index, name: contact.name, phone: contact.phone, image: contact.image, birthday: contact.birthday);
+  SimpleContact editedContact = SimpleContact(index:contact.index, name: contact.name, phone: contact.phone, image: contact.image, birthday: contact.birthday,mbti: contact.mbti);
   final TextEditingController _controller1 = TextEditingController(text: editedContact.name);
   final TextEditingController _controller2 = TextEditingController(text: editedContact.phone);
   final TextEditingController _controller3 = TextEditingController(text: editedContact.birthday);
+  final TextEditingController _controller4 = TextEditingController(text: editedContact.mbti);
 
   Future getImage(ImageSource imageSource) async {
     //pickedFile에 ImagePicker로 가져온 이미지가 담긴다.
@@ -182,6 +193,24 @@ Future<void> editProfile(BuildContext context, SimpleContact contact, onUpdate) 
                         ),
                       ],
                     ),
+                    SizedBox(height: 8),
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          "MBTI ",
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                        const SizedBox(width: 8), // 간격 조정을 위한 SizedBox
+                        Expanded(
+                          child: TextField(
+                            controller: _controller4,
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -208,9 +237,11 @@ Future<void> editProfile(BuildContext context, SimpleContact contact, onUpdate) 
               editedContact.phone = _controller2.text;
               editedContact.birthday = _controller3.text;
               onUpdate(contact.index, editedContact);
+              editedContact.mbti = _controller4.text;
               print(_controller1.text);
               print(_controller2.text);
               print(_controller3.text);
+              print(_controller4.text);
               Navigator.of(context).pop();
             },
           ),
