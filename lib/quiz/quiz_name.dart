@@ -6,7 +6,8 @@ import 'package:kaist_week1/contact.dart';
 import 'package:kaist_week1/contacts_provider.dart';
 import 'package:kaist_week1/ranking_provider.dart';
 import 'quiz_phonenumber.dart';
-
+import 'package:kaist_week1/mode_select.dart';
+import 'package:kaist_week1/main.dart';
 //이름 퀴즈 - 탭1
 
 class NameQuizPage extends StatefulWidget {
@@ -177,6 +178,79 @@ class _NameQuizPageState extends State<NameQuizPage> {
       },
     );
   }
+  void _showEndQuizDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        TextEditingController _name_nicknameController = TextEditingController();
+        return AlertDialog(
+          title: Text('퀴즈를 끝내시겠습니까?'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('현재까지 맞춘 문제 개수: $answercount_name'),
+              TextField(
+                controller: _name_nicknameController,
+                decoration: InputDecoration(
+                  labelText: '랭킹용 닉네임을 설정해주세요',
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('닫기'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => NavigationBarWidget(initialIndex: 2),),
+                      (route) => false,
+                );
+              },
+              child: Text('나가기'),
+            ),
+
+            TextButton(
+              onPressed: () {
+                Provider.of<RankingProvider>(context, listen: false).addRanking(
+                    _name_nicknameController.text,
+                    answercount_name,
+                    'name');
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('랭킹에 등록되었습니다'),
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    // margin: EdgeInsets.symmetric(horizontal: 900.0, vertical: 0.0),
+                    width: 200,
+                  ),
+                );
+                setState(() {
+                  currentIndex = 0;
+                  contact =
+                  Provider.of<ContactsProvider>(context, listen: false)
+                      .contacts[currentIndex];
+                  _generateNameQuizOptions();
+                });
+              },
+              child: Text('랭킹 등록'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _showRankingModal() {
     showModalBottomSheet(
       context: context,
@@ -293,64 +367,88 @@ class _NameQuizPageState extends State<NameQuizPage> {
 
     return Scaffold(
       body:SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(0.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: _previousQuestion,
+                  child: Text('이전 문제'),
+                ),
+                Text('${currentIndex + 1}/${filteredContacts.length}'),
+                TextButton(
+                  onPressed: _nextQuestion,
+                  child: Text('다음 문제'),
+                ),
+              ],
+            ),
+            Container(
+              width: 120,
+              height: 120,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: contact != null ? _getImageProvider(contact!.image) : SizedBox.shrink(),
+              ),
+            ),
+            SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextButton(
-                    onPressed: _previousQuestion,
-                    child: Text('이전 문제'),
-                  ),
-                  Text('${currentIndex + 1}/${filteredContacts.length}'),
-                  TextButton(
-                    onPressed: _nextQuestion,
-                    child: Text('다음 문제'),
-                  ),
-                ],
-              ),
-              Container(
-                width: 120,
-                height: 120,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: contact != null ? _getImageProvider(contact!.image) : SizedBox.shrink(),
-                ),
-              ),
-              SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
 
-                    SizedBox(height: 8),
-                    Text(
-                      "이 사람의 이름은?",
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.grey[700],
-                      ),
+                  SizedBox(height: 8),
+                  Text(
+                    "이 사람의 이름은?",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey[700],
                     ),
-                    SizedBox(height: 16),
-                    ...options.map((option) => ElevatedButton(
-                      onPressed: () => _checkAnswer(option),
-                      child: Text(option),
-                    )),
-                  ],
-                ),
+                  ),
+                  SizedBox(height: 16),
+                  ...options.map((option) => ElevatedButton(
+                    onPressed: () => _checkAnswer(option),
+                    child: Text(option),
+                  )),
+                ],
+
               ),
-            ],
-          ),),
+
+            ),
+            SizedBox(height: 12,),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 16, bottom: 16),
+                child: ElevatedButton(
+                  onPressed: _showEndQuizDialog,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.pink,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  child: Text('퀴즈 끝내기', style: TextStyle(color: Colors.white),),
+                ),
+              ),),
+          ],
+        ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showRankingModal,
-        child: Icon(Icons.leaderboard),
-        tooltip: '이름 퀴즈 랭킹보기',
+
+      floatingActionButton: Stack(
+        children:[ Positioned(
+          bottom: 16 + 13,
+          right: 16,
+          child: FloatingActionButton(
+            onPressed: _showRankingModal,
+            child: Icon(Icons.leaderboard),
+            tooltip: '이름 퀴즈 랭킹보기',
+          ),
+        ),]
       ),
+
     );
   }
 

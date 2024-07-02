@@ -37,6 +37,7 @@ class _ModeSelectionPageState extends State<ModeSelectionPage> {
                 });
               },
             ),
+            SizedBox(height: 20,),
             Row(
               children: [
                 ElevatedButton(
@@ -57,15 +58,15 @@ class _ModeSelectionPageState extends State<ModeSelectionPage> {
                 ElevatedButton(
                   onPressed: selectedGroup == null
                 ? null
-        : () {
-    Navigator.push(
-    context,
-    MaterialPageRoute(
-    builder: (context) => simple_page(selectedGroup: selectedGroup!),
-    ),
-    );
-    },
-                  child: Text('4문제 모드 (비활성화)'),
+                    : () {
+                Navigator.push(
+                context,
+                MaterialPageRoute(
+                builder: (context) => simple_page(selectedGroup: selectedGroup!),
+                ),
+                );
+                },
+                  child: Text('4문제 모드'),
                 ),
               ],
             ),
