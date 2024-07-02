@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'whoe_quiz_page.dart';
-import 'simple_quiz_page.dart';
+
 import 'contacts_provider.dart';
 import 'groups_provider.dart';
 import './dialog.dart';
@@ -21,7 +21,7 @@ class _ModeSelectionPageState extends State<ModeSelectionPage> {
         List<String> dropDownGroup = contactsProvider.nowGroup;
         return Scaffold(
           appBar: AppBar(
-            title: Text('퀴즈 모드 및 그룹 선택'),
+            title: Text('퀴즈 그룹 선택'),
           ),
           body: Center(
             child: Column(
@@ -42,32 +42,17 @@ class _ModeSelectionPageState extends State<ModeSelectionPage> {
                       )
                   )
                 ),
-                Row(
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => free_page(),
-                          ),
-                        );
-                      },
-                      child: Text('전체 문제 모드'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => simple_page(),
-                          ),
-                        );
-                      },
-                      child: Text('4 문제 모드'),
-                    ),
-                  ],
-
+                SizedBox(height: 20,),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => free_page(),
+                      ),
+                    );
+                  },
+                  child: Text('퀴즈 시작!!'),
                 ),
               ],
             ),
