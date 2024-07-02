@@ -78,11 +78,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 child:Flexible(
                   child: GroupDropdown(
                     groups: groups,
-                    selectedGroup: dropDownGroup[0],
+                    selectedGroup: contactsProvider.nowGroup[0],
                     onGroupChanged:(String newGroup){
                       dropDownGroup[0]= newGroup;
                       Provider.of<ContactsProvider>(context, listen: false).updateNowGroup(dropDownGroup, 0);
-                    }, isEdit: false,
+                    }, widgetFrom: 0,
                   )
                 )),
               const SizedBox(width: 10,),

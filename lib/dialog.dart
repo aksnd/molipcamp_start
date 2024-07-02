@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'contacts_provider.dart';
 import 'groups_provider.dart';
 import 'package:provider/provider.dart';
+import './main.dart';
 
 Future<void> showProfile(BuildContext context, SimpleContact contact, Set<String> groups, bool condition , onUpdate) async {
   return showDialog<void>(
@@ -105,6 +106,43 @@ Future<void> showProfile(BuildContext context, SimpleContact contact, Set<String
       );
     },
   );
+}
+
+Future<void> deleteGroupDialog(BuildContext context, String group, int widgetFrom) {
+  return showDialog(
+      context: context,
+    barrierDismissible: false,
+    builder: (context){
+      return StatefulBuilder(
+        builder: (context, setState){
+          return AlertDialog(
+            title: Text('"${group}"그룹을 삭제하시겠습니까?'),
+            contentPadding: EdgeInsets.all(10),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Close'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: Text('Delete'),
+                onPressed: () {
+                    Provider.of<ContactsProvider>(context, listen: false).removeGroup(group, widgetFrom);
+                    Provider.of<GroupsProvider>(context, listen: false).deleteGroup(group);
+                    Navigator.of(context).pop();
+
+                    // 원하는 탭으로 이동
+                    //final navBarState = context.findAncestorStateOfType<NavigationBarWidgetState>();
+                    //navBarState?.navigateToTab(1);  // 갤러리 탭으로 이동
+          },
+              ),
+            ],
+          );
+        },
+      );
+    }
+);
 }
 
 Future<void> addNewGroup(BuildContext context, SimpleContact contact,Set<String> groups, onUpdate) async{
@@ -302,7 +340,7 @@ Future<void> editProfile(BuildContext context, SimpleContact contact,Set<String>
                             Expanded(child: GroupDropdown(
                               groups: groups,
                               selectedGroup: editedContact.group,
-                              isEdit: true,
+                              widgetFrom: 9,
                               onGroupChanged:(String newGroup){
                                 if (newGroup== 'new_group'){
                                   editedContact.name = _controller1.text;
@@ -375,7 +413,7 @@ class GroupDropdown extends StatefulWidget {
   final Set<String> groups;
   final String selectedGroup;
   final Function(String) onGroupChanged;
-  final bool isEdit;
+  final int widgetFrom;
 
 
   const GroupDropdown({
@@ -383,7 +421,7 @@ class GroupDropdown extends StatefulWidget {
     required this.groups,
     required this.selectedGroup,
     required this.onGroupChanged,
-    required this.isEdit,
+    required this.widgetFrom,
   }) : super(key: key);
 
   @override
@@ -392,50 +430,94 @@ class GroupDropdown extends StatefulWidget {
 
 class _GroupDropdownState extends State<GroupDropdown>{
   String? _selectedGroup;
+  //Set<String>? _groups;
 
   @override
   void initState(){
     super.initState();
+    //_groups= widget.groups;
     _selectedGroup = widget.selectedGroup;
   }
 
+
   @override
   Widget build(BuildContext context) {
-    List<DropdownMenuItem<String>> _droppingItems;
-    _droppingItems=widget.groups.map((String group) {
-      return DropdownMenuItem<String>(
-        value: group,
-        child: Text(group),
-      );
-    }).toList();
-    if(widget.isEdit){
-      _droppingItems.add(
-        const DropdownMenuItem<String>(
-          value: 'new_group',
-          child: Text('새 그룹 추가'),
-        ),
-      );
-    }
-    else{
-      _droppingItems.add(
-        const DropdownMenuItem<String>(
-          value: 'all_groups',
-          child: Text('모든 그룹 보기'),
-        ),
-      );
-    }
-    return DropdownButton<String>(
-      value: _selectedGroup,
-      hint: Text(_selectedGroup ?? 'Select Group'),
-      items: _droppingItems,
-      onChanged: (String? newValue) {
-        if (newValue != null&& newValue !=_selectedGroup) {
-          setState((){
-            _selectedGroup=newValue;
-          });
-          widget.onGroupChanged(newValue);
+
+    GlobalKey<State> dropdownKey = GlobalKey();
+    return Consumer2<ContactsProvider,GroupsProvider>(
+      builder: (context,contactsProvider, groupsProvider, child) {
+        List<String> dropDownGroup = contactsProvider.nowGroup;
+        if(widget.widgetFrom!=9){
+          _selectedGroup = dropDownGroup[widget.widgetFrom];
         }
-      },
+
+        List<DropdownMenuItem<String>> _droppingItems;
+        //Set<String> groupsWithoutEtc= _groups!;
+        Set<String> groupsWithoutEtc= groupsProvider.groups;
+
+        groupsWithoutEtc.remove('기타');
+        _droppingItems=[DropdownMenuItem<String>(
+            value: '기타',
+        child: Text('기타')
+        )];
+        if(widget.widgetFrom == 9){
+          _droppingItems.addAll(groupsWithoutEtc.map((String group) {
+            return DropdownMenuItem<String>(
+              value: group,
+              child: Text(group),
+            );
+          }));
+          _droppingItems.add(
+              const DropdownMenuItem<String>(
+                  value: 'new_group',
+                  child: Text('새 그룹 추가')
+              ));
+        }
+        else{
+          _droppingItems.addAll(groupsWithoutEtc.map((String group) {
+            return DropdownMenuItem<String>(
+              value: group,
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [Text(group),
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: (){
+                        deleteGroupDialog(context, group,widget.widgetFrom);
+                        dropdownKey.currentState?.setState(() {});
+                        //setState((){_selectedGroup=contactsProvider.nowGroup[widget.widgetFrom];
+                        //});
+                      },)
+                  ]
+              ),
+            );
+          }));
+          _droppingItems.add(
+              const DropdownMenuItem<String>(
+                value: 'all_groups',
+                child: Text('모든 그룹 보기'),
+              )
+          );
+        }
+
+
+
+
+        return DropdownButton<String>(
+          key: dropdownKey,
+          value: _selectedGroup,
+          hint: Text(_selectedGroup ?? 'Select Group'),
+          items: _droppingItems,
+          onChanged: (String? newValue) {
+            if (newValue != null&& newValue !=_selectedGroup) {
+              setState((){
+                _selectedGroup=newValue;
+              });
+              widget.onGroupChanged(newValue);
+            }
+          },
+        );
+      }
     );
   }
 }
