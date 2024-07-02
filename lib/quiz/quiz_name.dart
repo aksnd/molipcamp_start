@@ -8,6 +8,7 @@ import 'package:kaist_week1/ranking_provider.dart';
 import 'quiz_phonenumber.dart';
 import 'package:kaist_week1/mode_select.dart';
 import 'package:kaist_week1/main.dart';
+import 'package:kaist_week1/quiz/utils/calculator.dart';
 //이름 퀴즈 - 탭1
 
 class NameQuizPage extends StatefulWidget {
@@ -126,6 +127,10 @@ class _NameQuizPageState extends State<NameQuizPage> {
   }
 
   void _showCompletionDialog() {
+
+    final contactsProvider = Provider.of<ContactsProvider>(context, listen: false);
+    double correctRate = calculateCorrectRate(answercount_name, currentIndex+1);
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -136,7 +141,8 @@ class _NameQuizPageState extends State<NameQuizPage> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('맞춘 문제 개수: $answercount_name'),
+              Text('맞춘 문제 개수: $answercount_name/${currentIndex+1}'),
+              Text('정답률: ${correctRate.toStringAsFixed(2)}%'),
               TextField(
                 controller: _name_nicknameController,
                 decoration: InputDecoration(
@@ -167,7 +173,7 @@ class _NameQuizPageState extends State<NameQuizPage> {
               onPressed: () {
                 Provider.of<RankingProvider>(context, listen: false).addRanking(
                     _name_nicknameController.text,
-                    answercount_name, filteredContacts.length,
+                    answercount_name, currentIndex+1,
                     'name');
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -183,6 +189,7 @@ class _NameQuizPageState extends State<NameQuizPage> {
                 );
                 setState(() {
                   currentIndex = 0;
+                  answercount_name=0;
                   contact =
                   Provider.of<ContactsProvider>(context, listen: false)
                       .contacts[currentIndex];
@@ -271,6 +278,7 @@ class _NameQuizPageState extends State<NameQuizPage> {
                                     '점수: ${entry.score}',
                                     style: TextStyle(fontSize: 14),
                                   ),
+                                  Text('정답률: ${entry.correctRate.toStringAsFixed(2)}%'),
                                 ],
                               ),
                               IconButton(
