@@ -26,9 +26,9 @@ class _BirthdayQuizPageState extends State<BirthdayQuizPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final contactsProvider = Provider.of<ContactsProvider>(context, listen: false);
-      if (contactsProvider.contacts.isNotEmpty) {
+      if (contactsProvider.widget3GroupFilteredContacts.isNotEmpty) {
         setState(() {
-          contact = contactsProvider.contacts[currentIndex];
+          contact = contactsProvider.widget3GroupFilteredContacts[currentIndex];
           _generateBirthdayQuizOptions();
         });
       }
@@ -97,9 +97,9 @@ class _BirthdayQuizPageState extends State<BirthdayQuizPage> {
   void _nextQuestion() {
     final contactsProvider = Provider.of<ContactsProvider>(context, listen: false);
     setState(() {
-      if (currentIndex < contactsProvider.contacts.length - 1) {
+      if (currentIndex < contactsProvider.widget3GroupFilteredContacts.length - 1) {
         currentIndex++;
-        contact = contactsProvider.contacts[currentIndex];
+        contact = contactsProvider.widget3GroupFilteredContacts[currentIndex];
         _generateBirthdayQuizOptions();
       } else {
         _showCompletionDialog();
@@ -112,7 +112,7 @@ class _BirthdayQuizPageState extends State<BirthdayQuizPage> {
     setState(() {
       if (currentIndex > 0) {
         currentIndex--;
-        contact = contactsProvider.contacts[currentIndex];
+        contact = contactsProvider.widget3GroupFilteredContacts[currentIndex];
         _generateBirthdayQuizOptions();
       }
     });
@@ -286,7 +286,7 @@ class _BirthdayQuizPageState extends State<BirthdayQuizPage> {
   @override
   Widget build(BuildContext context) {
     final contactsProvider = Provider.of<ContactsProvider>(context);
-    if (contactsProvider.contacts.isEmpty) {
+    if (contactsProvider.widget3GroupFilteredContacts.isEmpty) {
       return Center(child: CircularProgressIndicator());
     }
     if (options.isEmpty) {
@@ -307,7 +307,7 @@ class _BirthdayQuizPageState extends State<BirthdayQuizPage> {
                     onPressed: _previousQuestion,
                     child: Text('이전 문제'),
                   ),
-                  Text('${currentIndex + 1}/${contactsProvider.contacts.length}'),
+                  Text('${currentIndex + 1}/${contactsProvider.widget3GroupFilteredContacts.length}'),
                   TextButton(
                     onPressed: _nextQuestion,
                     child: Text('다음 문제'),

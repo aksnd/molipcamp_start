@@ -27,9 +27,9 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final contactsProvider = Provider.of<ContactsProvider>(context, listen: false);
-      if (contactsProvider.contacts.isNotEmpty) {
+      if (contactsProvider.widget3GroupFilteredContacts.isNotEmpty) {
         setState(() {
-          contact = contactsProvider.contacts[currentIndex];
+          contact = contactsProvider.widget3GroupFilteredContacts[currentIndex];
           _generate_phonenumber_QuizOptions();
         });
       }
@@ -95,9 +95,9 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
   void _nextQuestion() {
     final contactsProvider = Provider.of<ContactsProvider>(context, listen: false);
     setState(() {
-      if (currentIndex < contactsProvider.contacts.length - 1) {
+      if (currentIndex < contactsProvider.widget3GroupFilteredContacts.length - 1) {
         currentIndex++;
-        contact = contactsProvider.contacts[currentIndex];
+        contact = contactsProvider.widget3GroupFilteredContacts[currentIndex];
         _generate_phonenumber_QuizOptions();
       } else {
         _showCompletionDialog();
@@ -110,7 +110,7 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
     setState(() {
       if (currentIndex > 0) {
         currentIndex--;
-        contact = contactsProvider.contacts[currentIndex];
+        contact = contactsProvider.widget3GroupFilteredContacts[currentIndex];
         _generate_phonenumber_QuizOptions();
       }
     });
@@ -118,7 +118,7 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
 
   void _showCompletionDialog() {
     final contactsProvider = Provider.of<ContactsProvider>(context, listen: false);
-    int totalQuestions = contactsProvider.contacts.length;
+    int totalQuestions = contactsProvider.widget3GroupFilteredContacts.length;
     double accuracy = (answercount_phonenumber / totalQuestions) * 100;
 
     showDialog(
@@ -288,7 +288,7 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
   @override
   Widget build(BuildContext context) {
     final contactsProvider = Provider.of<ContactsProvider>(context);
-    if (contactsProvider.contacts.isEmpty) {
+    if (contactsProvider.widget3GroupFilteredContacts.isEmpty) {
       return Center(child: CircularProgressIndicator());
     }
     if (options.isEmpty) {
@@ -310,7 +310,7 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
                     onPressed: _previousQuestion,
                     child: Text('이전 문제'),
                   ),
-                  Text('${currentIndex + 1}/${contactsProvider.contacts.length}'),
+                  Text('${currentIndex + 1}/${contactsProvider.widget3GroupFilteredContacts.length}'),
                   TextButton(
                     onPressed: _nextQuestion,
                     child: Text('다음 문제'),
