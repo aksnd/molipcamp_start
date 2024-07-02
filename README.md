@@ -10,7 +10,7 @@
 - 그룹별로 전화번호 보여주기
 - 전화버튼을 통한 전화 앱 연결
 - 핸드폰 내의 전화번호부에 해당 연락처 저장
-- 추가 버튼을 통한 새로운 전화번호 저장 (직접 저장과 전화번호부에서 가져오는 2가지 방법 존재)
+- 추가 버튼을 통한 새로운 전화번호 저장 (수동과 전화번호부 연동)
 
 ### 탭 2 - 이미지 탭
 - 그룹별로 이미지 보여주기(기본사진 예외처리)
@@ -24,13 +24,23 @@
 # [2] Project Skills (프로젝트 기술)
 
 ### 주요 라이브러리 
-shared_Preferences - <https://pub.dev/packages/shared_preferences>
-image_Picker <https://pub.dev/packages/image_picker>
-flutter_native_contact_picker <https://pub.dev/packages/flutter_native_contact_picker>
-contacts_service
-provider
+- shared_Preferences - <https://pub.dev/packages/shared_preferences>
+- image_Picker - <https://pub.dev/packages/image_picker>
+- flutter_native_contact_picker - <https://pub.dev/packages/flutter_native_contact_picker>
+- contacts_service - <https://pub.dev/documentation/contacts_service/latest/>
+- provider - <https://pub.dev/packages/provider>
 
-### 주요 기능
+### 주요 technology
+imagePicker 이용 갤러리, 카메라 접근
+SharedPreference와 provider를 이용한 탭별 자료 연계 및 local 저장 (contacts, ranking, groups)
+flutter_native_contact_picker와 contacts_service를 이용한 전화번호부 연동
+dropdown 이용하여 탭별 자료 연계
+
+# [3] 구동 방법
+'git clone https://github.com/your_username/your_flutter_app.git' 으로 clone
+'flutter pub get' 후 'flutter run' 으로 실행
+
+
 
 # [4] 개발 멤버
 
