@@ -464,22 +464,38 @@ class _GroupDropdownState extends State<GroupDropdown>{
           _droppingItems.addAll(groupsWithoutEtc.map((String group) {
             return DropdownMenuItem<String>(
               value: group,
-              child: Text(group),
+              child: Container(
+                  width: 200,
+                  height: 48,
+                  alignment: Alignment.centerLeft,
+                  child: Text(group, overflow: TextOverflow.ellipsis)),
             );
           }));
           _droppingItems.add(
-              const DropdownMenuItem<String>(
+              DropdownMenuItem<String>(
                   value: 'new_group',
-                  child: Text('새 그룹 추가')
+                  child: Container(
+                      width: 200,
+                      height: 48,
+                      alignment: Alignment.centerLeft,
+                      child: Text('새 그룹 추가', overflow: TextOverflow.ellipsis)),
               ));
         }
         else{
           _droppingItems.addAll(groupsWithoutEtc.map((String group) {
             return DropdownMenuItem<String>(
               value: group,
-              child: Row(
+              child:SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text(group),
+                  children: [
+                    Container(
+                        width: 90,
+                        height: 48,
+                        alignment: Alignment.centerLeft,
+                        child: Text(group, overflow: TextOverflow.ellipsis)
+                    ),
                     IconButton(
                       icon: Icon(Icons.close),
                       onPressed: (){
@@ -489,34 +505,42 @@ class _GroupDropdownState extends State<GroupDropdown>{
                         //});
                       },)
                   ]
-              ),
+              )),
             );
           }));
           _droppingItems.add(
-              const DropdownMenuItem<String>(
+              DropdownMenuItem<String>(
                 value: 'all_groups',
-                child: Text('모든 그룹 보기'),
+                child: Container(
+                    constraints: BoxConstraints(maxWidth: 100), // 원하는 최대 너비 설정
+                    child: Text(
+                      '모든 그룹 보기',
+                      overflow: TextOverflow.ellipsis,
+                    ),
               )
-          );
+          ));
         }
 
 
 
 
-        return DropdownButton<String>(
-          key: dropdownKey,
-          value: _selectedGroup,
-          hint: Text(_selectedGroup ?? 'Select Group'),
-          items: _droppingItems,
-          onChanged: (String? newValue) {
-            if (newValue != null&& newValue !=_selectedGroup) {
-              setState((){
-                _selectedGroup=newValue;
-              });
-              widget.onGroupChanged(newValue);
-            }
-          },
+        return DropdownButtonFormField<String>(
+              key: dropdownKey,
+              value: _selectedGroup,
+              hint: Text(_selectedGroup ?? 'Select Group'),
+              items: _droppingItems,
+              onChanged: (String? newValue) {
+                if (newValue != null&& newValue !=_selectedGroup) {
+                  setState((){
+                    _selectedGroup=newValue;
+                  });
+                  widget.onGroupChanged(newValue);
+                }
+              },
+              isExpanded: true,
+
         );
+
       }
     );
   }
