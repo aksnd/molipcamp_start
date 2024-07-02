@@ -6,13 +6,15 @@ class RankingEntry {
   final String nickname;
   final String category;
   final int score;
+  final double correctRate;
 
-  RankingEntry(this.nickname, this.score, this.category);
+  RankingEntry(this.nickname, this.score, this.correctRate, this.category);
 
   Map<String, dynamic> toMap() {
     return {
       'nickname': nickname,
       'score': score,
+      'correctRate': correctRate,
       'category': category,
     };
   }
@@ -21,6 +23,7 @@ class RankingEntry {
     return RankingEntry(
       map['nickname'],
       map['score'],
+      map['correctRate'],
       map['category'],
     );
   }
@@ -39,6 +42,9 @@ class RankingProvider with ChangeNotifier {
     // 앱 시작 시 저장된 랭킹 데이터를 불러옴
     _loadRankingsFromPrefs();
   }
+
+
+
   List<RankingEntry> getRankings(String category) {
     if (_rankings.containsKey(category)) {
       return List.unmodifiable(_rankings[category]!);
@@ -48,16 +54,18 @@ class RankingProvider with ChangeNotifier {
     }
   }
 
-  void addRanking(String nickname, int score, String category) {
-
+  void addRanking(String nickname, int score, int totalQuestions, String category) {
+    double correctRate = (score / totalQuestions) * 100;
     if (_rankings[category] == null) {
       _rankings[category] = [];
     }
-    _rankings[category]!.add(RankingEntry(nickname, score, category));
-    _rankings[category]!.sort((a, b) => b.score.compareTo(a.score));
+    _rankings[category]!.add(RankingEntry(nickname, score, correctRate, category));
+    _rankings[category]!.sort((a, b) => b.correctRate.compareTo(a.correctRate));
     _saveRankingsToPrefs(); // 변경 사항을 저장
     notifyListeners();
   }
+
+
 
   void clearRankings(String category) {
     _rankings[category]!.clear();

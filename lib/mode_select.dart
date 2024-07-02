@@ -52,7 +52,7 @@ class _ModeSelectionPageState extends State<ModeSelectionPage> {
                       ),
                     );
                   },
-                  child: Text('퀴즈 시작!!'),
+                  child: Text('퀴즈 시작!'),
                 ),
               ],
             ),

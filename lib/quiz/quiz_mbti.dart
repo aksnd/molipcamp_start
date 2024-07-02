@@ -8,6 +8,7 @@ import 'package:kaist_week1/contacts_provider.dart';
 import 'package:kaist_week1/ranking_provider.dart';
 import 'quiz_phonenumber.dart';
 import 'package:kaist_week1/main.dart';
+import 'package:kaist_week1/quiz/utils/calculator.dart';
 
 //MBTI 퀴즈 - 탭2
 
@@ -43,7 +44,7 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
 
   void _generateMBTIQuizOptions() {
     if (contact == null) {
-      print("contact = null");
+
       return;
     }
 
@@ -51,7 +52,7 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
     options = [correctAnswer];
 
     Random random = Random();
-    final contactsProvider = Provider.of<ContactsProvider>(context, listen: false);
+
 
     while (options.length < 3) {
       String randomMBTI = MBTI_LIST[random.nextInt(16)];
@@ -63,12 +64,13 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
     options.shuffle();
   }
 
+
+
   void _checkAnswer(String selectedOption) {
     bool isCorrect = selectedOption == correctAnswer;
     if (isCorrect) {
       answerCountMbti++;
     }
-
     showDialog(
       context: context,
       builder: (context) {
@@ -120,17 +122,22 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
   }
 
   void _showCompletionDialog() {
+    final contactsProvider = Provider.of<ContactsProvider>(context, listen: false);
+    double correctRate = calculateCorrectRate(answerCountMbti, currentIndex+1);
+
+
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) {
         TextEditingController _mbti_nicknameController = TextEditingController();
         return AlertDialog(
-          title: Text('모든 문제가 끝났습니다!'),
+          title: Text('퀴즈를 끝내시겠어요?'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('맞춘 문제 개수: $answerCountMbti'),
+              Text('맞춘 문제 개수: $answerCountMbti/${currentIndex+1}'),
+              Text('정답률: ${correctRate.toStringAsFixed(2)}%'),
               TextField(
                 controller: _mbti_nicknameController,
                 decoration: InputDecoration(
@@ -146,12 +153,23 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
               },
               child: Text('닫기'),
             ),
+       TextButton(
+            onPressed: () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NavigationBarWidget(initialIndex: 2),),
+                    (route) => false,
+              );
+            },
+            child: Text('나가기'),
+          ),
 
             TextButton(
               onPressed: () {
                 Provider.of<RankingProvider>(context, listen: false).addRanking(
                     _mbti_nicknameController.text,
-                    answerCountMbti,
+                    answerCountMbti, currentIndex+1,
                     'mbti');
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -167,81 +185,8 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
                 );
                 setState(() {
                   currentIndex = 0;
-                  contact =
-                  Provider.of<ContactsProvider>(context, listen: false)
-                      .contacts[currentIndex];
-                  _generateMBTIQuizOptions();
-                });
-              },
-              child: Text('랭킹 등록'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-  void _showEndQuizDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        TextEditingController _name_nicknameController = TextEditingController();
-        return AlertDialog(
-          title: Text('퀴즈를 끝내시겠습니까?'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('현재까지 맞춘 문제 개수: $answerCountMbti'),
-              TextField(
-                controller: _name_nicknameController,
-                decoration: InputDecoration(
-                  labelText: '랭킹용 닉네임을 설정해주세요',
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('닫기'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => NavigationBarWidget(initialIndex: 2),),
-                      (route) => false,
-                );
-              },
-              child: Text('나가기'),
-            ),
-
-            TextButton(
-              onPressed: () {
-                Provider.of<RankingProvider>(context, listen: false).addRanking(
-                    _name_nicknameController.text,
-                    answerCountMbti,
-                    'name');
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('랭킹에 등록되었습니다'),
-                    behavior: SnackBarBehavior.floating,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    // margin: EdgeInsets.symmetric(horizontal: 900.0, vertical: 0.0),
-                    width: 200,
-                  ),
-                );
-                setState(() {
-                  currentIndex = 0;
-                  contact =
-                  Provider.of<ContactsProvider>(context, listen: false)
-                      .contacts[currentIndex];
+                  answerCountMbti=0;
+                  contact = contactsProvider.widget3GroupFilteredContacts[currentIndex];
                   _generateMBTIQuizOptions();
                 });
               },
@@ -254,6 +199,8 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
   }
 
   void _showRankingModal() {
+
+
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -326,6 +273,7 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
                                     '점수: ${entry.score}',
                                     style: TextStyle(fontSize: 14),
                                   ),
+                                  Text('정답률: ${entry.correctRate.toStringAsFixed(2)}%'),
                                 ],
                               ),
                               IconButton(
@@ -432,7 +380,7 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 16, bottom: 16),
                   child: ElevatedButton(
-                    onPressed: _showEndQuizDialog,
+                    onPressed: _showCompletionDialog,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.pink,
                       shape: RoundedRectangleBorder(

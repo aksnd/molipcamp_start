@@ -132,7 +132,7 @@ class _NameQuizPageState extends State<NameQuizPage> {
       builder: (context) {
         TextEditingController _name_nicknameController = TextEditingController();
         return AlertDialog(
-          title: Text('모든 문제가 끝났습니다!'),
+          title: Text('퀴즈를 끝내시겠어요?'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -154,81 +154,20 @@ class _NameQuizPageState extends State<NameQuizPage> {
             ),
             TextButton(
               onPressed: () {
-                Provider.of<RankingProvider>(context, listen: false).addRanking(
-                    _name_nicknameController.text,
-                    answercount_name,
-                    'name');
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('랭킹에 등록되었습니다'),
-                    behavior: SnackBarBehavior.floating,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    // margin: EdgeInsets.symmetric(horizontal: 900.0, vertical: 0.0),
-                    width: 200,
-                  ),
-                );
-                setState(() {
-                  currentIndex = 0;
-                  contact =
-                  Provider.of<ContactsProvider>(context, listen: false)
-                      .contacts[currentIndex];
-                  _generateNameQuizOptions();
-                });
-              },
-              child: Text('랭킹 등록'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-  void _showEndQuizDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        TextEditingController _name_nicknameController = TextEditingController();
-        return AlertDialog(
-          title: Text('퀴즈를 끝내시겠습니까?'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('현재까지 맞춘 문제 개수: $answercount_name'),
-              TextField(
-                controller: _name_nicknameController,
-                decoration: InputDecoration(
-                  labelText: '랭킹용 닉네임을 설정해주세요',
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('닫기'),
-            ),
-            TextButton(
-              onPressed: () {
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => NavigationBarWidget(initialIndex: 2),),
+                    builder: (context) => NavigationBarWidget(initialIndex: 2),),
                       (route) => false,
                 );
               },
               child: Text('나가기'),
             ),
-
             TextButton(
               onPressed: () {
                 Provider.of<RankingProvider>(context, listen: false).addRanking(
                     _name_nicknameController.text,
-                    answercount_name,
+                    answercount_name, filteredContacts.length,
                     'name');
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -257,6 +196,7 @@ class _NameQuizPageState extends State<NameQuizPage> {
       },
     );
   }
+
 
   void _showRankingModal() {
     showModalBottomSheet(
@@ -430,7 +370,7 @@ class _NameQuizPageState extends State<NameQuizPage> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 16, bottom: 16),
                 child: ElevatedButton(
-                  onPressed: _showEndQuizDialog,
+                  onPressed: _showCompletionDialog,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.pink,
                     shape: RoundedRectangleBorder(
