@@ -28,7 +28,7 @@ class _ModeSelectionPageState extends State<ModeSelectionPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Container(
-                  width: 130,
+                  width: 180,
                   alignment: Alignment.centerRight,
                   child:Flexible(
                       child: GroupDropdown(
@@ -38,7 +38,7 @@ class _ModeSelectionPageState extends State<ModeSelectionPage> {
                           dropDownGroup[2]= newGroup;
                           Provider.of<ContactsProvider>(context, listen: false).updateNowGroup(dropDownGroup, 2);
                         },
-                        isEdit: false,
+                        widgetFrom: 2,
                       )
                   )
                 ),

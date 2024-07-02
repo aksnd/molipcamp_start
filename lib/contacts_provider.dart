@@ -154,4 +154,18 @@ class ContactsProvider extends ChangeNotifier {
     _widget3filterGroupContacts(); //3개의 tab의 group기반 다시 확인하고
     notifyListeners(); // 바뀐것을 알려준다!
   }
+  void removeGroup(String group, int widgetFrom){
+    for(int index=0; index < _contacts.length; index ++){
+      if (_contacts[index].group== group) {
+        _contacts[index].group = '기타';
+      }
+    }
+    for(int i=0;i<3;i++){
+      if(_nowGroup[i]==group){
+        _nowGroup[i]='기타';
+        updateNowGroup(_nowGroup, i);
+      }
+    }
+    contactsChangeFunctions();
+  }
 }

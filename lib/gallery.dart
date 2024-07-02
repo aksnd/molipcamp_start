@@ -11,6 +11,7 @@ class gallery extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: PhotoGridScreen(),
     );
   }
@@ -42,7 +43,7 @@ class _PhotoGridScreenState extends State<PhotoGridScreen> {
             title: const Text('Photo Grid'),
             actions: <Widget>[
               Container(
-                  width: 130,
+                  width: 180,
                   alignment: Alignment.centerRight,
                   child:Flexible(
                       child: GroupDropdown(
@@ -52,7 +53,7 @@ class _PhotoGridScreenState extends State<PhotoGridScreen> {
                             dropDownGroup[1]= newGroup;
                             Provider.of<ContactsProvider>(context, listen: false).updateNowGroup(dropDownGroup, 1);
                           },
-                          isEdit: false,
+                          widgetFrom: 1,
                       )
                   )),
               const SizedBox(width: 10,),
