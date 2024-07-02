@@ -28,7 +28,7 @@ class _NameQuizPageState extends State<NameQuizPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final contactsProvider = Provider.of<ContactsProvider>(context, listen: false);
-      filteredContacts = contactsProvider.contacts.where((contact) => contact.image != 'assets/images/default.png').toList();
+      filteredContacts = contactsProvider.widget3GroupFilteredContacts.where((contact) => contact.image != 'assets/images/default.png').toList();
       if (filteredContacts.isNotEmpty) {
         setState(() {
           contact = filteredContacts[currentIndex];
@@ -49,9 +49,16 @@ class _NameQuizPageState extends State<NameQuizPage> {
 
     final contactsProvider = Provider.of<ContactsProvider>(context, listen: false);
     Random random = Random();
-    while (options.length < 3) {
-      // String randomName = contactsProvider.contacts[random.nextInt(contactsProvider.contacts.length)].name;
+    for(int i=0;i<filteredContacts.length*4;i++){
+      if(options.length>=3)
+        break;
       String randomName = filteredContacts[random.nextInt(filteredContacts.length)].name;
+      if (!options.contains(randomName)) {
+        options.add(randomName);
+      }
+    }
+    while (options.length < 3) {
+      String randomName = contactsProvider.contacts[random.nextInt(contactsProvider.contacts.length)].name;
       if (!options.contains(randomName)) {
         options.add(randomName);
       }

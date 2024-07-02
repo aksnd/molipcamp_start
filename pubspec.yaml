@@ -26,6 +26,13 @@ dev_dependencies:
   flutter_lints: ^3.0.0
   provider: ^5.0.0
   shared_preferences: ^2.0.13 # Check for the latest version
+  flutter_launcher_icons: ^0.13.1
+
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/app_icon.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -37,6 +44,7 @@ flutter:
   assets:
     - assets/contacts.json
     - assets/images/
+    - assets/icons/app_icon.png
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

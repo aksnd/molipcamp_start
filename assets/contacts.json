@@ -87,7 +87,7 @@
     "phone": "010-5207-6070",
     "image": "assets/images/kseungwan.png",
     "birthday": "2001.05.09",
-    "group": "default",
+    "group": "기타",
     "mbti": "INTP"
   },
   {
@@ -141,7 +141,7 @@
     "phone": "010-4830-9246",
     "image": "assets/images/seoyeong.png",
     "birthday": "2002.06.07",
-    "group": "KAIST",
+    "group": "성균관대학교",
     "mbti": "ISTJ"
   },
   {
@@ -168,7 +168,7 @@
     "phone": "010-5297-6753",
     "image": "assets/images/seohyun.png",
     "birthday": "2003.03.21",
-    "group": "KAIST",
+    "group": "GIST",
     "mbti": "ENFJ"
   },
   {

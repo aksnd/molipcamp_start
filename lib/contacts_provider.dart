@@ -9,8 +9,20 @@ class ContactsProvider extends ChangeNotifier {
   List<SimpleContact> _contacts = [];
   List<SimpleContact> _filteredcontacts = [];
   String _SearchQuery = '';
+
+  List<SimpleContact> _widget1GroupFilteredContacts = [];
+  List<SimpleContact> _widget2GroupFilteredContacts = [];
+  List<SimpleContact> _widget3GroupFilteredContacts = [];
+
+  List<String> _nowGroup = ['all_groups','all_groups','all_groups'];
+
   List<SimpleContact> get contacts => _contacts; //외부에서 contacts로 접근할때 _contacts와 같게 취급
   List<SimpleContact> get filteredcontacts => _filteredcontacts; //외부에서 filteredcontacts로 접근할때 _filteredcontacts와 같게 취급
+  List<SimpleContact> get widget1GroupFilteredContacts => _widget1GroupFilteredContacts;
+  List<SimpleContact> get widget2GroupFilteredContacts => _widget2GroupFilteredContacts;
+  List<SimpleContact> get widget3GroupFilteredContacts => _widget3GroupFilteredContacts;
+  List<String> get nowGroup => _nowGroup;
+
   ContactsProvider() {
     //첫 Contacts가 생성될때 실행되는 함수, load만으로 가져옴
     _loadContacts();
@@ -29,11 +41,7 @@ class ContactsProvider extends ChangeNotifier {
         final List<dynamic> jsonData = jsonDecode(jsonString);
         _contacts = jsonData.map((item) => SimpleContact.fromJson(item)).toList();
       }
-      //contacts의 전반적인 상태관리 함수 4개라 생각하면 편함
-      _sortContacts(); //_contacts ㄱㄴㄷ순 정렬, index 재할당
-      _saveContacts(); //_contacts 그대로 sharedPreference에 저장
-      _filterContacts(); //검색중이었을떄, 검색중인놈만 뜨게하기위해 filteredcontacts 재검색
-      notifyListeners(); // Notify listeners when contacts are loaded
+      contactsChangeFunctions();
     } catch (e) {
       print('Error loading contacts: $e');
       // Handle error as needed (e.g., show error message)
@@ -46,6 +54,36 @@ class ContactsProvider extends ChangeNotifier {
     } else {
       _filteredcontacts = _contacts
           .where((contact) => contact.name.toLowerCase().contains(_SearchQuery.toLowerCase()))
+          .toList();
+    }
+  }
+
+  void _widget1filterGroupContacts() { // 상태관리 함수 3호 검색어랑 매칭해서 확인하기
+    if (_nowGroup[0]=='all_groups') {
+      _widget1GroupFilteredContacts = _filteredcontacts;
+    } else {
+      _widget1GroupFilteredContacts = _filteredcontacts
+          .where((contact) => contact.group==_nowGroup[0])
+          .toList();
+    }
+  }
+
+  void _widget2filterGroupContacts() { // 상태관리 함수 3호 검색어랑 매칭해서 확인하기
+    if (_nowGroup[1]=='all_groups') {
+      _widget2GroupFilteredContacts = _contacts;
+    } else {
+      _widget2GroupFilteredContacts = _contacts
+          .where((contact) => contact.group==_nowGroup[1])
+          .toList();
+    }
+  }
+
+  void _widget3filterGroupContacts() { // 상태관리 함수 3호 검색어랑 매칭해서 확인하기
+    if (_nowGroup[2]=='all_groups') {
+      _widget3GroupFilteredContacts = _contacts;
+    } else {
+      _widget3GroupFilteredContacts = _contacts
+          .where((contact) => contact.group==_nowGroup[2])
           .toList();
     }
   }
@@ -72,35 +110,48 @@ class ContactsProvider extends ChangeNotifier {
 
   void addContact(SimpleContact contact) { //추가하기
     _contacts.add(contact);
-    _sortContacts();
-    _saveContacts();
-    _filterContacts();
-    notifyListeners(); // Notify listeners after adding a new contact
+    contactsChangeFunctions();
   }
 
   void updateContact(int index, SimpleContact updatedContact) { //수정하기
     if (index >= 0 && index < _contacts.length) {
       _contacts[index] = updatedContact;
-      _sortContacts();
-      _saveContacts();
-      _filterContacts();
-      notifyListeners(); // Notify listeners after updating a contact
+      contactsChangeFunctions();
     }
   }
   void deleteContact(int index) { //삭제하기
     if (index >= 0 && index < _contacts.length) {
       _contacts.removeAt(index);
-      _sortContacts();
-      _saveContacts(); // Save contacts to SharedPreferences after deleting
-      _filterContacts();
-      notifyListeners(); // Notify listeners after deleting a contact
+      contactsChangeFunctions();
     }
   }
 
   void updateSearchQuery(String query) { // 검색할때 Query가 변경되었을때 사용되는 함수
     _SearchQuery = query;
     _filterContacts();
+    _widget1filterGroupContacts();
     notifyListeners();
   }
 
+  void updateNowGroup(List<String> nowGroup, int widget) {
+    _nowGroup = nowGroup;
+    if(widget==0) {
+      _widget1filterGroupContacts();
+    } else if(widget==1){
+      _widget2filterGroupContacts();
+    } else if(widget==2){
+      _widget3filterGroupContacts();
+    }
+    notifyListeners();
+  }
+
+  void contactsChangeFunctions(){ //contacts값이 바뀌었을떄 선언해야하는 모든 함수
+    _sortContacts(); // 정렬하고
+    _saveContacts(); // 저장하고
+    _filterContacts(); //검색 다시 확인하고
+    _widget1filterGroupContacts();
+    _widget2filterGroupContacts();
+    _widget3filterGroupContacts(); //3개의 tab의 group기반 다시 확인하고
+    notifyListeners(); // 바뀐것을 알려준다!
+  }
 }

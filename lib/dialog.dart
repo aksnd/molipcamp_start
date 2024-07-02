@@ -107,6 +107,69 @@ Future<void> showProfile(BuildContext context, SimpleContact contact, Set<String
   );
 }
 
+Future<void> addNewGroup(BuildContext context, SimpleContact contact,Set<String> groups, onUpdate) async{
+  final TextEditingController _controllerGroup = TextEditingController();
+
+  return showDialog
+  (context: context,
+  barrierDismissible: false,
+  builder: (context){
+    return StatefulBuilder(
+      builder: (context, setState){
+        return AlertDialog(
+          title: Text('새 그룹명을 입력하세요'),
+          contentPadding: EdgeInsets.all(10),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(height: 20,),
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child:
+                  Row(
+                    children: <Widget>[
+                      Text(
+                        "그룹명: ",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: TextField(
+                          controller: _controllerGroup,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),]
+            )
+          ),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Close'),
+            onPressed: () {
+              Navigator.of(context).pop();
+              editProfile(context, contact, groups, onUpdate);
+            },
+          ),
+          TextButton(
+            child: Text('Save'),
+            onPressed: () {
+              contact.group=_controllerGroup.text;
+              Provider.of<GroupsProvider>(context, listen: false).addGroups(_controllerGroup.text);
+              Navigator.of(context).pop();
+              editProfile(context, contact,groups,onUpdate);
+            },
+          ),
+        ],
+      );
+        },
+      );
+  }
+  );
+}
 
 
 Future<void> editProfile(BuildContext context, SimpleContact contact,Set<String> groups, onUpdate) async {
@@ -142,8 +205,8 @@ Future<void> editProfile(BuildContext context, SimpleContact contact,Set<String>
                   // _getImageProvider(contact.image),
                   SizedBox(height: 20,),
                   Container(
-                    width: 200, // 원하는 크기로 설정하세요
-                    height: 200, // 원하는 크기로 설정하세요
+                    width: 150, // 원하는 크기로 설정하세요
+                    height: 150, // 원하는 크기로 설정하세요
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8.0),
                       child: _getImageProvider(editedContact.image),
@@ -237,11 +300,21 @@ Future<void> editProfile(BuildContext context, SimpleContact contact,Set<String>
                             ),
                             const SizedBox(width: 8), // 간격 조정을 위한 SizedBox
                             Expanded(child: GroupDropdown(
-                                groups: groups,
-                                selectedGroup: editedContact.group,
-                                onGroupChanged:(String newGroup){
-                                  editedContact.group= newGroup;
+                              groups: groups,
+                              selectedGroup: editedContact.group,
+                              isEdit: true,
+                              onGroupChanged:(String newGroup){
+                                if (newGroup== 'new_group'){
+                                  editedContact.name = _controller1.text;
+                                  editedContact.phone = _controller2.text;
+                                  editedContact.birthday = _controller3.text;
+                                  editedContact.mbti = _controller4.text;
+                                  Navigator.of(context).pop();
+                                  addNewGroup(context, editedContact, groups,onUpdate);
+
                                 }
+                                else{editedContact.group= newGroup;}
+                                },
                             )),
                           ],
                         ),
@@ -270,8 +343,8 @@ Future<void> editProfile(BuildContext context, SimpleContact contact,Set<String>
                   editedContact.name = _controller1.text;
                   editedContact.phone = _controller2.text;
                   editedContact.birthday = _controller3.text;
-                  onUpdate(contact.index, editedContact);
                   editedContact.mbti = _controller4.text;
+                  onUpdate(contact.index, editedContact);
                   print(_controller1.text);
                   print(_controller2.text);
                   print(_controller3.text);
@@ -302,12 +375,15 @@ class GroupDropdown extends StatefulWidget {
   final Set<String> groups;
   final String selectedGroup;
   final Function(String) onGroupChanged;
+  final bool isEdit;
+
 
   const GroupDropdown({
     Key? key,
     required this.groups,
     required this.selectedGroup,
     required this.onGroupChanged,
+    required this.isEdit,
   }) : super(key: key);
 
   @override
@@ -325,25 +401,35 @@ class _GroupDropdownState extends State<GroupDropdown>{
 
   @override
   Widget build(BuildContext context) {
+    List<DropdownMenuItem<String>> _droppingItems;
+    _droppingItems=widget.groups.map((String group) {
+      return DropdownMenuItem<String>(
+        value: group,
+        child: Text(group),
+      );
+    }).toList();
+    if(widget.isEdit){
+      _droppingItems.add(
+        const DropdownMenuItem<String>(
+          value: 'new_group',
+          child: Text('새 그룹 추가'),
+        ),
+      );
+    }
+    else{
+      _droppingItems.add(
+        const DropdownMenuItem<String>(
+          value: 'all_groups',
+          child: Text('모든 그룹 보기'),
+        ),
+      );
+    }
     return DropdownButton<String>(
       value: _selectedGroup,
       hint: Text(_selectedGroup ?? 'Select Group'),
-      items: widget.groups.map((String group) {
-        return DropdownMenuItem<String>(
-          value: group,
-          child: Text(group),
-        );
-      }).toList()
-        ..add(
-          const DropdownMenuItem<String>(
-            value: 'new_group',
-            child: Text('새 그룹 추가'),
-          ),
-        ),
+      items: _droppingItems,
       onChanged: (String? newValue) {
-        if (newValue == 'new_group') {
-          //수정하기
-        } else if (newValue != null&& newValue !=_selectedGroup) {
+        if (newValue != null&& newValue !=_selectedGroup) {
           setState((){
             _selectedGroup=newValue;
           });
@@ -353,4 +439,5 @@ class _GroupDropdownState extends State<GroupDropdown>{
     );
   }
 }
+
 

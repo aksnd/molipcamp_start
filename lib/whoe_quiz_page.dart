@@ -13,9 +13,8 @@ import 'quiz/quiz_mbti.dart';
 
 //이게 전체 총괄
 class free_page extends StatelessWidget {
-  final String selectedGroup;
 
-  const free_page({super.key, required this.selectedGroup});
+  const free_page({super.key});
 
 
   @override

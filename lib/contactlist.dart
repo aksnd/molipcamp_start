@@ -65,15 +65,31 @@ class _MyHomePageState extends State<MyHomePage> {
       builder: (context,contactsProvider, groupsProvider, child){
         final contacts = contactsProvider.contacts;
         final groups = groupsProvider.groups;
+        List<String> dropDownGroup = contactsProvider.nowGroup;
         final filteredcontacts = contactsProvider.filteredcontacts;
+        final groupfilteredcontacts = contactsProvider.widget1GroupFilteredContacts;
         return Scaffold(
           appBar: AppBar(
             title: const Text('전화번호부'),
             actions: <Widget>[
+              Container(
+                width: 130,
+                alignment: Alignment.centerRight,
+                child:Flexible(
+                  child: GroupDropdown(
+                    groups: groups,
+                    selectedGroup: dropDownGroup[0],
+                    onGroupChanged:(String newGroup){
+                      dropDownGroup[0]= newGroup;
+                      Provider.of<ContactsProvider>(context, listen: false).updateNowGroup(dropDownGroup, 0);
+                    }, isEdit: false,
+                  )
+                )),
+              const SizedBox(width: 10,),
               IconButton( // 단순추가
                 icon: Icon(Icons.add),
                 onPressed: () {
-                  SimpleContact defaultContact = SimpleContact(index: 1,name: '', phone: '010-0000-0000', image: 'assets/images/default.png', birthday: '2000.01.01', group: 'default', mbti: 'ENTJ');
+                  SimpleContact defaultContact = SimpleContact(index: 1,name: '', phone: '010-0000-0000', image: 'assets/images/default.png', birthday: '2000.01.01', group: '기타', mbti: 'ENTJ');
                   editProfile(context, defaultContact, groups, addContact);
                 },
               ),
@@ -82,8 +98,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () async {
                   NativeContact.Contact? contact = await _contactPicker.selectContact();
                   if(contact!=null && contact.fullName!=null && contact.phoneNumbers!=null){
-                    SimpleContact defaultContact = SimpleContact(index: 1,name: contact.fullName!, phone: formatPhoneNumber(contact.phoneNumbers![0]),group:'default', image: 'assets/images/default.png', birthday: '2000.01.01',mbti: 'ENTJ');
-                    addContact(1, defaultContact);
+                    SimpleContact defaultContact = SimpleContact(index: 1,name: contact.fullName!, phone: formatPhoneNumber(contact.phoneNumbers![0]),group:'기타', image: 'assets/images/default.png', birthday: '2000.01.01',mbti: 'ENTJ');
+                    editProfile(context, defaultContact, groups, addContact);
 
                   }
                 },
@@ -107,9 +123,9 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               Expanded(
                 child:ListView.builder(
-                  itemCount: filteredcontacts.length,
+                  itemCount: groupfilteredcontacts.length,
                   itemBuilder: (context, index) { // 이 index는 filteredcontacts의 index 이므로 Read말고는 부적합
-                    final contact = filteredcontacts[index];
+                    final contact = groupfilteredcontacts[index];
                     return Column(
                       children: [
                         ListTile(
