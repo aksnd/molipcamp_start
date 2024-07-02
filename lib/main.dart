@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import './gallery.dart';
-import './free_page.dart';
+import './whoe_quiz_page.dart';
 import './contactlist.dart';
 import 'contacts_provider.dart';
 import 'ranking_provider.dart';
@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/services.dart';
+import './mode_select.dart';
 
 void main(){
   SystemChrome.setPreferredOrientations([
@@ -47,21 +48,27 @@ class NavigationBarWidget extends StatefulWidget {
 
 class _NavigationBarState extends State<NavigationBarWidget> {
   int _selectedIndex = 0;
+  bool modeSelected = false;
+  String? selectedGroup;
 
   List _pages = [
     phone_number(),
     gallery(),
-    free_page(),
+    ModeSelectionPage(),
   ];
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      modeSelected = false;
     });
   }
-  @override
-  void initState() {
-    super.initState();
+
+  void _onGroupSelected(String group) {
+    setState(() {
+      selectedGroup = group;
+      modeSelected = true;
+    });
   }
 
 
