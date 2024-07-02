@@ -182,7 +182,7 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
                 setState(() {
                   currentIndex = 0;
                   answercount_phonenumber=0;
-                  contact = Provider.of<ContactsProvider>(context, listen: false).contacts[currentIndex];
+                  contact = Provider.of<ContactsProvider>(context, listen: false).widget3GroupFilteredContacts[currentIndex];
                   _generate_phonenumber_QuizOptions();
                 });
               },

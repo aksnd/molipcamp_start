@@ -190,9 +190,7 @@ class _NameQuizPageState extends State<NameQuizPage> {
                 setState(() {
                   currentIndex = 0;
                   answercount_name=0;
-                  contact =
-                  Provider.of<ContactsProvider>(context, listen: false)
-                      .contacts[currentIndex];
+                  contact = filteredContacts[currentIndex];
                   _generateNameQuizOptions();
                 });
               },
