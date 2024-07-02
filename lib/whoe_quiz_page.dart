@@ -23,7 +23,7 @@ class free_page extends StatelessWidget {
       length: 4,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('퀴즈'),
+          title: const Text('whole ver.'),
           backgroundColor: Colors.pinkAccent,
           bottom: TabBar(
             tabs: [

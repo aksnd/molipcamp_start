@@ -8,6 +8,7 @@ import '../contacts_provider.dart';
 import '../ranking_provider.dart';
 import 'quiz_phonenumber.dart';
 import 'package:kaist_week1/main.dart';
+import 'package:kaist_week1/quiz/utils/calculator.dart';
 
 
 //전화번호 퀴즈 - 탭3
@@ -119,8 +120,7 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
 
   void _showCompletionDialog() {
     final contactsProvider = Provider.of<ContactsProvider>(context, listen: false);
-    int totalQuestions = contactsProvider.widget3GroupFilteredContacts.length;
-    double accuracy = (answercount_phonenumber / totalQuestions) * 100;
+    double correctRate = calculateCorrectRate(answercount_phonenumber, currentIndex+1);
 
     showDialog(
       context: context,
@@ -128,72 +128,14 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
       builder: (context) {
         TextEditingController _phonenumber_nicknameController = TextEditingController();
         return AlertDialog(
-          title: Text('모든 문제가 끝났습니다!'),
+          title: Text('퀴즈를 끝내시겠어요?'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('맞춘 문제 개수: $answercount_phonenumber'),
-              Text('정답률 : ${accuracy.toStringAsFixed(2)}%'),
+              Text('맞춘 문제 개수: $answercount_phonenumber/${currentIndex+1}'),
+              Text('정답률 : ${correctRate.toStringAsFixed(2)}%'),
               TextField(
                 controller: _phonenumber_nicknameController,
-                decoration: InputDecoration(
-                  labelText: '랭킹용 닉네임을 설정해주세요',
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('닫기'),
-            ),
-            TextButton(
-              onPressed: () {
-                Provider.of<RankingProvider>(context, listen: false)
-                    .addRanking(_phonenumber_nicknameController.text, answercount_phonenumber, '전화번호');
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('랭킹에 등록되었습니다'),
-                    behavior: SnackBarBehavior.floating,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    // margin: EdgeInsets.symmetric(horizontal: 900.0, vertical: 0.0),
-                    width: 200,
-                  ),
-                );
-                setState(() {
-                  currentIndex = 0;
-                  contact = Provider.of<ContactsProvider>(context, listen: false).contacts[currentIndex];
-                  _generate_phonenumber_QuizOptions();
-                });
-              },
-
-              child: Text('랭킹 등록'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showEndQuizDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        TextEditingController _name_nicknameController = TextEditingController();
-        return AlertDialog(
-          title: Text('퀴즈를 끝내시겠습니까?'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('현재까지 맞춘 문제 개수: $answercount_phonenumber'),
-              TextField(
-                controller: _name_nicknameController,
                 decoration: InputDecoration(
                   labelText: '랭킹용 닉네임을 설정해주세요',
                 ),
@@ -218,13 +160,13 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
               },
               child: Text('나가기'),
             ),
-
             TextButton(
               onPressed: () {
-                Provider.of<RankingProvider>(context, listen: false).addRanking(
-                    _name_nicknameController.text,
-                    answercount_phonenumber,
-                    'name');
+                Provider.of<RankingProvider>(context, listen: false)
+                    .addRanking(
+                    _phonenumber_nicknameController.text,
+                    answercount_phonenumber, currentIndex+1,
+                    '전화번호');
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -239,12 +181,12 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
                 );
                 setState(() {
                   currentIndex = 0;
-                  contact =
-                  Provider.of<ContactsProvider>(context, listen: false)
-                      .contacts[currentIndex];
+                  answercount_phonenumber=0;
+                  contact = Provider.of<ContactsProvider>(context, listen: false).contacts[currentIndex];
                   _generate_phonenumber_QuizOptions();
                 });
               },
+
               child: Text('랭킹 등록'),
             ),
           ],
@@ -252,6 +194,8 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
       },
     );
   }
+
+
 
   void _showRankingModal() {
     showModalBottomSheet(
@@ -325,6 +269,7 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
                                     '점수: ${entry.score}',
                                     style: TextStyle(fontSize: 14),
                                   ),
+                                  Text('정답률: ${entry.correctRate.toStringAsFixed(2)}%'),
                                 ],
                               ),
                               IconButton(
@@ -435,7 +380,7 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 16, bottom: 16),
                   child: ElevatedButton(
-                    onPressed: _showEndQuizDialog,
+                    onPressed: _showCompletionDialog,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.pink,
                       shape: RoundedRectangleBorder(
