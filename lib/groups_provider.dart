@@ -51,6 +51,7 @@ class GroupsProvider extends ChangeNotifier {
   void deleteGroup(String group) { //삭제하기
     if (_groups.contains(group)) {
       _groups.remove(group);
+      _saveGroups();
       notifyListeners(); // Notify listeners after deleting a contact
     }
   }

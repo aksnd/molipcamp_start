@@ -132,7 +132,6 @@ Future<void> deleteGroupDialog(BuildContext context, String group, int widgetFro
                     Provider.of<GroupsProvider>(context, listen: false).deleteGroup(group);
                     Navigator.of(context).pop();
 
-
                     // 원하는 탭으로 이동
                     //final navBarState = context.findAncestorStateOfType<NavigationBarWidgetState>();
                     //navBarState?.navigateToTab(1);  // 갤러리 탭으로 이동
@@ -442,6 +441,7 @@ class _GroupDropdownState extends State<GroupDropdown>{
 
   @override
   Widget build(BuildContext context) {
+
     //final contactsProvider = Provider.of<ContactsProvider>(context, listen: false);
     //final groupsProvider = Provider.of<ContactsProvider>(context, listen: false);
     List<DropdownMenuItem<String>> _droppingItems;
@@ -492,18 +492,26 @@ class _GroupDropdownState extends State<GroupDropdown>{
       );
     }
 
-    return DropdownButton<String>(
-      value: _selectedGroup,
-      hint: Text(_selectedGroup ?? 'Select Group'),
-      items: _droppingItems,
-      onChanged: (String? newValue) {
-        if (newValue != null&& newValue !=_selectedGroup) {
-          setState((){
-            _selectedGroup=newValue;
-          });
-          widget.onGroupChanged(newValue);
+    return Consumer2<ContactsProvider,GroupsProvider>(
+      builder: (context,contactsProvider, groupsProvider, child) {
+        List<String> dropDownGroup = contactsProvider.nowGroup;
+        if(widget.widgetFrom!=9){
+          _selectedGroup = dropDownGroup[widget.widgetFrom];
         }
-      },
+        return DropdownButton<String>(
+          value: _selectedGroup,
+          hint: Text(_selectedGroup ?? 'Select Group'),
+          items: _droppingItems,
+          onChanged: (String? newValue) {
+            if (newValue != null&& newValue !=_selectedGroup) {
+              setState((){
+                _selectedGroup=newValue;
+              });
+              widget.onGroupChanged(newValue);
+            }
+          },
+        );
+      }
     );
   }
 }
