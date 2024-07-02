@@ -1,4 +1,4 @@
-// quiz_utils.dart
+
 double calculateCorrectRate(int correctAnswers, int totalQuestions) {
   if (totalQuestions == 0) return 0;
   double rate = (correctAnswers / totalQuestions) * 100;
