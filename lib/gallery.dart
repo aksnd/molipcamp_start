@@ -51,7 +51,8 @@ class _PhotoGridScreenState extends State<PhotoGridScreen> {
                           onGroupChanged:(String newGroup){
                             dropDownGroup[1]= newGroup;
                             Provider.of<ContactsProvider>(context, listen: false).updateNowGroup(dropDownGroup, 1);
-                          }
+                          },
+                          isEdit: false,
                       )
                   )),
               const SizedBox(width: 10,),

@@ -82,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onGroupChanged:(String newGroup){
                       dropDownGroup[0]= newGroup;
                       Provider.of<ContactsProvider>(context, listen: false).updateNowGroup(dropDownGroup, 0);
-                    }
+                    }, isEdit: false,
                   )
                 )),
               const SizedBox(width: 10,),
