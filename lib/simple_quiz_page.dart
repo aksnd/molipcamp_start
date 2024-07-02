@@ -8,8 +8,11 @@ import 'ranking_provider.dart';
 
 
 //이게 전체 총괄
-class free_page extends StatelessWidget {
-  const free_page({super.key});
+class simple_page extends StatelessWidget {
+  final String selectedGroup;
+
+  const simple_page({super.key, required this.selectedGroup});
+
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +24,10 @@ class free_page extends StatelessWidget {
           backgroundColor: Colors.pinkAccent,
           bottom: TabBar(
             tabs: [
-              Tab(text: '이름 퀴즈'),
+              Tab(text: '이름 심플'),
               Tab(text: 'MBTI'),
               Tab(text: '전화번호'),
-              Tab(text: '생일 퀴즈'),
+              Tab(text: '생일 심플'),
             ],
           ),
         ),
@@ -37,6 +40,28 @@ class free_page extends StatelessWidget {
             BirthdayQuizPage(),
           ],
         ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.contact_page),
+              label: '전화번호 ',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.insert_photo),
+              label: '갤러리',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.quiz),
+              label: '퀴즈',
+            ),
+          ],
+          currentIndex: 2, // '퀴즈' 페이지로 설정
+          selectedItemColor: Colors.amber[800],
+          onTap: (index) {
+            Navigator.pop(context);
+          },
+        ),
+
       ),
     );
   }
@@ -73,8 +98,8 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
   void _generate_phonenumber_QuizOptions() {
 
     if (contact == null)
-      {print("contact = null");
-      return;}
+    {print("contact = null");
+    return;}
 
     correctAnswer = contact!.phone;
     options = [correctAnswer];
@@ -151,6 +176,10 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
   }
 
   void _showCompletionDialog() {
+    final contactsProvider = Provider.of<ContactsProvider>(context, listen: false);
+    int totalQuestions = contactsProvider.contacts.length;
+    double accuracy = (answercount_phonenumber / totalQuestions) * 100;
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -162,6 +191,7 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text('맞춘 문제 개수: $answercount_phonenumber'),
+              Text('정답률 : ${accuracy.toStringAsFixed(2)}%'),
               TextField(
                 controller: _phonenumber_nicknameController,
                 decoration: InputDecoration(
@@ -194,11 +224,11 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
                   ),
                 );
                 setState(() {
-        currentIndex = 0;
-        contact = Provider.of<ContactsProvider>(context, listen: false).contacts[currentIndex];
-        _generate_phonenumber_QuizOptions();
-        });
-        },
+                  currentIndex = 0;
+                  contact = Provider.of<ContactsProvider>(context, listen: false).contacts[currentIndex];
+                  _generate_phonenumber_QuizOptions();
+                });
+              },
 
               child: Text('랭킹 등록'),
             ),
@@ -275,6 +305,7 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
                                     entry.nickname,
                                     style: TextStyle(fontSize: 16),
                                   ),
+                                  SizedBox(width: 8),
                                   Text(
                                     '점수: ${entry.score}',
                                     style: TextStyle(fontSize: 14),
@@ -325,68 +356,68 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
 
     return Scaffold(
 
-    body:SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextButton(
-                  onPressed: _previousQuestion,
-                  child: Text('이전 문제'),
-                ),
-                Text('${currentIndex + 1}/${contactsProvider.contacts.length}'),
-                TextButton(
-                  onPressed: _nextQuestion,
-                  child: Text('다음 문제'),
-                ),
-              ],
-            ),
-            Container(
-              width: 120,
-              height: 120,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8.0),
-                child: contact != null ? _getImageProvider(contact!.image) : SizedBox.shrink(),
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      body:SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    contact != null ? "이름: ${contact!.name}" : "이름 없음",
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey[700],
-                    ),
+                  TextButton(
+                    onPressed: _previousQuestion,
+                    child: Text('이전 문제'),
                   ),
-                  SizedBox(height: 8),
-                  Text(
-                    "이 사람의 전화번호는?",
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey[700],
-                    ),
+                  Text('${currentIndex + 1}/${contactsProvider.contacts.length}'),
+                  TextButton(
+                    onPressed: _nextQuestion,
+                    child: Text('다음 문제'),
                   ),
-                  SizedBox(height: 16),
-                  ...options.map((option) => ElevatedButton(
-                    onPressed: () => _checkAnswer(option),
-                    child: Text(option),
-                  )),
                 ],
               ),
+              Container(
+                width: 120,
+                height: 120,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: contact != null ? _getImageProvider(contact!.image) : SizedBox.shrink(),
+                ),
+              ),
 
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      contact != null ? "이름: ${contact!.name}" : "이름 없음",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      "이 사람의 전화번호는?",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    ...options.map((option) => ElevatedButton(
+                      onPressed: () => _checkAnswer(option),
+                      child: Text(option),
+                    )),
+                  ],
+                ),
+
+              ),
+            ],
+          ),
         ),
       ),
-    ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showRankingModal,
         child: Icon(Icons.leaderboard),
@@ -489,7 +520,7 @@ class _NameQuizPageState extends State<NameQuizPage> {
         contact = filteredContacts[currentIndex];
         _generateNameQuizOptions();
       }
-    else {
+      else {
         _showCompletionDialog();
       }
     });
@@ -681,65 +712,65 @@ class _NameQuizPageState extends State<NameQuizPage> {
 
 
     return Scaffold(
-        body:SingleChildScrollView(
-          child: Padding(
-                padding: const EdgeInsets.all(0.0),
-                child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextButton(
-                  onPressed: _previousQuestion,
-                  child: Text('이전 문제'),
-                ),
-                Text('${currentIndex + 1}/${filteredContacts.length}'),
-                TextButton(
-                  onPressed: _nextQuestion,
-                  child: Text('다음 문제'),
-                ),
-              ],
-            ),
-            Container(
-              width: 120,
-              height: 120,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8.0),
-                child: contact != null ? _getImageProvider(contact!.image) : SizedBox.shrink(),
-              ),
-            ),
-            SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      body:SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(0.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-
-                  SizedBox(height: 8),
-                  Text(
-                    "이 사람의 이름은?",
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey[700],
-                    ),
+                  TextButton(
+                    onPressed: _previousQuestion,
+                    child: Text('이전 문제'),
                   ),
-                  SizedBox(height: 16),
-                  ...options.map((option) => ElevatedButton(
-                    onPressed: () => _checkAnswer(option),
-                    child: Text(option),
-                  )),
+                  Text('${currentIndex + 1}/${filteredContacts.length}'),
+                  TextButton(
+                    onPressed: _nextQuestion,
+                    child: Text('다음 문제'),
+                  ),
                 ],
               ),
-            ),
-          ],
-                ),),
-        ),
+              Container(
+                width: 120,
+                height: 120,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: contact != null ? _getImageProvider(contact!.image) : SizedBox.shrink(),
+                ),
+              ),
+              SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+
+                    SizedBox(height: 8),
+                    Text(
+                      "이 사람의 이름은?",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    ...options.map((option) => ElevatedButton(
+                      onPressed: () => _checkAnswer(option),
+                      child: Text(option),
+                    )),
+                  ],
+                ),
+              ),
+            ],
+          ),),
+      ),
       floatingActionButton: FloatingActionButton(
-      onPressed: _showRankingModal,
-      child: Icon(Icons.leaderboard),
-      tooltip: '이름 퀴즈 랭킹보기',
-    ),
+        onPressed: _showRankingModal,
+        child: Icon(Icons.leaderboard),
+        tooltip: '이름 퀴즈 랭킹보기',
+      ),
     );
   }
 
@@ -1033,66 +1064,66 @@ class _BirthdayQuizPageState extends State<BirthdayQuizPage> {
     }
 
     return Scaffold(
-        body:SingleChildScrollView(
-          child: Padding(
-                padding: const EdgeInsets.all(0.0),
-                child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextButton(
-                  onPressed: _previousQuestion,
-                  child: Text('이전 문제'),
-                ),
-                Text('${currentIndex + 1}/${contactsProvider.contacts.length}'),
-                TextButton(
-                  onPressed: _nextQuestion,
-                  child: Text('다음 문제'),
-                ),
-              ],
-            ),
-            Container(
-              width: 120,
-              height: 120,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8.0),
-                child: contact != null ? _getImageProvider(contact!.image) : SizedBox.shrink(),
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      body:SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(0.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    contact != null ? "이름: ${contact!.name}" : "이름 없음",
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey[700],
-                    ),
+                  TextButton(
+                    onPressed: _previousQuestion,
+                    child: Text('이전 문제'),
                   ),
-                  SizedBox(height: 8),
-                  Text(
-                    "이 사람의 생일은?",
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey[700],
-                    ),
+                  Text('${currentIndex + 1}/${contactsProvider.contacts.length}'),
+                  TextButton(
+                    onPressed: _nextQuestion,
+                    child: Text('다음 문제'),
                   ),
-                  SizedBox(height: 16),
-                  ...options.map((option) => ElevatedButton(
-                    onPressed: () => _checkAnswer(option),
-                    child: Text(option),
-                  )),
                 ],
               ),
-            ),
-          ],
-                ),),
-        ),
+              Container(
+                width: 120,
+                height: 120,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: contact != null ? _getImageProvider(contact!.image) : SizedBox.shrink(),
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      contact != null ? "이름: ${contact!.name}" : "이름 없음",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      "이 사람의 생일은?",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    ...options.map((option) => ElevatedButton(
+                      onPressed: () => _checkAnswer(option),
+                      child: Text(option),
+                    )),
+                  ],
+                ),
+              ),
+            ],
+          ),),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showRankingModal,
         child: Icon(Icons.leaderboard),
@@ -1392,71 +1423,71 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
     }
 
     return Scaffold(
-        body:SingleChildScrollView(
-          child: Padding(
-                padding: const EdgeInsets.all(0.0),
-                child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextButton(
-                  onPressed: _previousQuestion,
-                  child: Text('이전 문제'),
-                ),
-                Text('${currentIndex + 1}/${contactsProvider.contacts.length}'),
-                TextButton(
-                  onPressed: _nextQuestion,
-                  child: Text('다음 문제'),
-                ),
-              ],
-            ),
-            Container(
-              width: 120,
-              height: 120,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8.0),
-                child: contact != null ? _getImageProvider(contact!.image) : SizedBox.shrink(),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      body:SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(0.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    contact != null ? "이름: ${contact!.name}" : "이름 없음",
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey[700],
-                    ),
+                  TextButton(
+                    onPressed: _previousQuestion,
+                    child: Text('이전 문제'),
                   ),
-                  SizedBox(height: 8),
-                  Text(
-                    "이 사람의 MBTI는?",
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey[700],
-                    ),
+                  Text('${currentIndex + 1}/${contactsProvider.contacts.length}'),
+                  TextButton(
+                    onPressed: _nextQuestion,
+                    child: Text('다음 문제'),
                   ),
-                  SizedBox(height: 16),
-                  ...options.map((option) => ElevatedButton(
-                    onPressed: () => _checkAnswer(option),
-                    child: Text(option),
-                  )),
                 ],
               ),
-            ),
-          ],
+              Container(
+                width: 120,
+                height: 120,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: contact != null ? _getImageProvider(contact!.image) : SizedBox.shrink(),
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      contact != null ? "이름: ${contact!.name}" : "이름 없음",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      "이 사람의 MBTI는?",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    ...options.map((option) => ElevatedButton(
+                      onPressed: () => _checkAnswer(option),
+                      child: Text(option),
+                    )),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
+      ),
       floatingActionButton: FloatingActionButton(
-      onPressed: _showRankingModal,
-      child: Icon(Icons.leaderboard),
-      tooltip: 'mbti 퀴즈 랭킹보기',
-    ),);
+        onPressed: _showRankingModal,
+        child: Icon(Icons.leaderboard),
+        tooltip: 'mbti 퀴즈 랭킹보기',
+      ),);
   }
 }
 
