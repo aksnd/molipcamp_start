@@ -43,7 +43,7 @@ class _PhotoGridScreenState extends State<PhotoGridScreen> {
             title: const Text('Photo Grid'),
             actions: <Widget>[
               Container(
-                  width: 180,
+                  width: 130,
                   alignment: Alignment.centerRight,
                   child:Flexible(
                       child: GroupDropdown(
