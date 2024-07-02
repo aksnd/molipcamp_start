@@ -9,7 +9,7 @@
 - 협업 툴 : Discord, Notion
 - 디자인 : Figma
 
-# [1] About the project (프로젝트 기능)
+# [2] About the project (프로젝트 기능)
 이 앱은 총 3개의 탭으로 이루어져 있으며, 3개의 탭이 유기적으로 연결되어 사용
 각 탭이 공통된 전화번호 객체를 이용하며, 해당 객체는 이름, 전화번호, 생일, MBTI, group, 이미지의 값을 보유함.
 
@@ -31,7 +31,7 @@
 - 퀴즈 정답률을 기반으로 한 랭킹 기능 구현
 - 
 
-# [2] Project Skills (프로젝트 기술)
+# [3] Project Skills (프로젝트 기술)
 
 ### 주요 라이브러리 
 - shared_Preferences - <https://pub.dev/packages/shared_preferences>
@@ -46,13 +46,13 @@ SharedPreference와 provider를 이용한 탭별 자료 연계 및 local 저장 
 flutter_native_contact_picker와 contacts_service를 이용한 전화번호부 연동
 dropdown 이용하여 탭별 자료 연계
 
-# [3] 구동 방법
+# [4] 구동 방법
 'git clone https://github.com/your_username/your_flutter_app.git' 으로 clone
 'flutter pub get' 후 'flutter run' 으로 실행
 
 
 
-# [4] 개발 멤버
+# [5] 개발 멤버
 
 ## 박지훈 <https://github.com/aksnd>
 - 전화번호 CRUD System 구현(SharedPreference), 갤러리를 연결하여 사진 업로드 기능 구현(imagePicker), provider를 이용한 탭별 Contact 객체 구현, bottomnavigator 구현
