@@ -49,6 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _requestPermission();
+    Provider.of<ContactsProvider>(context, listen: false).updateSearchQuery('');
   }
 
   Future<void> _requestPermission() async {
@@ -63,9 +64,12 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Consumer2<ContactsProvider,GroupsProvider>(
       builder: (context,contactsProvider, groupsProvider, child){
+        //검색 값 초기화
+
         final contacts = contactsProvider.contacts;
         final groups = groupsProvider.groups;
         List<String> dropDownGroup = contactsProvider.nowGroup;
+
         final filteredcontacts = contactsProvider.filteredcontacts;
         final groupfilteredcontacts = contactsProvider.widget1GroupFilteredContacts;
         return Scaffold(

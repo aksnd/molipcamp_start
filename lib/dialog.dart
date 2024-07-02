@@ -14,7 +14,18 @@ Future<void> showProfile(BuildContext context, SimpleContact contact, Set<String
     builder: (BuildContext context) {
       return AlertDialog(
         contentPadding: EdgeInsets.all(10),
-        title: Text('프로필 확인'),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('프로필 확인'),
+            IconButton(
+              icon: Icon(Icons.close), // 닫기 버튼 아이콘
+              onPressed: () {
+                Navigator.of(context).pop(); // 다이얼로그 닫기
+              },
+            ),
+          ],
+        ),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -96,12 +107,6 @@ Future<void> showProfile(BuildContext context, SimpleContact contact, Set<String
                 editProfile(context, contact,groups,onUpdate);
               },
             ),
-          TextButton(
-            child: Text('close'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
         ],
       );
     },
@@ -119,14 +124,9 @@ Future<void> deleteGroupDialog(BuildContext context, String group, int widgetFro
             title: Text('"${group}"그룹을 삭제하시겠습니까?'),
             contentPadding: EdgeInsets.all(10),
             actions: <Widget>[
+
               TextButton(
-                child: Text('Close'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: Text('Delete'),
+                child: Text('예'),
                 onPressed: () {
                     Provider.of<ContactsProvider>(context, listen: false).removeGroup(group, widgetFrom);
                     Provider.of<GroupsProvider>(context, listen: false).deleteGroup(group);
@@ -136,6 +136,12 @@ Future<void> deleteGroupDialog(BuildContext context, String group, int widgetFro
                     //final navBarState = context.findAncestorStateOfType<NavigationBarWidgetState>();
                     //navBarState?.navigateToTab(1);  // 갤러리 탭으로 이동
           },
+              ),
+              TextButton(
+                child: Text('아니오'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
               ),
             ],
           );
@@ -186,14 +192,14 @@ Future<void> addNewGroup(BuildContext context, SimpleContact contact,Set<String>
           ),
         actions: <Widget>[
           TextButton(
-            child: Text('Close'),
+            child: Text('취소'),
             onPressed: () {
               Navigator.of(context).pop();
               editProfile(context, contact, groups, onUpdate);
             },
           ),
           TextButton(
-            child: Text('Save'),
+            child: Text('저장'),
             onPressed: () {
               contact.group=_controllerGroup.text;
               Provider.of<GroupsProvider>(context, listen: false).addGroups(_controllerGroup.text);
