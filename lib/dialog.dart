@@ -439,66 +439,72 @@ class _GroupDropdownState extends State<GroupDropdown>{
     _selectedGroup = widget.selectedGroup;
   }
 
+
   @override
   Widget build(BuildContext context) {
 
-    //final contactsProvider = Provider.of<ContactsProvider>(context, listen: false);
-    //final groupsProvider = Provider.of<ContactsProvider>(context, listen: false);
-    List<DropdownMenuItem<String>> _droppingItems;
-    //Set<String> groupsWithoutEtc= _groups!;
-    Set<String> groupsWithoutEtc= widget.groups;
-
-    groupsWithoutEtc.remove('기타');
-    _droppingItems=[DropdownMenuItem<String>(
-      value: '기타',
-      child: Text('기타')
-    )];
-    if(widget.widgetFrom == 9){
-      _droppingItems.addAll(groupsWithoutEtc.map((String group) {
-        return DropdownMenuItem<String>(
-          value: group,
-          child: Text(group),
-        );
-      }));
-      _droppingItems.add(
-          const DropdownMenuItem<String>(
-              value: 'new_group',
-              child: Text('새 그룹 추가')
-          ));
-    }
-    else{
-      _droppingItems.addAll(groupsWithoutEtc.map((String group) {
-        return DropdownMenuItem<String>(
-            value: group,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text(group),
-                  IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: (){
-                        deleteGroupDialog(context, group,widget.widgetFrom);
-                        //setState((){_selectedGroup=contactsProvider.nowGroup[widget.widgetFrom];
-                      //});
-                },)
-                ]
-            ),
-        );
-      }));
-      _droppingItems.add(
-        const DropdownMenuItem<String>(
-          value: 'all_groups',
-          child: Text('모든 그룹 보기'),
-        )
-      );
-    }
-
+    GlobalKey<State> dropdownKey = GlobalKey();
     return Consumer2<ContactsProvider,GroupsProvider>(
       builder: (context,contactsProvider, groupsProvider, child) {
         List<String> dropDownGroup = contactsProvider.nowGroup;
         if(widget.widgetFrom!=9){
           _selectedGroup = dropDownGroup[widget.widgetFrom];
         }
+
+        List<DropdownMenuItem<String>> _droppingItems;
+        //Set<String> groupsWithoutEtc= _groups!;
+        Set<String> groupsWithoutEtc= groupsProvider.groups;
+
+        groupsWithoutEtc.remove('기타');
+        _droppingItems=[DropdownMenuItem<String>(
+            value: '기타',
+        child: Text('기타')
+        )];
+        if(widget.widgetFrom == 9){
+          _droppingItems.addAll(groupsWithoutEtc.map((String group) {
+            return DropdownMenuItem<String>(
+              value: group,
+              child: Text(group),
+            );
+          }));
+          _droppingItems.add(
+              const DropdownMenuItem<String>(
+                  value: 'new_group',
+                  child: Text('새 그룹 추가')
+              ));
+        }
+        else{
+          _droppingItems.addAll(groupsWithoutEtc.map((String group) {
+            return DropdownMenuItem<String>(
+              value: group,
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [Text(group),
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: (){
+                        deleteGroupDialog(context, group,widget.widgetFrom);
+                        dropdownKey.currentState?.setState(() {});
+                        //setState((){_selectedGroup=contactsProvider.nowGroup[widget.widgetFrom];
+                        //});
+                      },)
+                  ]
+              ),
+            );
+          }));
+          _droppingItems.add(
+              const DropdownMenuItem<String>(
+                value: 'all_groups',
+                child: Text('모든 그룹 보기'),
+              )
+          );
+        }
+
+
+
+
         return DropdownButton<String>(
+          key: dropdownKey,
           value: _selectedGroup,
           hint: Text(_selectedGroup ?? 'Select Group'),
           items: _droppingItems,
