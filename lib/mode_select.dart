@@ -56,17 +56,15 @@ class _ModeSelectionPageState extends State<ModeSelectionPage> {
                       child: Text('전체 문제 모드'),
                     ),
                     ElevatedButton(
-                      onPressed: selectedGroup == null
-                ? null
-                    : () {
-                Navigator.push(
-                context,
-                MaterialPageRoute(
-                builder: (context) => simple_page(selectedGroup: selectedGroup!),
-                ),
-                );
-                },
-                      child: Text('4문제 모드 (비활성화)'),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => simple_page(),
+                          ),
+                        );
+                      },
+                      child: Text('4 문제 모드'),
                     ),
                   ],
 

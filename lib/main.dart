@@ -31,8 +31,9 @@ class projectapp1 extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => RankingProvider()), // 추가: RankingProvider 등록
         ChangeNotifierProvider(create: (context)=> GroupsProvider()),
       ],
-      child: MaterialApp(
+      child: const MaterialApp(
         title: '몰입캠프 첫 project',
+        debugShowCheckedModeBanner: false,
         home: NavigationBarWidget(), // Adjust this based on your starting point
       ),
     );
