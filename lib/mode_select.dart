@@ -38,7 +38,7 @@ class _ModeSelectionPageState extends State<ModeSelectionPage> {
                           dropDownGroup[2]= newGroup;
                           Provider.of<ContactsProvider>(context, listen: false).updateNowGroup(dropDownGroup, 2);
                         },
-                        isEdit: false,
+                        widgetFrom: 2,
                       )
                   )
                 ),
