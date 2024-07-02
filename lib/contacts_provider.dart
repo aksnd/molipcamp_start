@@ -14,7 +14,7 @@ class ContactsProvider extends ChangeNotifier {
   List<SimpleContact> _widget2GroupFilteredContacts = [];
   List<SimpleContact> _widget3GroupFilteredContacts = [];
 
-  List<String> _nowGroup = ['default','default','default'];
+  List<String> _nowGroup = ['all_groups','all_groups','all_groups'];
 
   List<SimpleContact> get contacts => _contacts; //외부에서 contacts로 접근할때 _contacts와 같게 취급
   List<SimpleContact> get filteredcontacts => _filteredcontacts; //외부에서 filteredcontacts로 접근할때 _filteredcontacts와 같게 취급
@@ -59,7 +59,7 @@ class ContactsProvider extends ChangeNotifier {
   }
 
   void _widget1filterGroupContacts() { // 상태관리 함수 3호 검색어랑 매칭해서 확인하기
-    if (_nowGroup[0]=='default') {
+    if (_nowGroup[0]=='all_groups') {
       _widget1GroupFilteredContacts = _filteredcontacts;
     } else {
       _widget1GroupFilteredContacts = _filteredcontacts
@@ -69,7 +69,7 @@ class ContactsProvider extends ChangeNotifier {
   }
 
   void _widget2filterGroupContacts() { // 상태관리 함수 3호 검색어랑 매칭해서 확인하기
-    if (_nowGroup[1]=='default') {
+    if (_nowGroup[1]=='all_groups') {
       _widget2GroupFilteredContacts = _contacts;
     } else {
       _widget2GroupFilteredContacts = _contacts
@@ -79,7 +79,7 @@ class ContactsProvider extends ChangeNotifier {
   }
 
   void _widget3filterGroupContacts() { // 상태관리 함수 3호 검색어랑 매칭해서 확인하기
-    if (_nowGroup[2]=='default') {
+    if (_nowGroup[2]=='all_groups') {
       _widget3GroupFilteredContacts = _contacts;
     } else {
       _widget3GroupFilteredContacts = _contacts

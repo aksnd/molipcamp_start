@@ -89,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
               IconButton( // 단순추가
                 icon: Icon(Icons.add),
                 onPressed: () {
-                  SimpleContact defaultContact = SimpleContact(index: 1,name: '', phone: '010-0000-0000', image: 'assets/images/default.png', birthday: '2000.01.01', group: 'default', mbti: 'ENTJ');
+                  SimpleContact defaultContact = SimpleContact(index: 1,name: '', phone: '010-0000-0000', image: 'assets/images/default.png', birthday: '2000.01.01', group: '기타', mbti: 'ENTJ');
                   editProfile(context, defaultContact, groups, addContact);
                 },
               ),
@@ -98,8 +98,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () async {
                   NativeContact.Contact? contact = await _contactPicker.selectContact();
                   if(contact!=null && contact.fullName!=null && contact.phoneNumbers!=null){
-                    SimpleContact defaultContact = SimpleContact(index: 1,name: contact.fullName!, phone: formatPhoneNumber(contact.phoneNumbers![0]),group:'default', image: 'assets/images/default.png', birthday: '2000.01.01',mbti: 'ENTJ');
-                    addContact(1, defaultContact);
+                    SimpleContact defaultContact = SimpleContact(index: 1,name: contact.fullName!, phone: formatPhoneNumber(contact.phoneNumbers![0]),group:'기타', image: 'assets/images/default.png', birthday: '2000.01.01',mbti: 'ENTJ');
+                    editProfile(context, defaultContact, groups, addContact);
 
                   }
                 },
