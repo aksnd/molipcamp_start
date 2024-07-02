@@ -70,10 +70,10 @@ class _MyHomePageState extends State<MyHomePage> {
         final groupfilteredcontacts = contactsProvider.widget1GroupFilteredContacts;
         return Scaffold(
           appBar: AppBar(
-            title: const Text('전화번호부'),
+            title: const Text('주소록', style:TextStyle(fontSize:25)),
             actions: <Widget>[
               Container(
-                width: 130,
+                width: 180,
                 alignment: Alignment.centerRight,
                 child:Flexible(
                   child: GroupDropdown(

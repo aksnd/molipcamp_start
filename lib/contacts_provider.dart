@@ -160,9 +160,11 @@ class ContactsProvider extends ChangeNotifier {
         _contacts[index].group = '기타';
       }
     }
-    if(_nowGroup[widgetFrom]==group){
-      _nowGroup[widgetFrom]='기타';
-      updateNowGroup(_nowGroup, widgetFrom);
+    for(int i=0;i<3;i++){
+      if(_nowGroup[i]==group){
+        _nowGroup[i]='기타';
+        updateNowGroup(_nowGroup, i);
+      }
     }
     contactsChangeFunctions();
   }

@@ -28,7 +28,7 @@ class _ModeSelectionPageState extends State<ModeSelectionPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Container(
-                  width: 130,
+                  width: 180,
                   alignment: Alignment.centerRight,
                   child:Flexible(
                       child: GroupDropdown(
