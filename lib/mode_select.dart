@@ -14,6 +14,7 @@ class _ModeSelectionPageState extends State<ModeSelectionPage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Consumer2<ContactsProvider,GroupsProvider>(
       builder: (context,contactsProvider, groupsProvider, child) {
         final groups = groupsProvider.groups;
@@ -55,16 +56,20 @@ class _ModeSelectionPageState extends State<ModeSelectionPage> {
                       child: Text('전체 문제 모드'),
                     ),
                     ElevatedButton(
-                      onPressed: () {
-                          Navigator.push(
-                            context,
-                              MaterialPageRoute(
-                                builder: (context) => simple_page(selectedGroup: dropDownGroup[2]),
-                              ),
-                          );},
+                      onPressed: selectedGroup == null
+                ? null
+                    : () {
+                Navigator.push(
+                context,
+                MaterialPageRoute(
+                builder: (context) => simple_page(selectedGroup: selectedGroup!),
+                ),
+                );
+                },
                       child: Text('4문제 모드 (비활성화)'),
                     ),
                   ],
+
                 ),
               ],
             ),

@@ -7,6 +7,7 @@ import '../contact.dart';
 import '../contacts_provider.dart';
 import '../ranking_provider.dart';
 import 'quiz_phonenumber.dart';
+import 'package:kaist_week1/main.dart';
 
 //생일 퀴즈 - 탭3
 class BirthdayQuizPage extends StatefulWidget {
@@ -178,6 +179,79 @@ class _BirthdayQuizPageState extends State<BirthdayQuizPage> {
       },
     );
   }
+  void _showEndQuizDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        TextEditingController _name_nicknameController = TextEditingController();
+        return AlertDialog(
+          title: Text('퀴즈를 끝내시겠습니까?'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('현재까지 맞춘 문제 개수: $answercount_birth'),
+              TextField(
+                controller: _name_nicknameController,
+                decoration: InputDecoration(
+                  labelText: '랭킹용 닉네임을 설정해주세요',
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('닫기'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NavigationBarWidget(initialIndex: 2),),
+                      (route) => false,
+                );
+              },
+              child: Text('나가기'),
+            ),
+
+            TextButton(
+              onPressed: () {
+                Provider.of<RankingProvider>(context, listen: false).addRanking(
+                    _name_nicknameController.text,
+                    answercount_birth,
+                    'name');
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('랭킹에 등록되었습니다'),
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    // margin: EdgeInsets.symmetric(horizontal: 900.0, vertical: 0.0),
+                    width: 200,
+                  ),
+                );
+                setState(() {
+                  currentIndex = 0;
+                  contact =
+                  Provider.of<ContactsProvider>(context, listen: false)
+                      .contacts[currentIndex];
+                  _generateBirthdayQuizOptions();
+                });
+              },
+              child: Text('랭킹 등록'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _showRankingModal() {
     showModalBottomSheet(
       context: context,
@@ -351,13 +425,37 @@ class _BirthdayQuizPageState extends State<BirthdayQuizPage> {
                   ],
                 ),
               ),
+              SizedBox(height: 12,),
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 16, bottom: 16),
+                  child: ElevatedButton(
+                    onPressed: _showEndQuizDialog,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.pink,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    child: Text('퀴즈 끝내기', style: TextStyle(color: Colors.white),),
+                  ),
+                ),),
+              
+              
             ],
           ),),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showRankingModal,
-        child: Icon(Icons.leaderboard),
-        tooltip: '생일 퀴즈 랭킹보기',
+      floatingActionButton: Stack(
+          children:[ Positioned(
+            bottom: 16 + 13,
+            right: 16,
+            child: FloatingActionButton(
+              onPressed: _showRankingModal,
+              child: Icon(Icons.leaderboard),
+              tooltip: '생일 퀴즈 랭킹보기',
+            ),
+          ),]
       ),
     );
   }

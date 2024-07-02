@@ -40,7 +40,8 @@ class projectapp1 extends StatelessWidget {
 }
 
 class NavigationBarWidget extends StatefulWidget {
-  const NavigationBarWidget({super.key});
+  final int initialIndex;
+  const NavigationBarWidget({super.key, this.initialIndex = 0});
 
   @override
   State<NavigationBarWidget> createState() => _NavigationBarState();
@@ -48,33 +49,35 @@ class NavigationBarWidget extends StatefulWidget {
 
 class _NavigationBarState extends State<NavigationBarWidget> {
   int _selectedIndex = 0;
-  bool modeSelected = false;
-  String? selectedGroup;
 
-  List _pages = [
-    phone_number(),
-    gallery(),
-    ModeSelectionPage(),
-  ];
+
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialIndex;
+  }
+
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      modeSelected = false;
+
     });
   }
 
-  void _onGroupSelected(String group) {
-    setState(() {
-      selectedGroup = group;
-      modeSelected = true;
-    });
-  }
+
 
 
 
   @override
   Widget build(BuildContext context) {
+    List _pages = [
+      phone_number(),
+      gallery(),
+      ModeSelectionPage(),
+    ];
+
     return Scaffold(
       body: Center(
         child: _pages[_selectedIndex],
