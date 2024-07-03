@@ -24,7 +24,7 @@ class _ModeSelectionPageState extends State<ModeSelectionPage> {
             '퀴즈 그룹 선택',
             style: TextStyle(color: Colors.white),
           ),
-
+        ),
           body: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -54,13 +54,13 @@ class _ModeSelectionPageState extends State<ModeSelectionPage> {
                     );
                   },
               style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF8ECAE6),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
+          backgroundColor: Color(0xFF8ECAE6),
+          shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
                   ),
-              
 
-                
+
+              ),
                 child: Text('퀴즈 시작!', style: TextStyle(color: Color(0xFF023047)),),
               ),
             ],
