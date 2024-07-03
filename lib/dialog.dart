@@ -464,7 +464,7 @@ class _GroupDropdownState extends State<GroupDropdown>{
         groupsWithoutEtc.remove('기타');
         _droppingItems=[DropdownMenuItem<String>(
             value: '기타',
-        child: Text('기타')
+        child: Text('기타',style: TextStyle(color: Colors.white),)
         )];
         if(widget.widgetFrom == 9){
           _droppingItems.addAll(groupsWithoutEtc.map((String group) {
@@ -474,7 +474,7 @@ class _GroupDropdownState extends State<GroupDropdown>{
                   width: 200,
                   height: 48,
                   alignment: Alignment.centerLeft,
-                  child: Text(group, overflow: TextOverflow.ellipsis)),
+                  child: Text(group, overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.white),)),
             );
           }));
           _droppingItems.add(
@@ -484,7 +484,7 @@ class _GroupDropdownState extends State<GroupDropdown>{
                       width: 200,
                       height: 48,
                       alignment: Alignment.centerLeft,
-                      child: Text('새 그룹 추가', overflow: TextOverflow.ellipsis)),
+                      child: Text('새 그룹 추가', overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.white),)),
               ));
         }
         else{
@@ -500,10 +500,10 @@ class _GroupDropdownState extends State<GroupDropdown>{
                         width: 90,
                         height: 48,
                         alignment: Alignment.centerLeft,
-                        child: Text(group, overflow: TextOverflow.ellipsis)
+                        child: Text(group, overflow: TextOverflow.ellipsis,style: TextStyle(color: Colors.white),)
                     ),
                     IconButton(
-                      icon: Icon(Icons.close),
+                      icon: Icon(Icons.close, color:Colors.white),
                       onPressed: (){
                         deleteGroupDialog(context, group,widget.widgetFrom);
                         dropdownKey.currentState?.setState(() {});
@@ -522,6 +522,7 @@ class _GroupDropdownState extends State<GroupDropdown>{
                     child: Text(
                       '모든 그룹 보기',
                       overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: Colors.white),
                     ),
               )
           ));
@@ -534,6 +535,8 @@ class _GroupDropdownState extends State<GroupDropdown>{
               key: dropdownKey,
               value: _selectedGroup,
               hint: Text(_selectedGroup ?? 'Select Group'),
+              style: TextStyle(color:Colors.amber),
+              dropdownColor: Color(0xFF023047),
               items: _droppingItems,
               onChanged: (String? newValue) {
                 if (newValue != null&& newValue !=_selectedGroup) {
