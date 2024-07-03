@@ -30,16 +30,14 @@ class _ModeSelectionPageState extends State<ModeSelectionPage> {
                 Container(
                   width: 130,
                   alignment: Alignment.centerRight,
-                  child:Flexible(
-                      child: GroupDropdown(
-                        groups: groups,
-                        selectedGroup: dropDownGroup[2],
-                        onGroupChanged:(String newGroup){
-                          dropDownGroup[2]= newGroup;
-                          Provider.of<ContactsProvider>(context, listen: false).updateNowGroup(dropDownGroup, 2);
-                        },
-                        widgetFrom: 2,
-                      )
+                  child:GroupDropdown(
+                    groups: groups,
+                    selectedGroup: dropDownGroup[2],
+                    onGroupChanged:(String newGroup){
+                      dropDownGroup[2]= newGroup;
+                      Provider.of<ContactsProvider>(context, listen: false).updateNowGroup(dropDownGroup, 2);
+                    },
+                    widgetFrom: 2,
                   )
                 ),
                 SizedBox(height: 20,),

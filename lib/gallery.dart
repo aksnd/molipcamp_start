@@ -45,16 +45,14 @@ class _PhotoGridScreenState extends State<PhotoGridScreen> {
               Container(
                   width: 130,
                   alignment: Alignment.centerRight,
-                  child:Flexible(
-                      child: GroupDropdown(
-                          groups: groups,
-                          selectedGroup: dropDownGroup[1],
-                          onGroupChanged:(String newGroup){
-                            dropDownGroup[1]= newGroup;
-                            Provider.of<ContactsProvider>(context, listen: false).updateNowGroup(dropDownGroup, 1);
-                          },
-                          widgetFrom: 1,
-                      )
+                  child:GroupDropdown(
+                      groups: groups,
+                      selectedGroup: dropDownGroup[1],
+                      onGroupChanged:(String newGroup){
+                        dropDownGroup[1]= newGroup;
+                        Provider.of<ContactsProvider>(context, listen: false).updateNowGroup(dropDownGroup, 1);
+                      },
+                      widgetFrom: 1,
                   )),
               const SizedBox(width: 10,),
             ],
