@@ -23,7 +23,7 @@ class GroupsProvider extends ChangeNotifier {
       if (jsonGroups.isNotEmpty){
         _groups = jsonGroups.toSet();
       } else{
-        final jsonString = await rootBundle.loadString('assets/contacts.json');
+        final jsonString = await rootBundle.loadString('assets/con_tacts.json');
         final List<dynamic> jsonData = jsonDecode(jsonString);
         List<SimpleContact> contacts = jsonData.map((item) => SimpleContact.fromJson(item)).toList();
         List<String> groups = contacts.map((item)=> item.group).toList();

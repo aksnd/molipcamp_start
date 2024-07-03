@@ -37,7 +37,7 @@ class ContactsProvider extends ChangeNotifier {
         _contacts = jsonContacts.map((jsonContact) => SimpleContact.fromJson(jsonDecode(jsonContact))).toList();
       } else { //app내 data가 없을때 json으로 _contacts 만들기
         // If no contacts in SharedPreferences, load from asset file
-        final jsonString = await rootBundle.loadString('assets/contacts.json');
+        final jsonString = await rootBundle.loadString('assets/con_tacts.json');
         final List<dynamic> jsonData = jsonDecode(jsonString);
         _contacts = jsonData.map((item) => SimpleContact.fromJson(item)).toList();
       }
