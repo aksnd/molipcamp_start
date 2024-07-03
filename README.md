@@ -65,5 +65,6 @@ dropdown 이용하여 탭별 자료 연계
 - 1,2번탭 UI/UX design: show profile 및 edit profile UI 제작. group dropdown 구현.
 - image load 기능 구현: Grid view로 image를 조회하고, 각 image를 클릭했을 때 연결되는 화면 구현
 - group system 구현: group provider와 shared preference를 이용해 정의되어있는 그룹 리스트를 관리.
+- splash 화면 및 app icon 제작, 삽입입
 
 
