@@ -258,112 +258,123 @@ Future<void> editProfile(BuildContext context, SimpleContact contact,Set<String>
                   ),
                   Padding(
                     padding: const EdgeInsets.all(15.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: <Widget>[
-                            Text(
-                              "이름 ",
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.grey[700],
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      decoration: BoxDecoration(
+                        color: Color(0xFF023047),
+                        borderRadius: BorderRadius.circular(12), // BorderRadius 설정
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: <Widget>[
+                              Text(
+                                "이름 ",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 8), // 간격 조정을 위한 SizedBox
-                            Expanded(
-                              child: TextField(
-                                controller: _controller1,
+                              const SizedBox(width: 8), // 간격 조정을 위한 SizedBox
+                              Expanded(
+                                child: TextField(
+                                  style: TextStyle(color: Colors.white),
+                                  controller: _controller1,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 8),
-                        Row(
-                          children: <Widget>[
-                            Text(
-                              "전화번호 ",
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.grey[700],
+                            ],
+                          ),
+                          SizedBox(height: 8),
+                          Row(
+                            children: <Widget>[
+                              Text(
+                                "전화번호 ",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 8), // 간격 조정을 위한 SizedBox
-                            Expanded(
-                              child: TextField(
-                                controller: _controller2,
+                              const SizedBox(width: 8), // 간격 조정을 위한 SizedBox
+                              Expanded(
+                                child: TextField(
+                                  style: TextStyle(color: Colors.white),
+                                  controller: _controller2,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 8),
-                        Row(
-                          children: <Widget>[
-                            Text(
-                              "생일 ",
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.grey[700],
+                            ],
+                          ),
+                          SizedBox(height: 8),
+                          Row(
+                            children: <Widget>[
+                              Text(
+                                "생일 ",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 8), // 간격 조정을 위한 SizedBox
-                            Expanded(
-                              child: TextField(
-                                controller: _controller3,
+                              const SizedBox(width: 8), // 간격 조정을 위한 SizedBox
+                              Expanded(
+                                child: TextField(
+                                  style: TextStyle(color: Colors.white),
+                                  controller: _controller3,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 8),
-                        Row(
-                          children: <Widget>[
-                            Text(
-                              "MBTI ",
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.grey[700],
+                            ],
+                          ),
+                          SizedBox(height: 8),
+                          Row(
+                            children: <Widget>[
+                              Text(
+                                "MBTI ",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 8), // 간격 조정을 위한 SizedBox
-                            Expanded(
-                              child: TextField(
-                                controller: _controller4,
+                              const SizedBox(width: 8), // 간격 조정을 위한 SizedBox
+                              Expanded(
+                                child: TextField(
+                                  style: TextStyle(color: Colors.white),
+                                  controller: _controller4,
+                                ),
                               ),
-                            ),
-                          ],
-                         ),
-                        SizedBox(height: 8),
-                        Row(
-                          children: <Widget>[
-                            Text(
-                              "그룹 ",
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.grey[700],
+                            ],
+                           ),
+                          SizedBox(height: 8),
+                          Row(
+                            children: <Widget>[
+                              Text(
+                                "그룹 ",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 8), // 간격 조정을 위한 SizedBox
-                            Expanded(child: GroupDropdown(
-                              groups: groups,
-                              selectedGroup: editedContact.group,
-                              widgetFrom: 9,
-                              onGroupChanged:(String newGroup){
-                                if (newGroup== 'new_group'){
-                                  editedContact.name = _controller1.text;
-                                  editedContact.phone = _controller2.text;
-                                  editedContact.birthday = _controller3.text;
-                                  editedContact.mbti = _controller4.text;
-                                  Navigator.of(context).pop();
-                                  addNewGroup(context, editedContact, groups,onUpdate);
+                              const SizedBox(width: 8), // 간격 조정을 위한 SizedBox
+                              Expanded(child: GroupDropdown(
+                                groups: groups,
+                                selectedGroup: editedContact.group,
+                                widgetFrom: 9,
+                                onGroupChanged:(String newGroup){
+                                  if (newGroup== 'new_group'){
+                                    editedContact.name = _controller1.text;
+                                    editedContact.phone = _controller2.text;
+                                    editedContact.birthday = _controller3.text;
+                                    editedContact.mbti = _controller4.text;
+                                    Navigator.of(context).pop();
+                                    addNewGroup(context, editedContact, groups,onUpdate);
 
-                                }
-                                else{editedContact.group= newGroup;}
-                                },
-                            )),
-                          ],
-                        ),
-                      ],
-                  ),
+                                  }
+                                  else{editedContact.group= newGroup;}
+                                  },
+                              )),
+                            ],
+                          ),
+                        ],
+                                        ),
+                    ),
                   )
                 ],
               ),
