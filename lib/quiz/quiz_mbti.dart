@@ -9,6 +9,7 @@ import 'package:kaist_week1/ranking_provider.dart';
 import 'quiz_phonenumber.dart';
 import 'package:kaist_week1/main.dart';
 import 'package:kaist_week1/quiz/utils/calculator.dart';
+import 'package:kaist_week1/quiz/utils/progress_bar.dart';
 
 //MBTI 퀴즈 - 탭2
 
@@ -132,7 +133,18 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
       builder: (context) {
         TextEditingController _mbti_nicknameController = TextEditingController();
         return AlertDialog(
-          title: Text('퀴즈를 끝내시겠어요?'),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('퀴즈를 끝내시겠어요?', style: TextStyle(fontSize: 20),),
+              IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -147,12 +159,7 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
             ],
           ),
           actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('닫기'),
-            ),
+
        TextButton(
             onPressed: () {
               Navigator.pushAndRemoveUntil(
@@ -211,23 +218,21 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
             return Container(
               padding: EdgeInsets.all(16),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.pink,
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: Text(
-                      'mbti 퀴즈 랭킹',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                  Row(
+                    children: [
+                      Text(
+                        'mbti 퀴즈 랭킹',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.pink,
+                        ),
                       ),
-                    ),
+                      Icon(Icons.auto_awesome, color: Colors.pink,)
+                    ],
                   ),
                   SizedBox(height: 16),
                   rankings.isEmpty
@@ -323,32 +328,27 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: _previousQuestion,
-                    child: Text('이전 문제'),
-                  ),
-                  Text('${currentIndex + 1}/${contactsProvider.widget3GroupFilteredContacts.length}'),
-                  TextButton(
-                    onPressed: _nextQuestion,
-                    child: Text('다음 문제'),
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: buildProgressBar(context, currentIndex, contactsProvider.widget3GroupFilteredContacts.length),
               ),
+              // Text('${currentIndex + 1}/${contactsProvider.widget3GroupFilteredContacts.length}'),
+
               Container(
                 width: 120,
                 height: 120,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
-                  child: contact != null ? _getImageProvider(contact!.image) : SizedBox.shrink(),
+                  child: contact != null
+                      ? _getImageProvider(contact!.image)
+                      : SizedBox.shrink(),
                 ),
               ),
+
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
                       contact != null ? "이름: ${contact!.name}" : "이름 없음",
@@ -365,31 +365,25 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
                         color: Colors.grey[700],
                       ),
                     ),
-                    SizedBox(height: 16),
-                    ...options.map((option) => ElevatedButton(
-                      onPressed: () => _checkAnswer(option),
-                      child: Text(option),
-                    )),
+                    SizedBox(height: 8),
+                    Center(
+                      child: Column(
+                        children: options
+                            .map((option) => Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: ElevatedButton(
+                            onPressed: () => _checkAnswer(option),
+                            child: Text(option),
+                          ),
+                        ))
+                            .toList(),
+                      ),
+                    ),
                   ],
                 ),
               ),
 
-              SizedBox(height: 12,),
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16, bottom: 16),
-                  child: ElevatedButton(
-                    onPressed: _showCompletionDialog,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.pink,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                    child: Text('퀴즈 끝내기', style: TextStyle(color: Colors.white),),
-                  ),
-                ),),
+
             ],
           ),
         ),
@@ -398,17 +392,40 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
 
 
       ),
-      floatingActionButton: Stack(
-          children:[ Positioned(
-            bottom: 16 + 13,
-            right: 16,
-            child: FloatingActionButton(
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(bottom: 40.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ElevatedButton(
+              onPressed: _showCompletionDialog,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.pink,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              child: Text('퀴즈 끝내기', style: TextStyle(color: Colors.white)),
+            ),
+            FloatingActionButton(
               onPressed: _showRankingModal,
               child: Icon(Icons.leaderboard),
               tooltip: 'mbti 퀴즈 랭킹보기',
             ),
-          ),]
+            ElevatedButton(
+              onPressed: _nextQuestion,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.pink,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              child: Text('다음 문제', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        ),
       ),
+
 
 
     );
