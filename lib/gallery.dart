@@ -39,8 +39,10 @@ class _PhotoGridScreenState extends State<PhotoGridScreen> {
         );
         List<String> dropDownGroup = contactsProvider.nowGroup;
         return Scaffold(
+          backgroundColor: Color(0xFF023047),
           appBar: AppBar(
-            title: const Text('Photo Grid'),
+            backgroundColor: Color(0xFF023047),
+            title: const Text('갤러리', style:TextStyle(fontSize:25, color: Colors.white)),
             actions: <Widget>[
               Container(
                   width: 130,
@@ -60,6 +62,7 @@ class _PhotoGridScreenState extends State<PhotoGridScreen> {
           body:Padding(
             padding: const EdgeInsets.all(8.0),
             child: GridView.builder(
+
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3, // 3x3 그리드
                 mainAxisSpacing: 8.0,

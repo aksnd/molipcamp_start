@@ -74,22 +74,25 @@ class _MyHomePageState extends State<MyHomePage> {
         final filteredcontacts = contactsProvider.filteredcontacts;
         final groupfilteredcontacts = contactsProvider.widget1GroupFilteredContacts;
         return Scaffold(
+          backgroundColor: Color(0xFF023047),
           appBar: AppBar(
             iconTheme: IconThemeData(color: Colors.white),
-
             backgroundColor: Color(0xFF023047),
             title: const Text('주소록', style:TextStyle(fontSize:25, color: Colors.white)),
             actions: <Widget>[
               Container(
                 width: 130,
                 alignment: Alignment.centerRight,
-                child:GroupDropdown(
-                  groups: groups,
-                  selectedGroup: contactsProvider.nowGroup[0],
-                  onGroupChanged:(String newGroup){
-                    dropDownGroup[0]= newGroup;
-                    Provider.of<ContactsProvider>(context, listen: false).updateNowGroup(dropDownGroup, 0);
-                  }, widgetFrom: 0,
+                child:Container(
+                  height: 40,
+                  child: GroupDropdown(
+                    groups: groups,
+                    selectedGroup: contactsProvider.nowGroup[0],
+                    onGroupChanged:(String newGroup){
+                      dropDownGroup[0]= newGroup;
+                      Provider.of<ContactsProvider>(context, listen: false).updateNowGroup(dropDownGroup, 0);
+                    }, widgetFrom: 0,
+                  ),
                 )),
               const SizedBox(width: 10,),
               IconButton( // 단순추가
@@ -117,10 +120,12 @@ class _MyHomePageState extends State<MyHomePage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextField( // 검색 기능을 위한 입력칸
+                  style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     labelText: 'Search',
+                    labelStyle: TextStyle(color: Colors.white),
                     border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.search),
+                    prefixIcon: Icon(Icons.search, color: Colors.white,),
                   ),
                   onChanged: (query) { //변경될때마다 query기반 연락처 검색(이름 기준)
                     Provider.of<ContactsProvider>(context, listen: false).updateSearchQuery(query);
@@ -134,51 +139,55 @@ class _MyHomePageState extends State<MyHomePage> {
                     final contact = groupfilteredcontacts[index];
                     return Column(
                       children: [
-                        ListTile(
-                            title: Text(contact.name),
-                            subtitle: Text(contact.phone),
-                            leading: CircleAvatar(
-                              radius: 30,
-                              backgroundImage: _getImageProvider(contact.image),
-                            ),
-                            onTap: (){
-                              showProfile(context, contact, groups, true, updateContact);
-                            },
-                            trailing: SizedBox(
-                                width: 100,
-                                height: 30,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    IconButton(
-                                      icon: const Icon(Icons.call_rounded),
-                                      onPressed: () => _makePhoneCall(contact.phone),
-                                    ),
-                                    IconButton(
-                                      // icon: const Icon(Icons.save),
-                                      icon: const Icon(Icons.download),
-                                      onPressed: () async {
-                                        ContactService.Contact newContact = ContactService.Contact(
-                                          givenName: contact.name,
-                                          phones: [ContactService.Item(label: "mobile", value: contact.phone.replaceAll(RegExp(r'[^0-9]'),''))],
-                                        );
-                                        try{
-                                          await ContactService.ContactsService.addContact(newContact);
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            SnackBar(
-                                              content: Text('연락처에 저장되었습니다'),
-                                              duration: Duration(seconds: 2),
-                                            ),
+                        ListTileTheme(
+                          iconColor: Colors.white,
+                          textColor: Colors.white,
+                          child: ListTile(
+                              title: Text(contact.name),
+                              subtitle: Text(contact.phone),
+                              leading: CircleAvatar(
+                                radius: 30,
+                                backgroundImage: _getImageProvider(contact.image),
+                              ),
+                              onTap: (){
+                                showProfile(context, contact, groups, true, updateContact);
+                              },
+                              trailing: SizedBox(
+                                  width: 100,
+                                  height: 30,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(Icons.call_rounded),
+                                        onPressed: () => _makePhoneCall(contact.phone),
+                                      ),
+                                      IconButton(
+                                        // icon: const Icon(Icons.save),
+                                        icon: const Icon(Icons.download),
+                                        onPressed: () async {
+                                          ContactService.Contact newContact = ContactService.Contact(
+                                            givenName: contact.name,
+                                            phones: [ContactService.Item(label: "mobile", value: contact.phone.replaceAll(RegExp(r'[^0-9]'),''))],
                                           );
-                                        }catch(e){
-                                          print('Failed to save contact to device: $e');
-                                        }
-                                      },
-                                    )
-                                  ],
-                                )
-                            )
-
+                                          try{
+                                            await ContactService.ContactsService.addContact(newContact);
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              SnackBar(
+                                                content: Text('연락처에 저장되었습니다'),
+                                                duration: Duration(seconds: 2),
+                                              ),
+                                            );
+                                          }catch(e){
+                                            print('Failed to save contact to device: $e');
+                                          }
+                                        },
+                                      )
+                                    ],
+                                  )
+                              )
+                          
+                          ),
                         ),
                         const SizedBox(height: 16),
                       ],
