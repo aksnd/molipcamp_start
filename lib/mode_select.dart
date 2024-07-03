@@ -5,30 +5,33 @@ import 'contacts_provider.dart';
 import 'groups_provider.dart';
 import './dialog.dart';
 import 'package:provider/provider.dart';
+
 class ModeSelectionPage extends StatefulWidget {
   @override
   _ModeSelectionPageState createState() => _ModeSelectionPageState();
 }
 
 class _ModeSelectionPageState extends State<ModeSelectionPage> {
-
   @override
   Widget build(BuildContext context) {
-
-    return Consumer2<ContactsProvider,GroupsProvider>(
-      builder: (context,contactsProvider, groupsProvider, child) {
-        final groups = groupsProvider.groups;
-        List<String> dropDownGroup = contactsProvider.nowGroup;
-        return Scaffold(
-          appBar: AppBar(
-            title: Text('퀴즈 그룹 선택'),
+    return Consumer2<ContactsProvider, GroupsProvider>(
+        builder: (context, contactsProvider, groupsProvider, child) {
+      final groups = groupsProvider.groups;
+      List<String> dropDownGroup = contactsProvider.nowGroup;
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            '퀴즈 그룹 선택',
+            style: TextStyle(color: Colors.white),
           ),
+
           body: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Container(
-                  width: 130,
+                  width: 180,
+                  color: Color(0xFF3AB349),
                   alignment: Alignment.centerRight,
                   child:GroupDropdown(
                     groups: groups,
@@ -50,13 +53,20 @@ class _ModeSelectionPageState extends State<ModeSelectionPage> {
                       ),
                     );
                   },
-                  child: Text('퀴즈 시작!'),
-                ),
-              ],
-            ),
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF8ECAE6),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+              
+
+                
+                child: Text('퀴즈 시작!', style: TextStyle(color: Color(0xFF023047)),),
+              ),
+            ],
           ),
-        );
-      }
-    );
+        ),
+      );
+    });
   }
 }

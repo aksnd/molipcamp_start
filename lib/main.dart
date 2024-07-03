@@ -114,7 +114,7 @@ class _NavigationBarState extends State<NavigationBarWidget> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.pink,
+        selectedItemColor: Color(0xFF3AB349),
         onTap: _onItemTapped,
       ),
     );
