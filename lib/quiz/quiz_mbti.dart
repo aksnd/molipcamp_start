@@ -10,6 +10,7 @@ import 'quiz_phonenumber.dart';
 import 'package:kaist_week1/main.dart';
 import 'package:kaist_week1/quiz/utils/calculator.dart';
 import 'package:kaist_week1/quiz/utils/progress_bar.dart';
+import 'package:kaist_week1/quiz/utils/checkAnswer.dart';
 
 //MBTI 퀴즈 - 탭2
 
@@ -67,37 +68,6 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
 
 
 
-  void _checkAnswer(String selectedOption) {
-    bool isCorrect = selectedOption == correctAnswer;
-    if (isCorrect) {
-      answerCountMbti++;
-    }
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(isCorrect ? '정답!' : '오답'),
-          content: Text(isCorrect ? '축하합니다! 정답입니다.' : '아쉽네요. 정답은 $correctAnswer입니다.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('닫기'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                _nextQuestion();
-              },
-              child: Text('다음문제'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   void _nextQuestion() {
     final contactsProvider = Provider.of<ContactsProvider>(context, listen: false);
     setState(() {
@@ -132,74 +102,76 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
       barrierDismissible: false,
       builder: (context) {
         TextEditingController _mbti_nicknameController = TextEditingController();
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('퀴즈를 끝내시겠어요?', style: TextStyle(fontSize: 20),),
-              IconButton(
-                icon: Icon(Icons.close),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('맞춘 문제 개수: $answerCountMbti/${currentIndex+1}'),
-              Text('정답률: ${correctRate.toStringAsFixed(2)}%'),
-              TextField(
-                controller: _mbti_nicknameController,
-                decoration: InputDecoration(
-                  labelText: '랭킹용 닉네임을 설정해주세요',
+        return SingleChildScrollView(
+          child: AlertDialog(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('퀴즈를 끝내시겠어요?', style: TextStyle(fontSize: 20),),
+                IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
                 ),
+              ],
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('맞춘 문제 개수: $answerCountMbti/${currentIndex+1}'),
+                Text('정답률: ${correctRate.toStringAsFixed(2)}%'),
+                TextField(
+                  controller: _mbti_nicknameController,
+                  decoration: InputDecoration(
+                    labelText: '랭킹용 닉네임을 설정해주세요',
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+
+                 TextButton(
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NavigationBarWidget(initialIndex: 2),),
+                      (route) => false,
+                );
+              },
+              child: Text('나가기'),
+            ),
+
+              TextButton(
+                onPressed: () {
+                  Provider.of<RankingProvider>(context, listen: false).addRanking(
+                      _mbti_nicknameController.text,
+                      answerCountMbti, currentIndex+1,
+                      'mbti');
+                  Navigator.of(context).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('랭킹에 등록되었습니다'),
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      // margin: EdgeInsets.symmetric(horizontal: 900.0, vertical: 0.0),
+                      width: 200,
+                    ),
+                  );
+                  setState(() {
+                    currentIndex = 0;
+                    answerCountMbti=0;
+                    contact = contactsProvider.widget3GroupFilteredContacts[currentIndex];
+                    _generateMBTIQuizOptions();
+                  });
+                },
+                child: Text('랭킹 등록'),
               ),
             ],
           ),
-          actions: [
-
-       TextButton(
-            onPressed: () {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => NavigationBarWidget(initialIndex: 2),),
-                    (route) => false,
-              );
-            },
-            child: Text('나가기'),
-          ),
-
-            TextButton(
-              onPressed: () {
-                Provider.of<RankingProvider>(context, listen: false).addRanking(
-                    _mbti_nicknameController.text,
-                    answerCountMbti, currentIndex+1,
-                    'mbti');
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('랭킹에 등록되었습니다'),
-                    behavior: SnackBarBehavior.floating,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    // margin: EdgeInsets.symmetric(horizontal: 900.0, vertical: 0.0),
-                    width: 200,
-                  ),
-                );
-                setState(() {
-                  currentIndex = 0;
-                  answerCountMbti=0;
-                  contact = contactsProvider.widget3GroupFilteredContacts[currentIndex];
-                  _generateMBTIQuizOptions();
-                });
-              },
-              child: Text('랭킹 등록'),
-            ),
-          ],
         );
       },
     );
@@ -323,69 +295,70 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
 
     return Scaffold(
       body:SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(0.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: buildProgressBar(context, currentIndex, contactsProvider.widget3GroupFilteredContacts.length),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: buildProgressBar(context, currentIndex, contactsProvider.widget3GroupFilteredContacts.length),
+            ),
+            // Text('${currentIndex + 1}/${contactsProvider.widget3GroupFilteredContacts.length}'),
+
+            Container(
+              width: 120,
+              height: 120,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: contact != null
+                    ? _getImageProvider(contact!.image)
+                    : SizedBox.shrink(),
               ),
-              // Text('${currentIndex + 1}/${contactsProvider.widget3GroupFilteredContacts.length}'),
+            ),
 
-              Container(
-                width: 120,
-                height: 120,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: contact != null
-                      ? _getImageProvider(contact!.image)
-                      : SizedBox.shrink(),
-                ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    contact != null ? "이름: ${contact!.name}" : "이름 없음",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    "이 사람의 MBTI는?",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Center(
+                    child: Column(
+                      children: options
+                          .map((option) => Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: ElevatedButton(
+                          onPressed: () => checkAnswer(context: context,
+                            selectedOption: option,
+                            correctAnswer: correctAnswer,
+                            answerCount: answerCountMbti,
+                            nextQuestion: _nextQuestion,),
+                          child: Text(option),
+                        ),
+                      ))
+                          .toList(),
+                    ),
+                  ),
+                ],
               ),
-
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      contact != null ? "이름: ${contact!.name}" : "이름 없음",
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.grey[700],
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      "이 사람의 MBTI는?",
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.grey[700],
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Center(
-                      child: Column(
-                        children: options
-                            .map((option) => Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: ElevatedButton(
-                            onPressed: () => _checkAnswer(option),
-                            child: Text(option),
-                          ),
-                        ))
-                            .toList(),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            ),
 
 
-            ],
-          ),
+          ],
         ),
 
 

@@ -10,6 +10,7 @@ import 'quiz_phonenumber.dart';
 import 'package:kaist_week1/main.dart';
 import 'package:kaist_week1/quiz/utils/calculator.dart';
 import 'package:kaist_week1/quiz/utils/progress_bar.dart';
+import 'package:kaist_week1/quiz/utils/checkAnswer.dart';
 
 //생일 퀴즈 - 탭3
 class BirthdayQuizPage extends StatefulWidget {
@@ -62,39 +63,6 @@ class _BirthdayQuizPageState extends State<BirthdayQuizPage> {
     options.shuffle();
   }
 
-  void _checkAnswer(String selectedOption) {
-    bool isCorrect = selectedOption == correctAnswer;
-    if (isCorrect) {
-      answercount_birth++;
-    }
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(isCorrect ? '정답!' : '오답'),
-          content: Text(
-              isCorrect ? '축하합니다! 정답입니다.' : '아쉽네요. 정답은 ${correctAnswer}입니다.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('닫기'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                _nextQuestion();
-              },
-              child: Text('다음문제'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
 
 
   void _nextQuestion() {
@@ -131,73 +99,75 @@ class _BirthdayQuizPageState extends State<BirthdayQuizPage> {
       barrierDismissible: false,
       builder: (context) {
         TextEditingController _birth_nicknameController = TextEditingController();
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('퀴즈를 끝내시겠어요?', style: TextStyle(fontSize: 20),),
-              IconButton(
-                icon: Icon(Icons.close),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('맞춘 문제 개수: $answercount_birth/${currentIndex+1}'),
-              Text('정답률: ${correctRate.toStringAsFixed(2)}%'),
-              TextField(
-                controller: _birth_nicknameController,
-                decoration: InputDecoration(
-                  labelText: '랭킹용 닉네임을 설정해주세요',
+        return SingleChildScrollView(
+          child: AlertDialog(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('퀴즈를 끝내시겠어요?', style: TextStyle(fontSize: 20),),
+                IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
                 ),
+              ],
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('맞춘 문제 개수: $answercount_birth/${currentIndex+1}'),
+                Text('정답률: ${correctRate.toStringAsFixed(2)}%'),
+                TextField(
+                  controller: _birth_nicknameController,
+                  decoration: InputDecoration(
+                    labelText: '랭킹용 닉네임을 설정해주세요',
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+
+              TextButton(
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NavigationBarWidget(initialIndex: 2),),
+                        (route) => false,
+                  );
+                },
+                child: Text('나가기'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Provider.of<RankingProvider>(context, listen: false).addRanking(
+                      _birth_nicknameController.text,
+                      answercount_birth, currentIndex+1,
+                      'birthday');
+                  Navigator.of(context).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('랭킹에 등록되었습니다'),
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      // margin: EdgeInsets.symmetric(horizontal: 900.0, vertical: 0.0),
+                      width: 200,
+                    ),
+                  );
+                  setState(() {
+                    currentIndex = 0;
+                    answercount_birth=0;
+                    contact = contactsProvider.widget3GroupFilteredContacts[currentIndex];
+                    _generateBirthdayQuizOptions();
+                  });
+                },
+                child: Text('랭킹 등록'),
               ),
             ],
           ),
-          actions: [
-
-            TextButton(
-              onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => NavigationBarWidget(initialIndex: 2),),
-                      (route) => false,
-                );
-              },
-              child: Text('나가기'),
-            ),
-            TextButton(
-              onPressed: () {
-                Provider.of<RankingProvider>(context, listen: false).addRanking(
-                    _birth_nicknameController.text,
-                    answercount_birth, currentIndex+1,
-                    'birthday');
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('랭킹에 등록되었습니다'),
-                    behavior: SnackBarBehavior.floating,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    // margin: EdgeInsets.symmetric(horizontal: 900.0, vertical: 0.0),
-                    width: 200,
-                  ),
-                );
-                setState(() {
-                  currentIndex = 0;
-                  answercount_birth=0;
-                  contact = contactsProvider.widget3GroupFilteredContacts[currentIndex];
-                  _generateBirthdayQuizOptions();
-                });
-              },
-              child: Text('랭킹 등록'),
-            ),
-          ],
         );
       },
     );
@@ -368,7 +338,11 @@ class _BirthdayQuizPageState extends State<BirthdayQuizPage> {
                             .map((option) => Padding(
                           padding: const EdgeInsets.all(5.0),
                           child: ElevatedButton(
-                            onPressed: () => _checkAnswer(option),
+                            onPressed: () => checkAnswer(context: context,
+                              selectedOption: option,
+                              correctAnswer: correctAnswer,
+                              answerCount: answercount_birth,
+                              nextQuestion: _nextQuestion,),
                             child: Text(option),
                           ),
                         ))

@@ -10,6 +10,7 @@ import 'package:kaist_week1/mode_select.dart';
 import 'package:kaist_week1/main.dart';
 import 'package:kaist_week1/quiz/utils/calculator.dart';
 import 'package:kaist_week1/quiz/utils/progress_bar.dart';
+import 'package:kaist_week1/quiz/utils/checkAnswer.dart';
 //이름 퀴즈 - 탭1
 
 class NameQuizPage extends StatefulWidget {
@@ -74,38 +75,6 @@ class _NameQuizPageState extends State<NameQuizPage> {
     options.shuffle();
   }
 
-  void _checkAnswer(String selectedOption) {
-    bool isCorrect = selectedOption == correctAnswer;
-    if (isCorrect) {
-      answercount_name++;
-    }
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(isCorrect ? '정답!' : '오답'),
-          content: Text(
-              isCorrect ? '축하합니다! 정답입니다.' : '아쉽네요. 정답은 ${correctAnswer}입니다.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('닫기'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                _nextQuestion();
-              },
-              child: Text('다음문제'),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   void _nextQuestion() {
     setState(() {
@@ -373,7 +342,11 @@ class _NameQuizPageState extends State<NameQuizPage> {
                         .map((option) => Padding(
                               padding: const EdgeInsets.all(5.0),
                               child: ElevatedButton(
-                                onPressed: () => _checkAnswer(option),
+                                onPressed: () => checkAnswer(context: context,
+                                  selectedOption: option,
+                                  correctAnswer: correctAnswer,
+                                  answerCount: answercount_name,
+                                  nextQuestion: _nextQuestion,),
                                 child: Text(option),
                               ),
                             ))

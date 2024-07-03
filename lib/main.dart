@@ -30,9 +30,16 @@ class projectapp1 extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => RankingProvider()), // 추가: RankingProvider 등록
         ChangeNotifierProvider(create: (context)=> GroupsProvider()),
       ],
-      child: const MaterialApp(
+      child: MaterialApp(
         title: '몰입캠프 첫 project',
         debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primaryColor: Color(0xFF023047),
+          appBarTheme: AppBarTheme(
+            color: Color(0xFF023047),
+          ),
+          scaffoldBackgroundColor: Color(0xFF023047),
+        ),
         home: NavigationBarWidget(), // Adjust this based on your starting point
       ),
     );
