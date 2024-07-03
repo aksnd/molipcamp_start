@@ -8,7 +8,7 @@
 
 - 개발 언어 : Flutter
 - 버전 및 이슈관리 : Github
-- 협업 툴 : Discord, Notion
+- 협업 툴 : Github, Notion
 - 디자인 : Figma
 
 # [2] About the project (프로젝트 기능)
