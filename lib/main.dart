@@ -10,8 +10,12 @@ import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/services.dart';
 import './mode_select.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 void main(){
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -63,8 +67,13 @@ class _NavigationBarState extends State<NavigationBarWidget> {
   void initState() {
     super.initState();
     _selectedIndex = widget.initialIndex;
+    removeSplashScreen();
   }
 
+  Future<void> removeSplashScreen() async{
+    await Future.delayed(const Duration(seconds: 3));
+    FlutterNativeSplash.remove();
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -90,6 +99,9 @@ class _NavigationBarState extends State<NavigationBarWidget> {
         child: _pages[_selectedIndex],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Color(0xFF023047),
+        selectedItemColor: Color(0xFF3AB349), // 선택된 아이템 색상
+        unselectedItemColor: Colors.white, // 선택되지 않은 아이템 색상
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.contact_page),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'whoe_quiz_page.dart';
+
 import 'contacts_provider.dart';
 import 'groups_provider.dart';
 import './dialog.dart';
@@ -101,9 +102,45 @@ class _ModeSelectionPageState extends State<ModeSelectionPage> with SingleTicker
                   backgroundColor: Color(0xFF8ECAE6),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  width: 180,
+                  color: Color(0xFF3AB349),
+                  alignment: Alignment.centerRight,
+                  child:GroupDropdown(
+                    groups: groups,
+                    selectedGroup: dropDownGroup[2],
+                    onGroupChanged:(String newGroup){
+                      dropDownGroup[2]= newGroup;
+                      Provider.of<ContactsProvider>(context, listen: false).updateNowGroup(dropDownGroup, 2);
+                    },
+                    widgetFrom: 2,
+                  )
+                ),
+                SizedBox(height: 20,),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => free_page(),
+                      ),
+                    );
+                  },
+              style: ElevatedButton.styleFrom(
+          backgroundColor: Color(0xFF8ECAE6),
+          shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
                   ),
                 ),
                 child: Text('퀴즈 시작!', style: TextStyle(color: Color(0xFF023047), fontWeight: FontWeight.bold),),
+
+
+              ),
+                child: Text('퀴즈 시작!', style: TextStyle(color: Color(0xFF023047)),),
               ),
             ],
           ),

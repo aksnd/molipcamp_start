@@ -19,6 +19,7 @@ dependencies:
   flutter_native_contact_picker: ^0.0.6
   permission_handler: ^10.0.0
   contacts_service: ^0.6.3
+  flutter_native_splash: ^2.4.0
 
 dev_dependencies:
   flutter_test:
@@ -34,6 +35,12 @@ flutter_icons:
   ios: true
   image_path: "assets/icons/app_icon.png"
 
+flutter_native_splash:
+  color: "#023047"
+  image: assets/splash.png
+  android: true
+  ios: true
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -42,6 +49,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/splash.png
     - assets/contacts.json
     - assets/images/
     - assets/icons/app_icon.png

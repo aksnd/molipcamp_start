@@ -14,7 +14,18 @@ Future<void> showProfile(BuildContext context, SimpleContact contact, Set<String
     builder: (BuildContext context) {
       return AlertDialog(
         contentPadding: EdgeInsets.all(10),
-        title: Text('프로필 확인'),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('프로필 확인'),
+            IconButton(
+              icon: Icon(Icons.close), // 닫기 버튼 아이콘
+              onPressed: () {
+                Navigator.of(context).pop(); // 다이얼로그 닫기
+              },
+            ),
+          ],
+        ),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -96,12 +107,6 @@ Future<void> showProfile(BuildContext context, SimpleContact contact, Set<String
                 editProfile(context, contact,groups,onUpdate);
               },
             ),
-          TextButton(
-            child: Text('close'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
         ],
       );
     },
@@ -119,14 +124,9 @@ Future<void> deleteGroupDialog(BuildContext context, String group, int widgetFro
             title: Text('"${group}"그룹을 삭제하시겠습니까?'),
             contentPadding: EdgeInsets.all(10),
             actions: <Widget>[
+
               TextButton(
-                child: Text('Close'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: Text('Delete'),
+                child: Text('예'),
                 onPressed: () {
                     Provider.of<ContactsProvider>(context, listen: false).removeGroup(group, widgetFrom);
                     Provider.of<GroupsProvider>(context, listen: false).deleteGroup(group);
@@ -136,6 +136,12 @@ Future<void> deleteGroupDialog(BuildContext context, String group, int widgetFro
                     //final navBarState = context.findAncestorStateOfType<NavigationBarWidgetState>();
                     //navBarState?.navigateToTab(1);  // 갤러리 탭으로 이동
           },
+              ),
+              TextButton(
+                child: Text('아니오'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
               ),
             ],
           );
@@ -186,14 +192,14 @@ Future<void> addNewGroup(BuildContext context, SimpleContact contact,Set<String>
           ),
         actions: <Widget>[
           TextButton(
-            child: Text('Close'),
+            child: Text('취소'),
             onPressed: () {
               Navigator.of(context).pop();
               editProfile(context, contact, groups, onUpdate);
             },
           ),
           TextButton(
-            child: Text('Save'),
+            child: Text('저장'),
             onPressed: () {
               contact.group=_controllerGroup.text;
               Provider.of<GroupsProvider>(context, listen: false).addGroups(_controllerGroup.text);
@@ -416,7 +422,7 @@ class GroupDropdown extends StatefulWidget {
   final int widgetFrom;
 
 
-  const GroupDropdown({
+  const  GroupDropdown({
     Key? key,
     required this.groups,
     required this.selectedGroup,
@@ -464,22 +470,38 @@ class _GroupDropdownState extends State<GroupDropdown>{
           _droppingItems.addAll(groupsWithoutEtc.map((String group) {
             return DropdownMenuItem<String>(
               value: group,
-              child: Text(group),
+              child: Container(
+                  width: 200,
+                  height: 48,
+                  alignment: Alignment.centerLeft,
+                  child: Text(group, overflow: TextOverflow.ellipsis)),
             );
           }));
           _droppingItems.add(
-              const DropdownMenuItem<String>(
+              DropdownMenuItem<String>(
                   value: 'new_group',
-                  child: Text('새 그룹 추가')
+                  child: Container(
+                      width: 200,
+                      height: 48,
+                      alignment: Alignment.centerLeft,
+                      child: Text('새 그룹 추가', overflow: TextOverflow.ellipsis)),
               ));
         }
         else{
           _droppingItems.addAll(groupsWithoutEtc.map((String group) {
             return DropdownMenuItem<String>(
               value: group,
-              child: Row(
+              child:SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text(group),
+                  children: [
+                    Container(
+                        width: 90,
+                        height: 48,
+                        alignment: Alignment.centerLeft,
+                        child: Text(group, overflow: TextOverflow.ellipsis)
+                    ),
                     IconButton(
                       icon: Icon(Icons.close),
                       onPressed: (){
@@ -489,34 +511,42 @@ class _GroupDropdownState extends State<GroupDropdown>{
                         //});
                       },)
                   ]
-              ),
+              )),
             );
           }));
           _droppingItems.add(
-              const DropdownMenuItem<String>(
+              DropdownMenuItem<String>(
                 value: 'all_groups',
-                child: Text('모든 그룹 보기'),
+                child: Container(
+                    constraints: BoxConstraints(maxWidth: 100), // 원하는 최대 너비 설정
+                    child: Text(
+                      '모든 그룹 보기',
+                      overflow: TextOverflow.ellipsis,
+                    ),
               )
-          );
+          ));
         }
 
 
 
 
-        return DropdownButton<String>(
-          key: dropdownKey,
-          value: _selectedGroup,
-          hint: Text(_selectedGroup ?? 'Select Group'),
-          items: _droppingItems,
-          onChanged: (String? newValue) {
-            if (newValue != null&& newValue !=_selectedGroup) {
-              setState((){
-                _selectedGroup=newValue;
-              });
-              widget.onGroupChanged(newValue);
-            }
-          },
+        return DropdownButtonFormField<String>(
+              key: dropdownKey,
+              value: _selectedGroup,
+              hint: Text(_selectedGroup ?? 'Select Group'),
+              items: _droppingItems,
+              onChanged: (String? newValue) {
+                if (newValue != null&& newValue !=_selectedGroup) {
+                  setState((){
+                    _selectedGroup=newValue;
+                  });
+                  widget.onGroupChanged(newValue);
+                }
+              },
+              isExpanded: true,
+
         );
+
       }
     );
   }
