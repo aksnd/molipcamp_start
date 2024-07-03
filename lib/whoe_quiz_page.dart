@@ -24,7 +24,7 @@ class free_page extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('퀴즈 풀이', style: TextStyle(color: Colors.white),),
-          backgroundColor: Color(0xFF3AB349),
+          backgroundColor: Color(0xFF8ECAE6),
           iconTheme: IconThemeData(color: Colors.white),
           bottom: TabBar(
             labelColor: Colors.white,

@@ -67,24 +67,22 @@ class _ModeSelectionPageState extends State<ModeSelectionPage> with SingleTicker
                 child: Container(
                           padding: EdgeInsets.all(8.0),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: Color(0xFF023047),
                             borderRadius: BorderRadius.circular(20),),
                   child: Container(
                       width: 180,
-                      color: Colors.white,
+
                       alignment: Alignment.centerRight,
-                      child: Flexible(
-                          child: GroupDropdown(
-                        groups: groups,
-                        selectedGroup: dropDownGroup[2],
-                        onGroupChanged: (String newGroup) {
-                          dropDownGroup[2] = newGroup;
-                          Provider.of<ContactsProvider>(context, listen: false)
-                              .updateNowGroup(dropDownGroup, 2);
-                        },
-                        widgetFrom: 2,
-                      )
-                      )
+                      child: GroupDropdown(
+                                              groups: groups,
+                                              selectedGroup: dropDownGroup[2],
+                                              onGroupChanged: (String newGroup) {
+                      dropDownGroup[2] = newGroup;
+                      Provider.of<ContactsProvider>(context, listen: false)
+                          .updateNowGroup(dropDownGroup, 2);
+                                              },
+                                              widgetFrom: 2,
+                                            )
                   ),
                 ),
               );}
@@ -105,7 +103,7 @@ class _ModeSelectionPageState extends State<ModeSelectionPage> with SingleTicker
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
-                child: Text('퀴즈 시작!', style: TextStyle(color: Color(0xFF023047)),),
+                child: Text('퀴즈 시작!', style: TextStyle(color: Color(0xFF023047), fontWeight: FontWeight.bold),),
               ),
             ],
           ),

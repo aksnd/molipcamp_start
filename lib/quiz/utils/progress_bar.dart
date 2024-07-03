@@ -12,7 +12,7 @@ Widget buildProgressBar(BuildContext context, int currentIndex, int totalCount) 
         width: double.infinity,
         height: 20,
         decoration: BoxDecoration(
-          color: Colors.grey[400],
+          color: Colors.grey[300],
           borderRadius: BorderRadius.circular(15),
         ),
       ),
@@ -20,7 +20,7 @@ Widget buildProgressBar(BuildContext context, int currentIndex, int totalCount) 
         width: progress * MediaQuery.of(context).size.width,
         height: 20,
         decoration: BoxDecoration(
-          color: Color(0xFF3AB349),
+          color: Color(0xFF8ECAE6),
           borderRadius: BorderRadius.circular(15),
         ),
       ),
