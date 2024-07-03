@@ -23,14 +23,20 @@ class free_page extends StatelessWidget {
       length: 4,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('퀴즈 풀이'),
-          backgroundColor: Colors.pinkAccent,
+          title: const Text('퀴즈 풀이', style: TextStyle(color: Colors.white),),
+          backgroundColor: Color(0xFF3AB349),
+          iconTheme: IconThemeData(color: Colors.white),
           bottom: TabBar(
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.white,
+            indicatorColor: Colors.white,
+            labelStyle: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+            unselectedLabelStyle: TextStyle(fontSize: 14.0),
             tabs: [
-              Tab(text: '이름 퀴즈'),
+              Tab(text: '이름'),
               Tab(text: 'MBTI'),
               Tab(text: '전화번호'),
-              Tab(text: '생일 퀴즈'),
+              Tab(text: '생일'),
             ],
           ),
         ),
