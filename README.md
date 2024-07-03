@@ -62,6 +62,8 @@ dropdown 이용하여 탭별 자료 연계
 ## 김예락 <https://github.com/kimyerak>
 - 3번탭(quiz) 전체 구현(UI 및 quiz관련 상태관리), overall UI/UX design, ranking system 구현
 ## 박윤서 <https://github.com/yunseopark-kaist>
-- 1,2번탭 UI/UX design, image load 기능 구현, group system 구현
+- 1,2번탭 UI/UX design: show profile 및 edit profile UI 제작. group dropdown 구현.
+- image load 기능 구현: Grid view로 image를 조회하고, 각 image를 클릭했을 때 연결되는 화면 구현
+- group system 구현: group provider와 shared preference를 이용해 정의되어있는 그룹 리스트를 관리.
 
 
