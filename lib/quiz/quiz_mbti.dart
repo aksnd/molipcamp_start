@@ -200,10 +200,10 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF3AB349),
+                          color: Color(0xFF8ECAE6),
                         ),
                       ),
-                      Icon(Icons.auto_awesome, color: Color(0xFF3AB349),)
+                      Icon(Icons.auto_awesome, color: Color(0xFF8ECAE6),)
                     ],
                   ),
                   SizedBox(height: 16),
@@ -216,7 +216,7 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 16,
-                          color: Colors.purple,
+                          color: Color(0xFF023047),
                         ),
                       ),
                     ),
@@ -389,7 +389,13 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
-              child: Text('퀴즈 끝내기', style: TextStyle(color: Colors.white)),
+              child: Row(
+                children: [
+                  Icon(Icons.square, color: Colors.white, size: 15,),
+                  SizedBox(width: 5,),
+                  Text('퀴즈 끝내기', style: TextStyle(color: Colors.white)),
+                ],
+              ),
             ),
             FloatingActionButton(
               onPressed: _showRankingModal,
@@ -404,7 +410,12 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
-              child: Text('다음 문제', style: TextStyle(color: Colors.white)),
+              child: Row(
+                children: [
+                  Text('다음 문제', style: TextStyle(color: Colors.white)),
+                  Icon(Icons.play_arrow, color: Colors.white, size: 20,),
+                ],
+              ),
             ),
           ],
         ),
