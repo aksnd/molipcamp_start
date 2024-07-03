@@ -99,6 +99,9 @@ class _NavigationBarState extends State<NavigationBarWidget> {
         child: _pages[_selectedIndex],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Color(0xFF023047),
+        selectedItemColor: Color(0xFF3AB349), // 선택된 아이템 색상
+        unselectedItemColor: Colors.white, // 선택되지 않은 아이템 색상
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.contact_page),
@@ -114,7 +117,6 @@ class _NavigationBarState extends State<NavigationBarWidget> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Color(0xFF3AB349),
         onTap: _onItemTapped,
       ),
     );

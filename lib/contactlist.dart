@@ -75,7 +75,10 @@ class _MyHomePageState extends State<MyHomePage> {
         final groupfilteredcontacts = contactsProvider.widget1GroupFilteredContacts;
         return Scaffold(
           appBar: AppBar(
-            title: const Text('주소록', style:TextStyle(fontSize:25)),
+            iconTheme: IconThemeData(color: Colors.white),
+
+            backgroundColor: Color(0xFF023047),
+            title: const Text('주소록', style:TextStyle(fontSize:25, color: Colors.white)),
             actions: <Widget>[
               Container(
                 width: 130,
