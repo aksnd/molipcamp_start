@@ -49,6 +49,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _requestPermission();
+    Provider.of<ContactsProvider>(context, listen: false).initializeQuery();
+    //Provider.of<ContactsProvider>(context, listen: false).updateSearchQuery('');
   }
 
   Future<void> _requestPermission() async {
@@ -63,9 +65,12 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Consumer2<ContactsProvider,GroupsProvider>(
       builder: (context,contactsProvider, groupsProvider, child){
+        //검색 값 초기화
+
         final contacts = contactsProvider.contacts;
         final groups = groupsProvider.groups;
         List<String> dropDownGroup = contactsProvider.nowGroup;
+
         final filteredcontacts = contactsProvider.filteredcontacts;
         final groupfilteredcontacts = contactsProvider.widget1GroupFilteredContacts;
         return Scaffold(
@@ -73,17 +78,15 @@ class _MyHomePageState extends State<MyHomePage> {
             title: const Text('주소록', style:TextStyle(fontSize:25)),
             actions: <Widget>[
               Container(
-                width: 180,
+                width: 130,
                 alignment: Alignment.centerRight,
-                child:Flexible(
-                  child: GroupDropdown(
-                    groups: groups,
-                    selectedGroup: contactsProvider.nowGroup[0],
-                    onGroupChanged:(String newGroup){
-                      dropDownGroup[0]= newGroup;
-                      Provider.of<ContactsProvider>(context, listen: false).updateNowGroup(dropDownGroup, 0);
-                    }, widgetFrom: 0,
-                  )
+                child:GroupDropdown(
+                  groups: groups,
+                  selectedGroup: contactsProvider.nowGroup[0],
+                  onGroupChanged:(String newGroup){
+                    dropDownGroup[0]= newGroup;
+                    Provider.of<ContactsProvider>(context, listen: false).updateNowGroup(dropDownGroup, 0);
+                  }, widgetFrom: 0,
                 )),
               const SizedBox(width: 10,),
               IconButton( // 단순추가

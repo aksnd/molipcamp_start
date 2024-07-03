@@ -132,6 +132,11 @@ class ContactsProvider extends ChangeNotifier {
     _widget1filterGroupContacts();
     notifyListeners();
   }
+  void initializeQuery(){
+    _SearchQuery = '';
+    _filterContacts();
+    _widget1filterGroupContacts();
+  }
 
   void updateNowGroup(List<String> nowGroup, int widget) {
     _nowGroup = nowGroup;
