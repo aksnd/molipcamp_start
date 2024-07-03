@@ -20,7 +20,7 @@ Widget buildProgressBar(BuildContext context, int currentIndex, int totalCount) 
         width: progress * MediaQuery.of(context).size.width,
         height: 20,
         decoration: BoxDecoration(
-          color: Colors.pink,
+          color: Color(0xFF3AB349),
           borderRadius: BorderRadius.circular(15),
         ),
       ),

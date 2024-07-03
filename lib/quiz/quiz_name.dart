@@ -56,15 +56,15 @@ class _NameQuizPageState extends State<NameQuizPage> {
     final contactsProvider =
         Provider.of<ContactsProvider>(context, listen: false);
     Random random = Random();
-    for (int i = 0; i < filteredContacts.length * 4; i++) {
-      if (options.length >= 3) break;
-      String randomName =
-          filteredContacts[random.nextInt(filteredContacts.length)].name;
-      if (!options.contains(randomName)) {
-        options.add(randomName);
-      }
-    }
-    while (options.length < 3) {
+    // for (int i = 0; i < filteredContacts.length * 4; i++) {
+    //   if (options.length >= 3) break;
+    //   String randomName =
+    //       filteredContacts[random.nextInt(filteredContacts.length)].name;
+    //   if (!options.contains(randomName)) {
+    //     options.add(randomName);
+    //   }
+    // }
+    while (options.length < 6) {
       String randomName = contactsProvider
           .contacts[random.nextInt(contactsProvider.contacts.length)].name;
       if (!options.contains(randomName)) {
@@ -209,10 +209,10 @@ class _NameQuizPageState extends State<NameQuizPage> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Colors.pink,
+                          color: Color(0xFF3AB349),
                         ),
                       ),
-                      Icon(Icons.auto_awesome, color: Colors.pink,)
+                      Icon(Icons.auto_awesome, color: Color(0xFF3AB349),)
                     ],
                   ),
                   SizedBox(height: 16),
@@ -308,7 +308,7 @@ class _NameQuizPageState extends State<NameQuizPage> {
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           // Text('${currentIndex + 1}/${filteredContacts.length}'),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(20.0),
             child: buildProgressBar(context, currentIndex, filteredContacts.length),
           ),
           Container(
@@ -332,25 +332,37 @@ class _NameQuizPageState extends State<NameQuizPage> {
                   "이 사람의 이름은?",
                   style: TextStyle(
                     fontSize: 18,
-                    color: Colors.grey[700],
+                    color: Colors.white,
                   ),
                 ),
-                SizedBox(height: 16),
+                SizedBox(height: 8),
                 Center(
-                  child: Column(
-                    children: options
-                        .map((option) => Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: ElevatedButton(
-                                onPressed: () => checkAnswer(context: context,
-                                  selectedOption: option,
-                                  correctAnswer: correctAnswer,
-                                  answerCount: answercount_name,
-                                  nextQuestion: _nextQuestion,),
-                                child: Text(option),
-                              ),
-                            ))
-                        .toList(),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Wrap(
+                      spacing: 10.0, // 열 간의 간격을 설정합니다.
+                      runSpacing: 10.0,
+                      children: options
+                          .map((option) => Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: ElevatedButton(
+                                  onPressed: () => checkAnswer(context: context,
+                                    selectedOption: option,
+                                    correctAnswer: correctAnswer,
+                                    answerCount: answercount_name,
+                                    nextQuestion: _nextQuestion,
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Color(0xFF8ECAE6),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  ),
+                                  child: Text(option, style: TextStyle(color: Color(0xFF023047)),),
+                                ),
+                              ))
+                          .toList(),
+                    ),
                   ),
                 ),
               ],
@@ -366,7 +378,7 @@ class _NameQuizPageState extends State<NameQuizPage> {
             ElevatedButton(
               onPressed: _showCompletionDialog,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.pink,
+                backgroundColor: Color(0xFF3AB349),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
@@ -381,7 +393,7 @@ class _NameQuizPageState extends State<NameQuizPage> {
             ElevatedButton(
               onPressed: _nextQuestion,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.pink,
+                backgroundColor: Color(0xFF3AB349),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),

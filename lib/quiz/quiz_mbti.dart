@@ -56,7 +56,7 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
     Random random = Random();
 
 
-    while (options.length < 3) {
+    while (options.length < 4) {
       String randomMBTI = MBTI_LIST[random.nextInt(16)];
       if (!options.contains(randomMBTI)) {
         options.add(randomMBTI);
@@ -200,10 +200,10 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Colors.pink,
+                          color: Color(0xFF3AB349),
                         ),
                       ),
-                      Icon(Icons.auto_awesome, color: Colors.pink,)
+                      Icon(Icons.auto_awesome, color: Color(0xFF3AB349),)
                     ],
                   ),
                   SizedBox(height: 16),
@@ -299,7 +299,7 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(20.0),
               child: buildProgressBar(context, currentIndex, contactsProvider.widget3GroupFilteredContacts.length),
             ),
             // Text('${currentIndex + 1}/${contactsProvider.widget3GroupFilteredContacts.length}'),
@@ -324,7 +324,7 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
                     contact != null ? "이름: ${contact!.name}" : "이름 없음",
                     style: TextStyle(
                       fontSize: 18,
-                      color: Colors.grey[700],
+                      color: Colors.white,
                     ),
                   ),
                   SizedBox(height: 8),
@@ -332,25 +332,36 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
                     "이 사람의 MBTI는?",
                     style: TextStyle(
                       fontSize: 18,
-                      color: Colors.grey[700],
+                      color: Colors.white,
                     ),
                   ),
                   SizedBox(height: 8),
                   Center(
-                    child: Column(
-                      children: options
-                          .map((option) => Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: ElevatedButton(
-                          onPressed: () => checkAnswer(context: context,
-                            selectedOption: option,
-                            correctAnswer: correctAnswer,
-                            answerCount: answerCountMbti,
-                            nextQuestion: _nextQuestion,),
-                          child: Text(option),
-                        ),
-                      ))
-                          .toList(),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Wrap(
+                        spacing: 40.0, // 열 간의 간격을 설정합니다.
+                        runSpacing: 10.0,
+                        children: options
+                            .map((option) => Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: ElevatedButton(
+                            onPressed: () => checkAnswer(context: context,
+                              selectedOption: option,
+                              correctAnswer: correctAnswer,
+                              answerCount: answerCountMbti,
+                              nextQuestion: _nextQuestion,),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(0xFF8ECAE6),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                            child: Text(option, style: TextStyle(color: Color(0xFF023047)),),
+                          ),
+                        ))
+                            .toList(),
+                      ),
                     ),
                   ),
                 ],
@@ -373,7 +384,7 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
             ElevatedButton(
               onPressed: _showCompletionDialog,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.pink,
+                backgroundColor: Color(0xFF3AB349),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
@@ -388,7 +399,7 @@ class _MBTIQuizPageState extends State<MBTIQuizPage> {
             ElevatedButton(
               onPressed: _nextQuestion,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.pink,
+                backgroundColor: Color(0xFF3AB349),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
