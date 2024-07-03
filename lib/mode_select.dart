@@ -12,25 +12,9 @@ class ModeSelectionPage extends StatefulWidget {
 }
 
 class _ModeSelectionPageState extends State<ModeSelectionPage>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
+    {
 
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(seconds: 1),
-      vsync: this,
-    )..repeat(reverse: true);
-    _animation = Tween<double>(begin: 0.95, end: 1.05).animate(_controller);
-  }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,12 +45,7 @@ class _ModeSelectionPageState extends State<ModeSelectionPage>
                 ],
               ),
               SizedBox(height: 20),
-              AnimatedBuilder(
-                  animation: _animation,
-                  builder: (context, child) {
-                    return Transform.scale(
-                      scale: _animation.value,
-                      child: Container(
+          Container(
                         padding: EdgeInsets.all(8.0),
                         decoration: BoxDecoration(
                           color: Color(0xFF023047),
@@ -87,8 +66,8 @@ class _ModeSelectionPageState extends State<ModeSelectionPage>
                               widgetFrom: 2,
                             )),
                       ),
-                    );
-                  }),
+
+
               SizedBox(
                 height: 30,
               ),
