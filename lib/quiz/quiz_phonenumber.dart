@@ -9,6 +9,8 @@ import '../ranking_provider.dart';
 import 'quiz_phonenumber.dart';
 import 'package:kaist_week1/main.dart';
 import 'package:kaist_week1/quiz/utils/calculator.dart';
+import 'package:kaist_week1/quiz/utils/progress_bar.dart';
+import 'package:kaist_week1/quiz/utils/checkAnswer.dart';
 
 
 //전화번호 퀴즈 - 탭3
@@ -61,38 +63,7 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
     options.shuffle();
   }
 
-  void _checkAnswer(String selectedOption) {
-    bool isCorrect = selectedOption == correctAnswer;
-    if (isCorrect) {
-      answercount_phonenumber++;
-    }
 
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(isCorrect ? '정답!' : '오답'),
-          content: Text(
-              isCorrect ? '축하합니다! 정답입니다.' : '아쉽네요. 정답은 ${correctAnswer}입니다.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('닫기'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                _nextQuestion();
-              },
-              child: Text('다음문제'),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   void _nextQuestion() {
     final contactsProvider = Provider.of<ContactsProvider>(context, listen: false);
@@ -127,69 +98,77 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
       barrierDismissible: false,
       builder: (context) {
         TextEditingController _phonenumber_nicknameController = TextEditingController();
-        return AlertDialog(
-          title: Text('퀴즈를 끝내시겠어요?'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('맞춘 문제 개수: $answercount_phonenumber/${currentIndex+1}'),
-              Text('정답률 : ${correctRate.toStringAsFixed(2)}%'),
-              TextField(
-                controller: _phonenumber_nicknameController,
-                decoration: InputDecoration(
-                  labelText: '랭킹용 닉네임을 설정해주세요',
+        return SingleChildScrollView(
+          child: AlertDialog(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('퀴즈를 끝내시겠어요?', style: TextStyle(fontSize: 20),),
+                IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
                 ),
+              ],
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('맞춘 문제 개수: $answercount_phonenumber/${currentIndex+1}'),
+                Text('정답률 : ${correctRate.toStringAsFixed(2)}%'),
+                TextField(
+                  controller: _phonenumber_nicknameController,
+                  decoration: InputDecoration(
+                    labelText: '랭킹용 닉네임을 설정해주세요',
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+
+              TextButton(
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NavigationBarWidget(initialIndex: 2),),
+                        (route) => false,
+                  );
+                },
+                child: Text('나가기'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Provider.of<RankingProvider>(context, listen: false)
+                      .addRanking(
+                      _phonenumber_nicknameController.text,
+                      answercount_phonenumber, currentIndex+1,
+                      '전화번호');
+                  Navigator.of(context).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('랭킹에 등록되었습니다'),
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      // margin: EdgeInsets.symmetric(horizontal: 900.0, vertical: 0.0),
+                      width: 200,
+                    ),
+                  );
+                  setState(() {
+                    currentIndex = 0;
+                    answercount_phonenumber=0;
+                    contact = Provider.of<ContactsProvider>(context, listen: false).widget3GroupFilteredContacts[currentIndex];
+                    _generate_phonenumber_QuizOptions();
+                  });
+                },
+
+                child: Text('랭킹 등록'),
               ),
             ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('닫기'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => NavigationBarWidget(initialIndex: 2),),
-                      (route) => false,
-                );
-              },
-              child: Text('나가기'),
-            ),
-            TextButton(
-              onPressed: () {
-                Provider.of<RankingProvider>(context, listen: false)
-                    .addRanking(
-                    _phonenumber_nicknameController.text,
-                    answercount_phonenumber, currentIndex+1,
-                    '전화번호');
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('랭킹에 등록되었습니다'),
-                    behavior: SnackBarBehavior.floating,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    // margin: EdgeInsets.symmetric(horizontal: 900.0, vertical: 0.0),
-                    width: 200,
-                  ),
-                );
-                setState(() {
-                  currentIndex = 0;
-                  answercount_phonenumber=0;
-                  contact = Provider.of<ContactsProvider>(context, listen: false).widget3GroupFilteredContacts[currentIndex];
-                  _generate_phonenumber_QuizOptions();
-                });
-              },
-
-              child: Text('랭킹 등록'),
-            ),
-          ],
         );
       },
     );
@@ -211,20 +190,18 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.pink,
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: Text(
-                      '전화번호 퀴즈 랭킹',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                  Row(
+                    children: [
+                      Text(
+                        '전화번호 퀴즈 랭킹',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.pink,
+                        ),
                       ),
-                    ),
+                      Icon(Icons.auto_awesome, color: Colors.pink,)
+                    ],
                   ),
                   SizedBox(height: 16),
                   rankings.isEmpty
@@ -318,37 +295,30 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
 
       body:SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(0.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: _previousQuestion,
-                    child: Text('이전 문제'),
-                  ),
-                  Text('${currentIndex + 1}/${contactsProvider.widget3GroupFilteredContacts.length}'),
-                  TextButton(
-                    onPressed: _nextQuestion,
-                    child: Text('다음 문제'),
-                  ),
-                ],
+              // Text('${currentIndex + 1}/${contactsProvider.widget3GroupFilteredContacts.length}'),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: buildProgressBar(context, currentIndex, contactsProvider.widget3GroupFilteredContacts.length),
               ),
               Container(
                 width: 120,
                 height: 120,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
-                  child: contact != null ? _getImageProvider(contact!.image) : SizedBox.shrink(),
+                  child: contact != null
+                      ? _getImageProvider(contact!.image)
+                      : SizedBox.shrink(),
                 ),
               ),
 
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(8.0),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
                       contact != null ? "이름: ${contact!.name}" : "이름 없음",
@@ -366,45 +336,65 @@ class _QuizPageState extends State<PhoneNumberQuizPage> {
                       ),
                     ),
                     SizedBox(height: 16),
-                    ...options.map((option) => ElevatedButton(
-                      onPressed: () => _checkAnswer(option),
-                      child: Text(option),
-                    )),
+                    Center(
+                      child: Column(
+                        children: options
+                            .map((option) => Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: ElevatedButton(
+                            onPressed: () => checkAnswer(context: context,
+                              selectedOption: option,
+                              correctAnswer: correctAnswer,
+                              answerCount: answercount_phonenumber,
+                              nextQuestion: _nextQuestion,),
+                            child: Text(option),
+                          ),
+                        ))
+                            .toList(),
+                      ),
+                    ),
                   ],
                 ),
 
               ),
-              SizedBox(height: 12,),
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16, bottom: 16),
-                  child: ElevatedButton(
-                    onPressed: _showCompletionDialog,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.pink,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                    child: Text('퀴즈 끝내기', style: TextStyle(color: Colors.white),),
-                  ),
-                ),),
+
 
             ],
           ),
         ),
       ),
-      floatingActionButton: Stack(
-          children:[ Positioned(
-            bottom: 16 + 13,
-            right: 16,
-            child: FloatingActionButton(
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(bottom: 40.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ElevatedButton(
+              onPressed: _showCompletionDialog,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.pink,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              child: Text('퀴즈 끝내기', style: TextStyle(color: Colors.white)),
+            ),
+            FloatingActionButton(
               onPressed: _showRankingModal,
               child: Icon(Icons.leaderboard),
               tooltip: '전화번호 퀴즈 랭킹보기',
             ),
-          ),]
+            ElevatedButton(
+              onPressed: _nextQuestion,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.pink,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              child: Text('다음 문제', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        ),
       ),
 
     );
